@@ -5,6 +5,7 @@ public class Main {
 		System.out.println("Fun with Git!");
 		System.out.println("Testing");
 		System.out.println("Testing 1 2 3");
+		System.out.println("Pushed Something!");
 	}
 
 }
