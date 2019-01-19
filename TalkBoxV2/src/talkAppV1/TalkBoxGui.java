@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.awt.event.ActionEvent;
+import java.awt.Font;
+import javax.swing.SwingConstants;
 
 public class TalkBoxGui extends JFrame {
 
@@ -53,16 +55,20 @@ public class TalkBoxGui extends JFrame {
 	public TalkBoxGui() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 770, 551);
+		setBounds(100, 100, 711, 551);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		contentPane.setLayout(null);
 
 		JLabel Display = new JLabel("BUTTON PRESSED!");
+		Display.setHorizontalAlignment(SwingConstants.CENTER);
+		Display.setFont(new Font("Stencil", Font.BOLD, 48));
+		Display.setBounds(10, 136, 670, 200);
 		contentPane.add(Display);
 
 		JButton btnImage1 = new JButton("NO");
+		btnImage1.setBounds(10, 10, 160, 100);
 		btnImage1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				playSound(noS);
@@ -72,6 +78,7 @@ public class TalkBoxGui extends JFrame {
 		contentPane.add(btnImage1);
 
 		JButton btnImage2 = new JButton("Strong NO");
+		btnImage2.setBounds(180, 10, 160, 100);
 		btnImage2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				playSound(sNoS);
@@ -82,6 +89,7 @@ public class TalkBoxGui extends JFrame {
 		contentPane.add(btnImage2);
 
 		JButton btnImage3 = new JButton("YES");
+		btnImage3.setBounds(350, 10, 160, 100);
 		btnImage3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				playSound(yesS);
@@ -91,6 +99,8 @@ public class TalkBoxGui extends JFrame {
 		contentPane.add(btnImage3);
 
 		JButton btnImageSimulator = new JButton("Simulator");
+		btnImageSimulator.setEnabled(false);
+		btnImageSimulator.setBounds(520, 10, 160, 100);
 		btnImageSimulator.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Simulator simulator = new Simulator(contentPane);
@@ -125,5 +135,6 @@ public class TalkBoxGui extends JFrame {
 			ee.printStackTrace();
 		}
 	}
+
 
 }
