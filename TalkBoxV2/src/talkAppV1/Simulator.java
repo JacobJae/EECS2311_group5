@@ -31,8 +31,10 @@ public class Simulator extends JFrame{
 		JLabel Display = new JLabel("BUTTON PRESSED!");
 		contentPane.add(Display);
 		
-		new File("/TalkBoxData").mkdirs();
-		File file = new File("/TalkBoxData");
+		String home = System.getProperty("user.home");
+		java.nio.file.Path path = java.nio.file.Paths.get(home, "TalkBoxData");
+		File file = new File(path.toString());
+		file.mkdirs();
 		ArrayList<File> files = new ArrayList<File>(Arrays.asList(file.listFiles()));
 		
 		for (int i = 0; i < files.size(); i++) {
