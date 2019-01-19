@@ -28,6 +28,8 @@ public class TalkBoxGui extends JFrame {
 	private JPanel contentPane;
 	private File audio;
 	private String name, noS = "TalkBoxData/no.wav", sNoS = "TalkBoxData/strong_no.wav", yesS = "TalkBoxData/yes.wav";
+	private AudioInputStream audioIn;
+	private Clip clip = null;
 
 	/**
 	 * Launch the application.
@@ -60,76 +62,34 @@ public class TalkBoxGui extends JFrame {
 		JLabel Display = new JLabel("BUTTON PRESSED!");
 		contentPane.add(Display);
 
-
-		audio = new File(noS);
-		name = new File(noS).getName().substring(0, new File(noS).getName().length() - 4);
-
-		JButton btnImage1 = new JButton(name);
+		JButton btnImage1 = new JButton("NO");
 		btnImage1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					AudioInputStream audioIn = AudioSystem.getAudioInputStream(new File(noS).toURI().toURL());
-					Clip clip = AudioSystem.getClip();
-					clip.open(audioIn);
-					clip.start();
-				} catch (UnsupportedAudioFileException ee) {
-					ee.printStackTrace();
-				} catch (IOException ee) {
-					ee.printStackTrace();
-				} catch (LineUnavailableException ee) {
-					ee.printStackTrace();
-				}
-				Display.setText(name + " Pressed!");
+				playSound(noS);
+				Display.setText("NO Pressed!");
 			}
 		});
 		contentPane.add(btnImage1);
 
-		audio = new File(sNoS);
-		name = new File(sNoS).getName().substring(0, new File(sNoS).getName().length() - 4);
-		JButton btnImage2 = new JButton(name);
+		JButton btnImage2 = new JButton("Strong NO");
 		btnImage2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					AudioInputStream audioIn = AudioSystem.getAudioInputStream(new File(sNoS).toURI().toURL());
-					Clip clip = AudioSystem.getClip();
-					clip.open(audioIn);
-					clip.start();
-				} catch (UnsupportedAudioFileException ee) {
-					ee.printStackTrace();
-				} catch (IOException ee) {
-					ee.printStackTrace();
-				} catch (LineUnavailableException ee) {
-					ee.printStackTrace();
-				}
-				Display.setText(name + " Pressed!");
+				playSound(sNoS);
+				Display.setText("Strong NO Pressed!");
 			}
 		});
 		btnImage2.setActionCommand("IMAGE 1");
 		contentPane.add(btnImage2);
 
-		audio = new File(yesS);
-		name = new File(yesS).getName().substring(0, new File(yesS).getName().length() - 4);
-		JButton btnImage3 = new JButton(name);
+		JButton btnImage3 = new JButton("YES");
 		btnImage3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					AudioInputStream audioIn = AudioSystem.getAudioInputStream(new File(yesS).toURI().toURL());
-					Clip clip = AudioSystem.getClip();
-					clip.open(audioIn);
-					clip.start();
-				} catch (UnsupportedAudioFileException ee) {
-					ee.printStackTrace();
-				} catch (IOException ee) {
-					ee.printStackTrace();
-				} catch (LineUnavailableException ee) {
-					ee.printStackTrace();
-				}
-				Display.setText(name + " Pressed!");
+				playSound(yesS);
+				Display.setText("YES Pressed!");
 			}
 		});
 		contentPane.add(btnImage3);
 
-	
 		JButton btnImageSimulator = new JButton("Simulator");
 		btnImageSimulator.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -147,6 +107,23 @@ public class TalkBoxGui extends JFrame {
 			return ""; // empty extension
 		}
 		return name.substring(lastIndexOf);
+	}
+
+	private void playSound(String audioFile) {
+
+		audio = new File(audioFile);
+		try {
+			audioIn = AudioSystem.getAudioInputStream(audio.toURI().toURL());
+			clip = AudioSystem.getClip();
+			clip.open(audioIn);
+			clip.start();
+		} catch (UnsupportedAudioFileException ee) {
+			ee.printStackTrace();
+		} catch (IOException ee) {
+			ee.printStackTrace();
+		} catch (LineUnavailableException ee) {
+			ee.printStackTrace();
+		}
 	}
 
 }
