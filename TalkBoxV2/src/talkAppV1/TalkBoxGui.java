@@ -83,6 +83,15 @@ public class TalkBoxGui extends JFrame {
 			}
 		});
 		contentPane.add(btnImage4);
+		
+		JButton btnImageSimulator = new JButton("Simulator");
+		btnImageSimulator.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Simulator simulator = new Simulator(contentPane);
+				simulator.setVisible(true);
+			}
+		});
+		contentPane.add(btnImageSimulator);
 	}
 
 	
