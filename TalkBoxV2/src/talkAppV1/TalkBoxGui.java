@@ -25,6 +25,7 @@ import javax.swing.SwingConstants;
 import java.awt.Dialog.ModalExclusionType;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.JTree;
 
 public class TalkBoxGui extends JFrame {
 
@@ -33,7 +34,7 @@ public class TalkBoxGui extends JFrame {
 	private JPanel contentPane;
 	private File audio;
 	private String name, no = "TalkBoxData/no.wav", strong_no = "TalkBoxData/strong_no.wav",
-			yes = "TalkBoxData/yes.wav";
+			yes = "TalkBoxData/yes.wav", hell_yeah = "TalkBoxData/hell_yeah.wav";
 	private AudioInputStream audioIn;
 	private Clip clip = null;
 
@@ -115,7 +116,17 @@ public class TalkBoxGui extends JFrame {
 				simulator.setVisible(true);
 			}
 		});
-		contentPane.add(btnImageSimulator);		
+		contentPane.add(btnImageSimulator);
+		
+		JButton btnImage4 = new JButton("HELL YEAH");
+		btnImage4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				playSound(hell_yeah);
+				Display.setText(name + " Pressed!");
+			}
+		});
+		btnImage4.setBounds(10, 48, 160, 100);
+		contentPane.add(btnImage4);
 
 		//Needs some work.
 		addKeyListener(new KeyAdapter() {
@@ -167,5 +178,4 @@ public class TalkBoxGui extends JFrame {
 	private void getName(String audioFile) {
 		name = audioFile.substring(audioFile.indexOf("/") + 1, audioFile.indexOf("."));
 	}
-
 }
