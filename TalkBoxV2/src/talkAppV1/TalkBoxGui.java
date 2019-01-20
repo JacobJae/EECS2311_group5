@@ -22,6 +22,9 @@ import java.util.Arrays;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import java.awt.Dialog.ModalExclusionType;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class TalkBoxGui extends JFrame {
 
@@ -29,7 +32,8 @@ public class TalkBoxGui extends JFrame {
 	private JButton b1, b2, b3, b4;
 	private JPanel contentPane;
 	private File audio;
-	private String name, noS = "TalkBoxData/no.wav", sNoS = "TalkBoxData/strong_no.wav", yesS = "TalkBoxData/yes.wav";
+	private String name, no = "TalkBoxData/no.wav", strong_no = "TalkBoxData/strong_no.wav",
+			yes = "TalkBoxData/yes.wav";
 	private AudioInputStream audioIn;
 	private Clip clip = null;
 
@@ -53,6 +57,7 @@ public class TalkBoxGui extends JFrame {
 	 * Create the frame.
 	 */
 	public TalkBoxGui() {
+		setAlwaysOnTop(true);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 711, 551);
@@ -60,54 +65,76 @@ public class TalkBoxGui extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		//this.setLocationRelativeTo(null);
+		//this.setExtendedState(MAXIMIZED_BOTH);
+		
 
 		JLabel Display = new JLabel("BUTTON PRESSED!");
 		Display.setHorizontalAlignment(SwingConstants.CENTER);
 		Display.setFont(new Font("Stencil", Font.BOLD, 48));
-		Display.setBounds(10, 136, 670, 200);
+		Display.setBounds(10, 301, 670, 200);
 		contentPane.add(Display);
 
 		JButton btnImage1 = new JButton("NO");
-		btnImage1.setBounds(10, 10, 160, 100);
+		btnImage1.setBounds(10, 175, 160, 100);
 		btnImage1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				playSound(noS);
-				Display.setText("NO Pressed!");
+				playSound(no);
+				Display.setText(name + " Pressed!");
 			}
 		});
 		contentPane.add(btnImage1);
 
 		JButton btnImage2 = new JButton("Strong NO");
-		btnImage2.setBounds(180, 10, 160, 100);
+		btnImage2.setBounds(180, 175, 160, 100);
 		btnImage2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				playSound(sNoS);
-				Display.setText("Strong NO Pressed!");
+				playSound(strong_no);
+				Display.setText(name + " Pressed!");
 			}
 		});
 		btnImage2.setActionCommand("IMAGE 1");
 		contentPane.add(btnImage2);
 
 		JButton btnImage3 = new JButton("YES");
-		btnImage3.setBounds(350, 10, 160, 100);
+		btnImage3.setBounds(350, 175, 160, 100);
 		btnImage3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				playSound(yesS);
-				Display.setText("YES Pressed!");
+				playSound(yes);
+				Display.setText(name + " Pressed!");
 			}
 		});
 		contentPane.add(btnImage3);
 
 		JButton btnImageSimulator = new JButton("Simulator");
 		btnImageSimulator.setEnabled(false);
-		btnImageSimulator.setBounds(520, 10, 160, 100);
+		btnImageSimulator.setBounds(520, 175, 160, 100);
 		btnImageSimulator.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Simulator simulator = new Simulator(contentPane);
 				simulator.setVisible(true);
 			}
 		});
-		contentPane.add(btnImageSimulator);
+		contentPane.add(btnImageSimulator);		
+
+		//Needs some work.
+		addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				if(arg0.equals(KeyEvent.VK_N)) {
+					playSound(no);
+					Display.setText(name + " Pressed!");}
+				else if(arg0.equals(KeyEvent.VK_Y))
+				{
+					playSound(yes);
+					Display.setText(name + " Pressed!");					
+				}
+				else {
+					playSound(strong_no);
+					Display.setText(name + " Pressed!");					
+				}
+			}
+		});
 	}
 
 	private String getFileExtension(File file) {
@@ -121,6 +148,7 @@ public class TalkBoxGui extends JFrame {
 
 	private void playSound(String audioFile) {
 
+		getName(audioFile);
 		audio = new File(audioFile);
 		try {
 			audioIn = AudioSystem.getAudioInputStream(audio.toURI().toURL());
@@ -136,5 +164,8 @@ public class TalkBoxGui extends JFrame {
 		}
 	}
 
+	private void getName(String audioFile) {
+		name = audioFile.substring(audioFile.indexOf("/") + 1, audioFile.indexOf("."));
+	}
 
 }
