@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JButton;
@@ -66,9 +67,10 @@ public class TalkBoxGui extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		//this.setLocationRelativeTo(null);
-		//this.setExtendedState(MAXIMIZED_BOTH);
-		
+		// this.setLocationRelativeTo(null);
+		// this.setExtendedState(MAXIMIZED_BOTH);
+
+		getClip();
 
 		JLabel Display = new JLabel("BUTTON PRESSED!");
 		Display.setHorizontalAlignment(SwingConstants.CENTER);
@@ -117,7 +119,7 @@ public class TalkBoxGui extends JFrame {
 			}
 		});
 		contentPane.add(btnImageSimulator);
-		
+
 		JButton btnImage4 = new JButton("HELL YEAH");
 		btnImage4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -128,24 +130,31 @@ public class TalkBoxGui extends JFrame {
 		btnImage4.setBounds(10, 48, 160, 100);
 		contentPane.add(btnImage4);
 
-		//Needs some work.
+		// Needs some work.
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent arg0) {
-				if(arg0.equals(KeyEvent.VK_N)) {
+				if (arg0.equals(KeyEvent.VK_N)) {
 					playSound(no);
-					Display.setText(name + " Pressed!");}
-				else if(arg0.equals(KeyEvent.VK_Y))
-				{
+					Display.setText(name + " Pressed!");
+				} else if (arg0.equals(KeyEvent.VK_Y)) {
 					playSound(yes);
-					Display.setText(name + " Pressed!");					
-				}
-				else {
+					Display.setText(name + " Pressed!");
+				} else {
 					playSound(strong_no);
-					Display.setText(name + " Pressed!");					
+					Display.setText(name + " Pressed!");
 				}
 			}
 		});
+	}
+
+	private void getClip() {
+		try {
+			clip = AudioSystem.getClip();
+		} catch (LineUnavailableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private String getFileExtension(File file) {
@@ -158,12 +167,14 @@ public class TalkBoxGui extends JFrame {
 	}
 
 	private void playSound(String audioFile) {
-
+		
+		clip.stop();
+		clip.close();
+		
 		getName(audioFile);
 		audio = new File(audioFile);
 		try {
 			audioIn = AudioSystem.getAudioInputStream(audio.toURI().toURL());
-			clip = AudioSystem.getClip();
 			clip.open(audioIn);
 			clip.start();
 		} catch (UnsupportedAudioFileException ee) {
@@ -173,6 +184,13 @@ public class TalkBoxGui extends JFrame {
 		} catch (LineUnavailableException ee) {
 			ee.printStackTrace();
 		}
+	}
+
+	private void setVolume() {
+		FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+		double gain = 0.25;  
+		float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
+		gainControl.setValue(dB);
 	}
 
 	private void getName(String audioFile) {
