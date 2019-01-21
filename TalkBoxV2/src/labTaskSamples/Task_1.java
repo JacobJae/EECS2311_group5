@@ -8,5 +8,6 @@ public class Task_1 {
 		System.out.println("Only Branch should change!");
 		
 		System.out.println("AAAAAAAAAAAAAAAAA");
+		System.out.println("NO CHANGE");
 	}
 }
