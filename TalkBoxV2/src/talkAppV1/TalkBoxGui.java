@@ -28,10 +28,11 @@ import java.awt.Dialog.ModalExclusionType;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JTree;
+import javax.swing.JTextPane;
 
 public class TalkBoxGui extends JFrame {
 
-	private JLabel Display;
+	private JLabel Display, ButtonDisplay;
 	private JButton btnSound1, btnSound2, btnSound3, btnSound4, btnPlaySound;
 	private JPanel contentPane;
 	private File audio;
@@ -79,6 +80,9 @@ public class TalkBoxGui extends JFrame {
 				selectBtn(0);
 				//playSound(no);
 				//Display.setText(name + " Pressed!");
+				getName(no);
+				ButtonDisplay.setText(name + " Selected");
+				
 			}
 		});
 
@@ -87,6 +91,8 @@ public class TalkBoxGui extends JFrame {
 				selectBtn(1);
 				//playSound(strong_no);
 				//Display.setText(name + " Pressed!");
+				getName(strong_no);
+				ButtonDisplay.setText(name + " Selected");
 			}
 		});
 
@@ -95,6 +101,8 @@ public class TalkBoxGui extends JFrame {
 				selectBtn(2);
 				//playSound(yes);
 				//Display.setText(name + " Pressed!");
+				getName(yes);
+				ButtonDisplay.setText(name + " Selected");
 			}
 		});
 
@@ -103,6 +111,8 @@ public class TalkBoxGui extends JFrame {
 				selectBtn(3);
 				//playSound(hell_yeah);
 				//Display.setText(name + " Pressed!");
+				getName(hell_yeah);
+				ButtonDisplay.setText(name + " Selected");
 			}
 		});
 
@@ -119,6 +129,8 @@ public class TalkBoxGui extends JFrame {
 				
 			}
 		});
+		
+		
 		
 	}
 
@@ -180,6 +192,12 @@ public class TalkBoxGui extends JFrame {
 		btnPlaySound.setFont(new Font("Stencil", Font.BOLD, 20));
 		btnPlaySound.setBounds(10, 233, 670, 100);
 		contentPane.add(btnPlaySound);
+		
+		ButtonDisplay = new JLabel("");
+		ButtonDisplay.setHorizontalAlignment(SwingConstants.CENTER);
+		ButtonDisplay.setFont(new Font("Dialog", Font.BOLD, 40));
+		ButtonDisplay.setBounds(38, 120, 608, 76);
+		contentPane.add(ButtonDisplay);
 	}
 
 	private void getClip() {
