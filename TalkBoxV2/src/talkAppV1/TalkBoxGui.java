@@ -29,11 +29,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JTree;
 import javax.swing.JTextPane;
+import javax.swing.JToggleButton;
 
 public class TalkBoxGui extends JFrame {
 
 	private JLabel Display, ButtonDisplay;
-	private JButton btnSound1, btnSound2, btnSound3, btnSound4, btnPlaySound;
+	private JToggleButton btnSound1, btnSound2, btnSound3, btnSound4;
+	private JButton btnPlaySound;
 	private JPanel contentPane;
 	private File audio;
 	private String name, no = "TalkBoxData/no.wav", strong_no = "TalkBoxData/strong_no.wav",
@@ -42,6 +44,7 @@ public class TalkBoxGui extends JFrame {
 	private Clip clip = null;
 	private ArrayList<String> clips = new ArrayList();
 	private ArrayList<JButton> sButtons = new ArrayList();
+	private ArrayList<JToggleButton> tButtons = new ArrayList();
 
 	/**
 	 * Launch the application.
@@ -138,9 +141,9 @@ public class TalkBoxGui extends JFrame {
 		
 		for (int i = 0; i < sButtons.size(); i++) {
 			if (i == x)
-				sButtons.get(i).setSelected(true);
+				tButtons.get(i).setSelected(true);
 			else
-				sButtons.get(i).setSelected(false);
+				tButtons.get(i).setSelected(false);
 		}
 		
 	}
@@ -151,10 +154,10 @@ public class TalkBoxGui extends JFrame {
 		clips.add(yes);
 		clips.add(hell_yeah);
 
-		sButtons.add(btnSound1);
-		sButtons.add(btnSound2);
-		sButtons.add(btnSound3);
-		sButtons.add(btnSound4);
+		tButtons.add(btnSound1);
+		tButtons.add(btnSound2);
+		tButtons.add(btnSound3);
+		tButtons.add(btnSound4);
 
 	}
 
@@ -168,22 +171,22 @@ public class TalkBoxGui extends JFrame {
 		Display.setFont(new Font("Stencil", Font.BOLD, 48));
 		Display.setBounds(10, 301, 670, 200);
 
-		btnSound1 = new JButton("NO");
+		btnSound1 = new JToggleButton("NO");
 		btnSound1.setFont(new Font("Stencil", Font.BOLD, 18));
 		contentPane.add(btnSound1);
 		btnSound1.setBounds(10, 11, 160, 100);
 
-		btnSound2 = new JButton("Strong NO");
+		btnSound2 = new JToggleButton("Strong NO");
 		btnSound2.setFont(new Font("Stencil", Font.BOLD, 18));
 		contentPane.add(btnSound2);
 		btnSound2.setBounds(180, 11, 160, 100);
 
-		btnSound3 = new JButton("YES");
+		btnSound3 = new JToggleButton("YES");
 		btnSound3.setFont(new Font("Stencil", Font.BOLD, 18));
 		contentPane.add(btnSound3);
 		btnSound3.setBounds(350, 11, 160, 100);
 
-		btnSound4 = new JButton("HELL YEAH");
+		btnSound4 = new JToggleButton("HELL YEAH");
 		btnSound4.setFont(new Font("Stencil", Font.BOLD, 18));
 		contentPane.add(btnSound4);
 		btnSound4.setBounds(520, 11, 160, 100);
