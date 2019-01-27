@@ -1,38 +1,33 @@
 package talkAppV1;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.FlowLayout;
-import javax.swing.JLabel;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.AbstractButton;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.awt.event.ActionEvent;
-import java.awt.Font;
-import javax.swing.SwingConstants;
-import java.awt.Dialog.ModalExclusionType;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import javax.swing.JTree;
-import javax.swing.JTextPane;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JToggleButton;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 public class TalkBoxGui extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JLabel Display, ButtonDisplay;
 	private JToggleButton btnSound1, btnSound2, btnSound3, btnSound4;
 	private JButton btnPlaySound;
@@ -42,9 +37,8 @@ public class TalkBoxGui extends JFrame {
 			yes = "TalkBoxData/yes.wav", hell_yeah = "TalkBoxData/hell_yeah.wav";
 	private AudioInputStream audioIn;
 	private Clip clip = null;
-	private ArrayList<String> clips = new ArrayList();
-	private ArrayList<JButton> sButtons = new ArrayList();
-	private ArrayList<JToggleButton> tButtons = new ArrayList();
+	private ArrayList<String> clips = new ArrayList<String>();
+	private ArrayList<JToggleButton> tButtons = new ArrayList<JToggleButton>();
 
 	/**
 	 * Launch the application.
@@ -69,7 +63,7 @@ public class TalkBoxGui extends JFrame {
 
 		setAlwaysOnTop(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 711, 551);
+		setBounds(100, 100, 711, 532);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -81,8 +75,6 @@ public class TalkBoxGui extends JFrame {
 		btnSound1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				selectBtn(0);
-				//playSound(no);
-				//Display.setText(name + " Pressed!");
 				getName(no);
 				ButtonDisplay.setText(name + " Selected");
 				
@@ -92,8 +84,6 @@ public class TalkBoxGui extends JFrame {
 		btnSound2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				selectBtn(1);
-				//playSound(strong_no);
-				//Display.setText(name + " Pressed!");
 				getName(strong_no);
 				ButtonDisplay.setText(name + " Selected");
 			}
@@ -102,8 +92,6 @@ public class TalkBoxGui extends JFrame {
 		btnSound3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				selectBtn(2);
-				//playSound(yes);
-				//Display.setText(name + " Pressed!");
 				getName(yes);
 				ButtonDisplay.setText(name + " Selected");
 			}
@@ -112,8 +100,6 @@ public class TalkBoxGui extends JFrame {
 		btnSound4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				selectBtn(3);
-				//playSound(hell_yeah);
-				//Display.setText(name + " Pressed!");
 				getName(hell_yeah);
 				ButtonDisplay.setText(name + " Selected");
 			}
@@ -121,9 +107,9 @@ public class TalkBoxGui extends JFrame {
 
 		btnPlaySound.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				for(int i=0;i<sButtons.size();i++)
+				for(int i=0;i<tButtons.size();i++)
 				{
-					if(sButtons.get(i).isSelected())
+					if(tButtons.get(i).isSelected())
 					{
 						playSound(clips.get(i));
 						Display.setText(name + " Pressed!");						
@@ -139,7 +125,7 @@ public class TalkBoxGui extends JFrame {
 
 	private void selectBtn(int x) {
 		
-		for (int i = 0; i < sButtons.size(); i++) {
+		for (int i = 0; i < tButtons.size(); i++) {
 			if (i == x)
 				tButtons.get(i).setSelected(true);
 			else
@@ -169,7 +155,7 @@ public class TalkBoxGui extends JFrame {
 		contentPane.add(Display);
 		Display.setHorizontalAlignment(SwingConstants.CENTER);
 		Display.setFont(new Font("Stencil", Font.BOLD, 48));
-		Display.setBounds(10, 301, 670, 200);
+		Display.setBounds(10, 320, 670, 157);
 
 		btnSound1 = new JToggleButton("NO");
 		btnSound1.setFont(new Font("Stencil", Font.BOLD, 18));
@@ -193,13 +179,13 @@ public class TalkBoxGui extends JFrame {
 
 		btnPlaySound = new JButton("Play Sound");
 		btnPlaySound.setFont(new Font("Stencil", Font.BOLD, 20));
-		btnPlaySound.setBounds(10, 233, 670, 100);
+		btnPlaySound.setBounds(10, 209, 670, 100);
 		contentPane.add(btnPlaySound);
 		
 		ButtonDisplay = new JLabel("");
 		ButtonDisplay.setHorizontalAlignment(SwingConstants.CENTER);
-		ButtonDisplay.setFont(new Font("Dialog", Font.BOLD, 40));
-		ButtonDisplay.setBounds(38, 120, 608, 76);
+		ButtonDisplay.setFont(new Font("Stencil", Font.BOLD, 40));
+		ButtonDisplay.setBounds(10, 122, 670, 76);
 		contentPane.add(ButtonDisplay);
 	}
 
