@@ -21,6 +21,8 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class TalkBoxGui extends JFrame {
 
@@ -30,7 +32,7 @@ public class TalkBoxGui extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JLabel Display, ButtonDisplay;
 	private JToggleButton btnSound1, btnSound2, btnSound3, btnSound4;
-	private JButton btnPlaySound;
+	private JButton btnPlaySound, btnExit, btnConfigure;
 	private JPanel contentPane;
 	private File audio;
 	private String name, no = "TalkBoxData/no.wav", strong_no = "TalkBoxData/strong_no.wav",
@@ -63,7 +65,7 @@ public class TalkBoxGui extends JFrame {
 
 		setAlwaysOnTop(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 711, 532);
+		setBounds(100, 100, 711, 622);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -117,9 +119,26 @@ public class TalkBoxGui extends JFrame {
 				}
 				
 			}
+		});		
+
+		btnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});		
+
+		btnConfigure.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ConfigurationApp();
+			}
 		});
 		
-		
+	}
+
+	protected void ConfigurationApp() {
+		this.setVisible(false);
+		new ConfigurationGUI().setVisible(true);
 		
 	}
 
@@ -187,6 +206,16 @@ public class TalkBoxGui extends JFrame {
 		ButtonDisplay.setFont(new Font("Stencil", Font.BOLD, 40));
 		ButtonDisplay.setBounds(10, 122, 670, 76);
 		contentPane.add(ButtonDisplay);
+		
+		btnExit = new JButton("Exit");
+		btnExit.setFont(new Font("Stencil", Font.BOLD, 20));
+		btnExit.setBounds(591, 514, 89, 58);
+		contentPane.add(btnExit);
+		
+		btnConfigure = new JButton("Configure");
+		btnConfigure.setFont(new Font("Stencil", Font.BOLD, 20));
+		btnConfigure.setBounds(10, 514, 582, 58);
+		contentPane.add(btnConfigure);
 	}
 
 	private void getClip() {
