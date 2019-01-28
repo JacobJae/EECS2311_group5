@@ -25,7 +25,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class TalkBoxGui extends JFrame {
-
+// delete this
 	/**
 	 * 
 	 */
