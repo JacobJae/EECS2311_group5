@@ -142,7 +142,7 @@ public class TalkBoxGui extends JFrame {
 
 	protected void ConfigurationApp() {
 		this.setVisible(false);
-		new ConfigurationGUI().setVisible(true);
+		new ConfigurationGUI(clips).setVisible(true);
 
 	}
 
