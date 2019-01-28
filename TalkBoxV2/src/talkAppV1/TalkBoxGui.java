@@ -30,9 +30,9 @@ public class TalkBoxGui extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JLabel Display, ButtonDisplay;
+	private JLabel Display;
 	private JToggleButton btnSound1, btnSound2, btnSound3, btnSound4;
-	private JButton btnPlaySound, btnExit, btnConfigure;
+	private JButton btnExit, btnConfigure;
 	private JPanel contentPane;
 	private File audio;
 	private String name, no = "TalkBoxData/no.wav", strong_no = "TalkBoxData/strong_no.wav",
@@ -82,7 +82,7 @@ public class TalkBoxGui extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				selectBtn(0);
 				getName(no);
-				ButtonDisplay.setText(name + " Selected");
+				playSound(clips.get(0));
 
 			}
 		});
@@ -91,7 +91,7 @@ public class TalkBoxGui extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				selectBtn(1);
 				getName(strong_no);
-				ButtonDisplay.setText(name + " Selected");
+				playSound(clips.get(1));
 			}
 		});
 
@@ -99,7 +99,7 @@ public class TalkBoxGui extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				selectBtn(2);
 				getName(yes);
-				ButtonDisplay.setText(name + " Selected");
+				playSound(clips.get(2));
 			}
 		});
 
@@ -107,10 +107,11 @@ public class TalkBoxGui extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				selectBtn(3);
 				getName(hell_yeah);
-				ButtonDisplay.setText(name + " Selected");
+				playSound(clips.get(3));
 			}
 		});
-
+		
+		/*
 		btnPlaySound.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				for (int i = 0; i < tButtons.size(); i++) {
@@ -122,7 +123,8 @@ public class TalkBoxGui extends JFrame {
 
 			}
 		});
-
+		 */
+		
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
@@ -203,17 +205,6 @@ public class TalkBoxGui extends JFrame {
 		btnSound4.setFont(new Font("Stencil", Font.BOLD, 18));
 		contentPane.add(btnSound4);
 		btnSound4.setBounds(520, 11, 160, 100);
-
-		btnPlaySound = new JButton("Play Sound");
-		btnPlaySound.setFont(new Font("Stencil", Font.BOLD, 20));
-		btnPlaySound.setBounds(10, 209, 670, 100);
-		contentPane.add(btnPlaySound);
-
-		ButtonDisplay = new JLabel("");
-		ButtonDisplay.setHorizontalAlignment(SwingConstants.CENTER);
-		ButtonDisplay.setFont(new Font("Stencil", Font.BOLD, 40));
-		ButtonDisplay.setBounds(10, 122, 670, 76);
-		contentPane.add(ButtonDisplay);
 
 		btnExit = new JButton("Exit");
 		btnExit.setFont(new Font("Stencil", Font.BOLD, 20));
