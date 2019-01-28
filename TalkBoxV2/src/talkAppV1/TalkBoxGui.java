@@ -36,7 +36,11 @@ public class TalkBoxGui extends JFrame {
 	private JPanel contentPane;
 	private File audio;
 	private String name, no = "TalkBoxData/no.wav", strong_no = "TalkBoxData/strong_no.wav",
-			yes = "TalkBoxData/yes.wav", hell_yeah = "TalkBoxData/hell_yeah.wav";
+			yes = "TalkBoxData/yes.wav", hell_yeah = "TalkBoxData/hell_yeah.wav", bruh = "TalkBoxData/bruh.mp3",
+			bye_have_a_beautiful_time = "TalkBoxData/bye_have_a_beautiful_time.mp3",
+			hello_cherie = "TalkBoxData/hello_cherie.mp3", hello_there = "TalkBoxData/hello_there.mp3",
+			hello = "TalkBoxData/hello.mp3", just_do_it = "TalkBoxData/just_do_it.mp3",
+			tadaah = "TalkBoxData/tadaah.mp3";
 	private AudioInputStream audioIn;
 	private Clip clip = null;
 	private ArrayList<String> clips = new ArrayList<String>();
@@ -79,7 +83,7 @@ public class TalkBoxGui extends JFrame {
 				selectBtn(0);
 				getName(no);
 				ButtonDisplay.setText(name + " Selected");
-				
+
 			}
 		});
 
@@ -109,23 +113,21 @@ public class TalkBoxGui extends JFrame {
 
 		btnPlaySound.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				for(int i=0;i<tButtons.size();i++)
-				{
-					if(tButtons.get(i).isSelected())
-					{
+				for (int i = 0; i < tButtons.size(); i++) {
+					if (tButtons.get(i).isSelected()) {
 						playSound(clips.get(i));
-						Display.setText(name + " Pressed!");						
-					}						
+						Display.setText(name + " Pressed!");
+					}
 				}
-				
+
 			}
-		});		
+		});
 
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
-		});		
+		});
 
 		btnConfigure.addMouseListener(new MouseAdapter() {
 			@Override
@@ -133,24 +135,24 @@ public class TalkBoxGui extends JFrame {
 				ConfigurationApp();
 			}
 		});
-		
+
 	}
 
 	protected void ConfigurationApp() {
 		this.setVisible(false);
 		new ConfigurationGUI().setVisible(true);
-		
+
 	}
 
 	private void selectBtn(int x) {
-		
+
 		for (int i = 0; i < tButtons.size(); i++) {
 			if (i == x)
 				tButtons.get(i).setSelected(true);
 			else
 				tButtons.get(i).setSelected(false);
 		}
-		
+
 	}
 
 	private void addComp() {
@@ -158,6 +160,12 @@ public class TalkBoxGui extends JFrame {
 		clips.add(strong_no);
 		clips.add(yes);
 		clips.add(hell_yeah);
+		clips.add(bye_have_a_beautiful_time);
+		clips.add(hello);
+		clips.add(hello_cherie);
+		clips.add(hello_there);
+		clips.add(bruh);
+		clips.add(tadaah);
 
 		tButtons.add(btnSound1);
 		tButtons.add(btnSound2);
@@ -200,18 +208,18 @@ public class TalkBoxGui extends JFrame {
 		btnPlaySound.setFont(new Font("Stencil", Font.BOLD, 20));
 		btnPlaySound.setBounds(10, 209, 670, 100);
 		contentPane.add(btnPlaySound);
-		
+
 		ButtonDisplay = new JLabel("");
 		ButtonDisplay.setHorizontalAlignment(SwingConstants.CENTER);
 		ButtonDisplay.setFont(new Font("Stencil", Font.BOLD, 40));
 		ButtonDisplay.setBounds(10, 122, 670, 76);
 		contentPane.add(ButtonDisplay);
-		
+
 		btnExit = new JButton("Exit");
 		btnExit.setFont(new Font("Stencil", Font.BOLD, 20));
 		btnExit.setBounds(591, 514, 89, 58);
 		contentPane.add(btnExit);
-		
+
 		btnConfigure = new JButton("Configure");
 		btnConfigure.setFont(new Font("Stencil", Font.BOLD, 20));
 		btnConfigure.setBounds(10, 514, 582, 58);
