@@ -39,9 +39,9 @@ import java.nio.file.Paths;
  * Serialized object will be saved on "TalkBoxData" as '.tbc' extension
  * Object contains
  * <ul>
- * 	<li>Coffee</li>
- * 	<li>Tea</li>
- * 	<li>Milk</li>
+ * 	<li>{@code int} numberOfAudioButtons</li>
+ * 	<li>{@code int} numberOfAudioSets</li>
+ * 	<li>{@code String[][]} audioFileNames</li>
  * </ul>
  *
  * @author  Sangheon Jae
@@ -94,7 +94,6 @@ public class TalkBox implements TalkBoxConfiguration {
      */
 	@Override
 	public int getNumberOfAudioButtons() {
-		// TODO Auto-generated method stub
 		return numberOfAudioButtons;
 	}
 
@@ -105,7 +104,6 @@ public class TalkBox implements TalkBoxConfiguration {
      */
 	@Override
 	public int getNumberOfAudioSets() {
-		// TODO Auto-generated method stub
 		return numberOfAudioSets;
 	}
 
@@ -116,7 +114,6 @@ public class TalkBox implements TalkBoxConfiguration {
      */
 	@Override
 	public int getTotalNumberOfButtons() {
-		// TODO Auto-generated method stub
 		return numberOfAudioButtons * numberOfAudioSets;
 	}
 
@@ -126,7 +123,6 @@ public class TalkBox implements TalkBoxConfiguration {
      */
 	@Override
 	public Path getRelativePathToAudioFiles() {
-		// TODO Auto-generated method stub
 		return Paths.get("TalkBoxData//");
 	}
 
@@ -139,7 +135,6 @@ public class TalkBox implements TalkBoxConfiguration {
      */
 	@Override
 	public String[][] getAudioFileNames() {
-		// TODO Auto-generated method stub
 		return audioFileNames;
 	}
 
