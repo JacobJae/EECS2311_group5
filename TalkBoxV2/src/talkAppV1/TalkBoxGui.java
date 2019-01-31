@@ -20,6 +20,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -42,10 +43,10 @@ public class TalkBoxGui extends JFrame {
 	 */
 	private TalkBox talkbox;
 	private String[][] audioFileNames;
-	private int width = 711, height = 622;
-	
-	
-	
+	private JToggleButton[][] audioFileButtons;
+	private ButtonGroup btngroup;
+	private int currentBtnSet = 0, width = 711, height = 622;
+
 	private JLabel Display;
 	private JButton btnExit, btnConfigure, btnSwap;
 	private JPanel contentPane;
@@ -75,6 +76,7 @@ public class TalkBoxGui extends JFrame {
 	 */
 	public TalkBoxGui() {
 		setAlwaysOnTop(true);
+		setTitle("Simulator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, width, height);
 		contentPane = new JPanel();
@@ -82,35 +84,9 @@ public class TalkBoxGui extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		setClip();
 		getSetting();
-		audioFileNames = talkbox.getAudioFileNames();
 		init();
-		putButtons(0);
-		
-		btnExit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		});
-		
-		btnConfigure.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				createConfigure();
-			}
-		});
-		
-		btnSwap.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				putButtons(1);
-			}
-		});
-		
-		
-
+		putButtons(currentBtnSet);
 //		btnConfigure.addMouseListener(new MouseAdapter() {
 //			@Override
 //			public void mouseClicked(MouseEvent e) {
@@ -119,49 +95,27 @@ public class TalkBoxGui extends JFrame {
 //		});
 	}
 
-	/*
-	 * create button in set i
-	*/
-	private void putButtons(int setNumber) {
-		for (int i = 0; i < talkbox.getNumberOfAudioButtons(); i++) {
-			String fileName = audioFileNames[setNumber][i];
-			if (fileName != null) {
-				int btnWidth = (width - talkbox.getNumberOfAudioButtons() * 10 - 10) / talkbox.getNumberOfAudioButtons();
-				JToggleButton btn = new JToggleButton(getName(fileName));
-				btn.setFont(new Font("Stencil", Font.BOLD, 18));
-				contentPane.add(btn);
-				btn.setBounds(10 + i * btnWidth + i * 10, 11, btnWidth, 100);
-				btn.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						playSound(fileName);
-					}
-				});
-			}
-		}
-	}
-
 	private void getSetting() {
 		try {
-		    FileInputStream fileInputStream = new FileInputStream("TalkBoxData/configure.tbc");
-		    ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-		    talkbox = (TalkBox) objectInputStream.readObject();
-		    objectInputStream.close();
-		} catch (IOException | ClassNotFoundException e) {
+			btngroup = new ButtonGroup();
+			clip = AudioSystem.getClip();
+			FileInputStream fileInputStream = new FileInputStream("TalkBoxData/configure.tbc");
+			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+			talkbox = (TalkBox) objectInputStream.readObject();
+			audioFileNames = talkbox.getAudioFileNames();
+			audioFileButtons = new JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
+			objectInputStream.close();
+		} catch (IOException | ClassNotFoundException | LineUnavailableException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	protected void ConfigurationApp() {
-		this.setVisible(false);
-		new ConfigurationGUI(clips).setVisible(true);
-	}
 
 	private void init() {
-		btnExit = new JButton("Swap");
-		btnExit.setFont(new Font("Stencil", Font.BOLD, 20));
-		btnExit.setBounds(300, 250, 100, 58);
-		contentPane.add(btnExit);
-		
+		btnSwap = new JButton("Swap");
+		btnSwap.setFont(new Font("Stencil", Font.BOLD, 20));
+		btnSwap.setBounds(300, 250, 100, 58);
+		contentPane.add(btnSwap);
+
 		Display = new JLabel("BUTTON PRESSED!");
 		contentPane.add(Display);
 		Display.setHorizontalAlignment(SwingConstants.CENTER);
@@ -177,18 +131,67 @@ public class TalkBoxGui extends JFrame {
 		btnConfigure.setFont(new Font("Stencil", Font.BOLD, 20));
 		btnConfigure.setBounds(10, 514, 582, 58);
 		contentPane.add(btnConfigure);
+
+		btnExit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+
+		btnConfigure.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				createConfigure();
+			}
+		});
+
+		btnSwap.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for (int i = 0; i < talkbox.getNumberOfAudioButtons(); i++) {
+					JToggleButton btn = audioFileButtons[currentBtnSet][i];
+					if (btn != null)
+						getContentPane().remove(btn);
+				}
+				contentPane.repaint();
+				currentBtnSet = (currentBtnSet + 1) % talkbox.getNumberOfAudioSets();
+				putButtons(currentBtnSet);
+			}
+		});
+	}
+
+	/*
+	 * create button in button set setNumber
+	 */
+	private void putButtons(int setNumber) {
+		for (int i = 0; i < talkbox.getNumberOfAudioButtons(); i++) {
+			String fileName = audioFileNames[setNumber][i];
+			if (fileName != null) {
+				int btnWidth = (width - talkbox.getNumberOfAudioButtons() * 10 - 10)
+						/ talkbox.getNumberOfAudioButtons();
+				JToggleButton btn = new JToggleButton(getName(fileName));
+				btn.setFont(new Font("Stencil", Font.BOLD, 18));
+				btn.setBounds(10 + i * btnWidth + i * 10, 11, btnWidth, 100);
+				btn.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						playSound(fileName);
+					}
+				});
+				btngroup.add(btn);
+				audioFileButtons[setNumber][i] = btn;
+				contentPane.add(btn);
+			}
+		}
 	}
 
 	private void playSound(String audioFile) {
-		System.out.println("audioFile");
 		clip.stop();
 		clip.close();
 
 		audio = new File(audioFile);
 		try {
 			audioIn = AudioSystem.getAudioInputStream(audio.toURI().toURL());
-//			Clip clipw = AudioSystem.getClip();
-			
 			clip.open(audioIn);
 			clip.start();
 		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException ee) {
@@ -196,15 +199,15 @@ public class TalkBoxGui extends JFrame {
 		}
 	}
 
-	private void setClip() {
-		try {
-			clip = AudioSystem.getClip();
-		} catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	private String getName(String audioFile) {
+		return audioFile.substring(audioFile.indexOf("/") + 1, audioFile.indexOf("."));
 	}
-	
+
+	protected void ConfigurationApp() {
+		this.setVisible(false);
+		new ConfigurationGUI(clips).setVisible(true);
+	}
+
 	private void setVolume() {
 		FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 		double gain = 0.25;
@@ -212,44 +215,38 @@ public class TalkBoxGui extends JFrame {
 		gainControl.setValue(dB);
 	}
 
-	private String getName(String audioFile) {
-		return audioFile.substring(audioFile.indexOf("/") + 1, audioFile.indexOf("."));
-	}
-	
 	private void createConfigure() {
-		EventQueue.invokeLater(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                JFrame frame = new JFrame("Test");
-                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                JPanel panel = new JPanel();
-                panel.setOpaque(true);
-                JTextArea textArea = new JTextArea(15, 50);
-                textArea.setWrapStyleWord(true);
-                textArea.setEditable(false);
-                textArea.setFont(Font.getFont(Font.SANS_SERIF));
-                JScrollPane scroller = new JScrollPane(textArea);
-                scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-                scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-                JPanel inputpanel = new JPanel();
-                inputpanel.setLayout(new FlowLayout());
-                JTextField input = new JTextField(20);
-                JButton button = new JButton("Enter");
-                DefaultCaret caret = (DefaultCaret) textArea.getCaret();
-                caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-                panel.add(scroller);
-                inputpanel.add(input);
-                inputpanel.add(button);
-                panel.add(inputpanel);
-                frame.getContentPane().add(BorderLayout.CENTER, panel);
-                frame.pack();
-                frame.setLocationByPlatform(true);
-                frame.setVisible(true);
-                frame.setResizable(false);
-                input.requestFocus();
-            }
-        });
+		EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				JFrame frame = new JFrame("Test");
+				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				JPanel panel = new JPanel();
+				panel.setOpaque(true);
+				JTextArea textArea = new JTextArea(15, 50);
+				textArea.setWrapStyleWord(true);
+				textArea.setEditable(false);
+				textArea.setFont(Font.getFont(Font.SANS_SERIF));
+				JScrollPane scroller = new JScrollPane(textArea);
+				scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+				scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+				JPanel inputpanel = new JPanel();
+				inputpanel.setLayout(new FlowLayout());
+				JTextField input = new JTextField(20);
+				JButton button = new JButton("Enter");
+				DefaultCaret caret = (DefaultCaret) textArea.getCaret();
+				caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+				panel.add(scroller);
+				inputpanel.add(input);
+				inputpanel.add(button);
+				panel.add(inputpanel);
+				frame.getContentPane().add(BorderLayout.CENTER, panel);
+				frame.pack();
+				frame.setLocationByPlatform(true);
+				frame.setVisible(true);
+				frame.setResizable(false);
+				input.requestFocus();
+			}
+		});
 	}
 }

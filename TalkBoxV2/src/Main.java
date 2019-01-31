@@ -61,6 +61,7 @@ public class Main {
 		    FileInputStream fileInputStream = new FileInputStream("TalkBoxData/configure.tbc");
 		    ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 		    TalkBox t = (TalkBox) objectInputStream.readObject();
+		    System.out.println(t.getNumberOfAudioSets());
 		    objectInputStream.close();
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();

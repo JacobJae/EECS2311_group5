@@ -92,8 +92,4 @@ public class Sound {
 		String audioName = "";
 		return audioName;
 	}
-	
-//	private void getName(String audioFile) {
-//		name = audioFile.substring(audioFile.indexOf("/") + 1, audioFile.indexOf("."));
-//	}
 }
