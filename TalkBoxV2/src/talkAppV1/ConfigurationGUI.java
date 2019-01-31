@@ -9,9 +9,17 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JList;
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.AbstractListModel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
@@ -32,6 +40,9 @@ public class ConfigurationGUI extends JFrame {
 	private ArrayList<String> clips = new ArrayList<String>(), selected = new ArrayList(),
 			nonSelected = new ArrayList();
 	private String name;
+	private Sound sound;
+	private TalkBox talkbox;
+	private String[][] audioFileNames;
 
 	/**
 	 * Launch the application.
@@ -45,24 +56,65 @@ public class ConfigurationGUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ConfigurationGUI(ArrayList clips) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public ConfigurationGUI(TalkBoxGui talkbox) {
+		talkbox.setVisible(false);
+		setVisible(true);
+		setTitle("Configuration");
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		// create custom close operation
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				e.getWindow().dispose();
+				talkbox.setVisible(true);
+				talkbox.reset();
+			}
+		});
 		setBounds(100, 100, 717, 535);
 		contentPane = new JPanel();
 		contentPane.setSize(new Dimension(400, 400));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 
-		this.clips = clips;
-		addClips();
-		init();
-		addAction();
-		setNames();
+//		this.clips = clips;
+//		addClips();
+//		init();
+//		addAction();
+//		setNames();
+	}
+	
+	/*
+	 * Get .tbc settings and initiate sound, buttongroup, talkbox object
+	 */
+	private void getSetting() {
+		try {
+			sound = new Sound();
+			FileInputStream fileInputStream = new FileInputStream("TalkBoxData/configure.tbc");
+			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+			talkbox = (TalkBox) objectInputStream.readObject();
+			audioFileNames = talkbox.getAudioFileNames();
+			objectInputStream.close();
+		} catch (IOException | ClassNotFoundException | LineUnavailableException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * Set .tbc settings based on configuration
+	 */
+	private void SetSetting() {
+		try {
+			FileOutputStream fileOutputStream = new FileOutputStream("TalkBoxData/configure.tbc");
+		    ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+		    objectOutputStream.writeObject(talkbox);
+		    objectOutputStream.flush();
+		    objectOutputStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-
 	private void setNames() {
-				
+
 	}
 
 	private void addClips() {
@@ -187,7 +239,7 @@ public class ConfigurationGUI extends JFrame {
 	protected void removeSound(int i) {
 
 	}
-	
+
 	private void getName(String audioFile) {
 		name = audioFile.substring(audioFile.indexOf("/") + 1, audioFile.indexOf("."));
 	}

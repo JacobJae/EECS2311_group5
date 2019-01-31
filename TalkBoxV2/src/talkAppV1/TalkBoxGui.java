@@ -1,11 +1,15 @@
 package talkAppV1;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -45,7 +49,8 @@ public class TalkBoxGui extends JFrame {
 	private String[][] audioFileNames;
 	private JToggleButton[][] audioFileButtons;
 	private ButtonGroup btngroup;
-	private int currentBtnSet = 0, width = 711, height = 622;
+	private Sound sound;
+	private int currentBtnSet = 0, width, height;
 
 	private JLabel Display;
 	private JButton btnExit, btnConfigure, btnSwap;
@@ -72,33 +77,38 @@ public class TalkBoxGui extends JFrame {
 	}
 
 	/**
-	 * Create the frame.
+	 * Create default Simulator the frame.
 	 */
 	public TalkBoxGui() {
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//		test Full HD resolution
+//		width = 1920 / 2;
+//		height = 1080 / 2;
+		width = (int) screenSize.getWidth() / 2;
+		height = (int) screenSize.getHeight() / 2;
 		setAlwaysOnTop(true);
 		setTitle("Simulator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, width, height);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
 
 		getSetting();
 		init();
 		putButtons(currentBtnSet);
-//		btnConfigure.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				ConfigurationApp();
-//			}
-//		});
 	}
 
+	public void reset() {
+		getSetting();
+		init();
+		putButtons(currentBtnSet);
+	}
+
+	/*
+	 * Get .tbc settings and initiate sound, buttongroup, talkbox object
+	 */
 	private void getSetting() {
 		try {
+			sound = new Sound();
 			btngroup = new ButtonGroup();
-			clip = AudioSystem.getClip();
 			FileInputStream fileInputStream = new FileInputStream("TalkBoxData/configure.tbc");
 			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 			talkbox = (TalkBox) objectInputStream.readObject();
@@ -111,25 +121,30 @@ public class TalkBoxGui extends JFrame {
 	}
 
 	private void init() {
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+
 		btnSwap = new JButton("Swap");
-		btnSwap.setFont(new Font("Stencil", Font.BOLD, 20));
-		btnSwap.setBounds(300, 250, 100, 58);
+		btnSwap.setFont(new Font("Stencil", Font.BOLD, width / 50));
+		btnSwap.setBounds(width / 2 - width / 16, height / 2 - height / 20, width / 8, height / 10);
 		contentPane.add(btnSwap);
 
 		Display = new JLabel("BUTTON PRESSED!");
 		contentPane.add(Display);
 		Display.setHorizontalAlignment(SwingConstants.CENTER);
-		Display.setFont(new Font("Stencil", Font.BOLD, 48));
-		Display.setBounds(10, 320, 670, 157);
+		Display.setFont(new Font("Stencil", Font.BOLD, width / 50));
+		Display.setBounds(width / 2 - width / 8, height / 2 + height / 20, width / 4, height / 10);
 
 		btnExit = new JButton("Exit");
-		btnExit.setFont(new Font("Stencil", Font.BOLD, 20));
-		btnExit.setBounds(591, 514, 89, 58);
+		btnExit.setFont(new Font("Stencil", Font.BOLD, width / 50));
+		btnExit.setBounds(width / 30 * 23, height - height / 3, width / 30 * 5, height / 10);
 		contentPane.add(btnExit);
 
 		btnConfigure = new JButton("Configure");
-		btnConfigure.setFont(new Font("Stencil", Font.BOLD, 20));
-		btnConfigure.setBounds(10, 514, 582, 58);
+		btnConfigure.setFont(new Font("Stencil", Font.BOLD, width / 50));
+		btnConfigure.setBounds(width / 30, height - height / 3, width / 30 * 21, height / 10);
 		contentPane.add(btnConfigure);
 
 		btnExit.addActionListener(new ActionListener() {
@@ -168,14 +183,15 @@ public class TalkBoxGui extends JFrame {
 		for (int i = 0; i < talkbox.getNumberOfAudioButtons(); i++) {
 			String fileName = audioFileNames[setNumber][i];
 			if (fileName != null) {
-				int btnWidth = (width - talkbox.getNumberOfAudioButtons() * 10 - 10)
+				int gap = width / 30, btnWidth = (width - (talkbox.getNumberOfAudioButtons() + 2) * gap)
 						/ talkbox.getNumberOfAudioButtons();
-				JToggleButton btn = new JToggleButton(getName(fileName));
-				btn.setFont(new Font("Stencil", Font.BOLD, 18));
-				btn.setBounds(10 + i * btnWidth + i * 10, 11, btnWidth, 100);
+				JToggleButton btn = new JToggleButton(
+						fileName.substring(fileName.indexOf("/") + 1, fileName.indexOf(".")));
+				btn.setFont(new Font("Stencil", Font.BOLD, width / 50));
+				btn.setBounds(gap + i * btnWidth + i * gap, height / 30, btnWidth, height / 10);
 				btn.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						playSound(fileName);
+						sound.playSound(fileName);
 					}
 				});
 				btngroup.add(btn);
@@ -185,68 +201,47 @@ public class TalkBoxGui extends JFrame {
 		}
 	}
 
-	private void playSound(String audioFile) {
-		clip.stop();
-		clip.close();
-
-		audio = new File(audioFile);
-		try {
-			audioIn = AudioSystem.getAudioInputStream(audio.toURI().toURL());
-			clip.open(audioIn);
-			clip.start();
-		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException ee) {
-			ee.printStackTrace();
-		}
-	}
-
-	private String getName(String audioFile) {
-		return audioFile.substring(audioFile.indexOf("/") + 1, audioFile.indexOf("."));
-	}
-
-	protected void ConfigurationApp() {
-		this.setVisible(false);
-		new ConfigurationGUI(clips).setVisible(true);
-	}
-
-	private void setVolume() {
-		FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-		double gain = 0.25;
-		float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
-		gainControl.setValue(dB);
-	}
-
 	private void createConfigure() {
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				JFrame frame = new JFrame("Test");
-				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				JPanel panel = new JPanel();
-				panel.setOpaque(true);
-				JTextArea textArea = new JTextArea(15, 50);
-				textArea.setWrapStyleWord(true);
-				textArea.setEditable(false);
-				textArea.setFont(Font.getFont(Font.SANS_SERIF));
-				JScrollPane scroller = new JScrollPane(textArea);
-				scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-				scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-				JPanel inputpanel = new JPanel();
-				inputpanel.setLayout(new FlowLayout());
-				JTextField input = new JTextField(20);
-				JButton button = new JButton("Enter");
-				DefaultCaret caret = (DefaultCaret) textArea.getCaret();
-				caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-				panel.add(scroller);
-				inputpanel.add(input);
-				inputpanel.add(button);
-				panel.add(inputpanel);
-				frame.getContentPane().add(BorderLayout.CENTER, panel);
-				frame.pack();
-				frame.setLocationByPlatform(true);
-				frame.setVisible(true);
-				frame.setResizable(false);
-				input.requestFocus();
-			}
-		});
+		ConfigurationGUI gui = new ConfigurationGUI(this);
+//		setTitle("Simulator");
+//		setVisible(false);
+//		setVisible(true);
+//		contentPane.removeAll();
+//		contentPane.repaint();
+
+		// JFrame parentFrame = this;
+//		parentFrame.setVisible(false);
+//		EventQueue.invokeLater(new Runnable() {
+//			@Override
+//			public void run() {
+//				JFrame frame = new JFrame("Test");
+//				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//				JPanel panel = new JPanel();
+//				panel.setOpaque(true);
+//				JTextArea textArea = new JTextArea(15, 50);
+//				textArea.setWrapStyleWord(true);
+//				textArea.setEditable(false);
+//				textArea.setFont(Font.getFont(Font.SANS_SERIF));
+//				JScrollPane scroller = new JScrollPane(textArea);
+//				scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+//				scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+//				JPanel inputpanel = new JPanel();
+//				inputpanel.setLayout(new FlowLayout());
+//				JTextField input = new JTextField(20);
+//				JButton button = new JButton("Enter");
+//				DefaultCaret caret = (DefaultCaret) textArea.getCaret();
+//				caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+//				panel.add(scroller);
+//				inputpanel.add(input);
+//				inputpanel.add(button);
+//				panel.add(inputpanel);
+//				frame.getContentPane().add(BorderLayout.CENTER, panel);
+//				frame.pack();
+//				frame.setLocationByPlatform(true);
+//				frame.setVisible(true);
+//				frame.setResizable(false);
+//				input.requestFocus();
+//			}
+//		});
 	}
 }
