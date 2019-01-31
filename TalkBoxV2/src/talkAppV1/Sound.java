@@ -35,14 +35,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
- * The {@code TalkBox} class contains user setting of TalkBox.
- * Serialized object will be saved on "TalkBoxData" as '.tbc' extension
- * Object contains
- * <ul>
- * 	<li>{@code int} numberOfAudioButtons</li>
- * 	<li>{@code int} numberOfAudioSets</li>
- * 	<li>{@code String[][]} audioFileNames</li>
- * </ul>
+ * The {@code Sound} class provide sound features.
  *
  * @author  Sangheon Jae
  * @author  Karmit Patel
@@ -50,9 +43,16 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  */
 
 public class Sound {
+	
+	/**
+	 * Private fields
+	 */
 	private AudioInputStream audioIn;
 	private Clip clip = null;
 	
+	/**
+     * Initializes a newly created {@code Sound} object with null clip
+     */
 	public Sound() {
 		try {
 			clip = AudioSystem.getClip();
@@ -62,6 +62,11 @@ public class Sound {
 		}
 	}
 	
+	/**
+     * Play sound file with '.wav' extension
+     * 
+     * @param audioFile relative path of audio file
+     */
 	public void playSound(String audioFile) {
 		clip.stop();
 		clip.close();
@@ -78,6 +83,11 @@ public class Sound {
 		}
 	}
 	
+	/**
+     * Record sound file with '.wav' extension and save it into 'TalkBoxData' directory
+     * 
+     * @return String relative path of sound file
+     */
 	public String recordSound() {
 		String audioName = "";
 		return audioName;

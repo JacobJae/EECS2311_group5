@@ -52,7 +52,7 @@ import java.nio.file.Paths;
 public class TalkBox implements TalkBoxConfiguration {
 	
 	/**
-	 * 
+	 * Private fields
 	 */
 	private int numberOfAudioButtons;
 	private int numberOfAudioSets;
