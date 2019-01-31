@@ -35,12 +35,19 @@ public class Main {
 	public static void createSetting() {
 		TalkBox talkbox = new TalkBox();
 		talkbox.setNumberOfAudioButtons(6);
-		talkbox.setNumberOfAudioSets(1);
+		talkbox.setNumberOfAudioSets(2);
 		String [][] audioFileNames = new String[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
 		audioFileNames[0][0] = "TalkBoxData/no.wav";
 		audioFileNames[0][1] = "TalkBoxData/strong_no.wav";
 		audioFileNames[0][2] = "TalkBoxData/yes.wav";
 		audioFileNames[0][3] = "TalkBoxData/hell_yeah.wav";
+		
+		audioFileNames[1][0] = "TalkBoxData/KissesinParadise.wav";
+		audioFileNames[1][1] = "TalkBoxData/Medley1.wav";
+		audioFileNames[1][2] = "TalkBoxData/MoodyLoop.wav";
+		audioFileNames[1][3] = "TalkBoxData/ShakeYourBootay.wav";
+		audioFileNames[1][4] = "TalkBoxData/test1.wav";
+		audioFileNames[1][5] = "TalkBoxData/UpbeatFunk.wav";
 		
 		talkbox.setAudioFileNames(audioFileNames);
 		
