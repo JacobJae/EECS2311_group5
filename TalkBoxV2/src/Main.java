@@ -6,6 +6,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Arrays;
 
+import javax.sound.sampled.LineUnavailableException;
+
 import talkAppV1.*;
 
 public class Main {
@@ -23,8 +25,12 @@ public class Main {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Sound frame = new Sound();
-					frame.playSound(no);
+//					Sound sound = new Sound();
+//					sound.startRecording();
+//					System.out.println("Tyope");
+//					Thread.sleep(3000);
+//					System.out.println("Stop");
+//					sound.stopRecording();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

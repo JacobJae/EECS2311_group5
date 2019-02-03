@@ -52,13 +52,10 @@ public class TalkBoxGui extends JFrame {
 	private Sound sound;
 	private int currentBtnSet = 0, width, height;
 
-	private JLabel Display;
-	private JButton btnExit, btnConfigure, btnSwap;
+	private JLabel display;
+	private JButton btnExit, btnConfigure, btnSwap, btnStop, btnVolUp, btnVolDown;
 	private JPanel contentPane;
-	private File audio;
-	private AudioInputStream audioIn;
-	private Clip clip = null;
-	private ArrayList<String> clips = new ArrayList<String>();
+	Font font;
 
 	/**
 	 * Launch the application.
@@ -86,10 +83,12 @@ public class TalkBoxGui extends JFrame {
 //		height = 1080 / 2;
 		width = (int) screenSize.getWidth() / 2;
 		height = (int) screenSize.getHeight() / 2;
+		setResizable(true);
 		setAlwaysOnTop(true);
 		setTitle("Simulator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, width, height);
+		font = new Font("Stencil", Font.BOLD, width / 50);
 
 		getSetting();
 		init();
@@ -126,25 +125,41 @@ public class TalkBoxGui extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
+		int gap = height / 30, btnWidth = (width - 8 * gap)	/ 6;
 		btnSwap = new JButton("Swap");
-		btnSwap.setFont(new Font("Stencil", Font.BOLD, width / 50));
-		btnSwap.setBounds(width / 2 - width / 16, height / 2 - height / 20, width / 8, height / 10);
+		btnSwap.setFont(font);
+		btnSwap.setBounds(gap + 1 * btnWidth + 1 * gap, height / 3, btnWidth, height / 6);
 		contentPane.add(btnSwap);
+		
+		btnStop = new JButton("Stop");
+		btnStop.setFont(font);
+		btnStop.setBounds(gap + 2 * btnWidth + 2 * gap, height / 3, btnWidth, height / 6);
+		contentPane.add(btnStop);
+		
+		btnVolUp = new JButton("Vol Up");
+		btnVolUp.setFont(font);
+		btnVolUp.setBounds(gap + 3 * btnWidth + 3 * gap, height / 3, btnWidth, height / 6);
+		contentPane.add(btnVolUp);
+		
+		btnVolDown = new JButton("Vol Down");
+		btnVolDown.setFont(font);
+		btnVolDown.setBounds(gap + 4 * btnWidth + 4 * gap, height / 3, btnWidth, height / 6);
+		contentPane.add(btnVolDown);
 
-		Display = new JLabel("BUTTON PRESSED!");
-		contentPane.add(Display);
-		Display.setHorizontalAlignment(SwingConstants.CENTER);
-		Display.setFont(new Font("Stencil", Font.BOLD, width / 50));
-		Display.setBounds(width / 2 - width / 8, height / 2 + height / 20, width / 4, height / 10);
+		display = new JLabel("BUTTON PRESSED!");
+		contentPane.add(display);
+		display.setHorizontalAlignment(SwingConstants.CENTER);
+		display.setFont(font);
+		display.setBounds(width / 2 - width / 8, height / 5 * 3, width / 4, height / 10);
 
 		btnExit = new JButton("Exit");
-		btnExit.setFont(new Font("Stencil", Font.BOLD, width / 50));
-		btnExit.setBounds(width / 30 * 23, height - height / 3, width / 30 * 5, height / 10);
+		btnExit.setFont(font);
+		btnExit.setBounds(width / 30 * 23, height / 4 * 3, width / 30 * 5, height / 8);
 		contentPane.add(btnExit);
 
 		btnConfigure = new JButton("Configure");
-		btnConfigure.setFont(new Font("Stencil", Font.BOLD, width / 50));
-		btnConfigure.setBounds(width / 30, height - height / 3, width / 30 * 21, height / 10);
+		btnConfigure.setFont(font);
+		btnConfigure.setBounds(width / 30, height / 4 * 3, width / 30 * 21, height / 8);
 		contentPane.add(btnConfigure);
 
 		btnExit.addActionListener(new ActionListener() {
@@ -157,6 +172,7 @@ public class TalkBoxGui extends JFrame {
 		btnConfigure.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				sound.stopSound();
 				createConfigure();
 			}
 		});
@@ -164,6 +180,7 @@ public class TalkBoxGui extends JFrame {
 		btnSwap.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				sound.stopSound();
 				for (int i = 0; i < talkbox.getNumberOfAudioButtons(); i++) {
 					JToggleButton btn = audioFileButtons[currentBtnSet][i];
 					if (btn != null)
@@ -172,6 +189,13 @@ public class TalkBoxGui extends JFrame {
 				contentPane.repaint();
 				currentBtnSet = (currentBtnSet + 1) % talkbox.getNumberOfAudioSets();
 				putButtons(currentBtnSet);
+			}
+		});
+		
+		btnStop.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				sound.stopSound();
 			}
 		});
 	}
@@ -183,12 +207,12 @@ public class TalkBoxGui extends JFrame {
 		for (int i = 0; i < talkbox.getNumberOfAudioButtons(); i++) {
 			String fileName = audioFileNames[setNumber][i];
 			if (fileName != null) {
-				int gap = width / 30, btnWidth = (width - (talkbox.getNumberOfAudioButtons() + 2) * gap)
+				int gap = height / 30, btnWidth = (width - (talkbox.getNumberOfAudioButtons() + 2) * gap)
 						/ talkbox.getNumberOfAudioButtons();
 				JToggleButton btn = new JToggleButton(
 						fileName.substring(fileName.indexOf("/") + 1, fileName.indexOf(".")));
-				btn.setFont(new Font("Stencil", Font.BOLD, width / 50));
-				btn.setBounds(gap + i * btnWidth + i * gap, height / 30, btnWidth, height / 10);
+				btn.setFont(font);
+				btn.setBounds(gap + i * btnWidth + i * gap, height / 30, btnWidth, height / 5);
 				btn.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						sound.playSound(fileName);
