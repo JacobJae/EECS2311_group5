@@ -98,17 +98,6 @@ public class Sound {
 		gainControl.setValue(dB);
 	}
 
-	/**
-	 * Record sound file with '.wav' extension and save it into 'TalkBoxData'
-	 * directory
-	 * 
-	 * @return String relative path of sound file
-	 */
-	public String recordSound() {
-		String audioName = "";
-		return audioName;
-	}
-
 	public AudioFormat getAudioFormat() {
 		float sampleRate = 16000;
 		int sampleSizeInBits = 8;
@@ -119,7 +108,13 @@ public class Sound {
 		return format;
 	}
 
-	public void startRecording() {
+	/**
+	 * Record sound file with '.wav' extension and save it into 'TalkBoxData'
+	 * directory
+	 * 
+	 * @return String relative path of sound file
+	 */
+	public void startRecording(String fileName) {
 		if (line == null) {
 			Thread t = new Thread(new Runnable() {
 				@Override
@@ -137,7 +132,7 @@ public class Sound {
 						line.start(); // start capturing
 						AudioInputStream ais = new AudioInputStream(line);
 						// start recording
-						AudioSystem.write(ais, FILE_TYPE, new File("TalkBoxData/Test.wav"));
+						AudioSystem.write(ais, FILE_TYPE, new File("TalkBoxData/" + fileName + ".wav"));
 					} catch (LineUnavailableException ex) {
 						ex.printStackTrace();
 					} catch (IOException ioe) {

@@ -1,10 +1,13 @@
 import java.awt.EventQueue;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.sound.sampled.LineUnavailableException;
 
@@ -20,22 +23,6 @@ public class Main {
 		System.out.println("Creating develop branch");
 
 //		createSetting();
-		
-		String no = "TalkBoxData/no.wav";
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-//					Sound sound = new Sound();
-//					sound.startRecording();
-//					System.out.println("Tyope");
-//					Thread.sleep(3000);
-//					System.out.println("Stop");
-//					sound.stopRecording();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 	}
 	
 	public static void createSetting() {
