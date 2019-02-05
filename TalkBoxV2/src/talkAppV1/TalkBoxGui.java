@@ -1,11 +1,21 @@
 package talkAppV1;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import javax.sound.sampled.AudioInputStream;
@@ -14,37 +24,38 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.DefaultCaret;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class TalkBoxGui extends JFrame {
-// delete this
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
-	private JLabel Display;
-	private JToggleButton btnSound1, btnSound2, btnSound3, btnSound4;
-	private JButton btnExit, btnConfigure;
+	private TalkBox talkbox;
+	private String[][] audioFileNames;
+	private JToggleButton[][] audioFileButtons;
+	private ButtonGroup btngroup;
+	private Sound sound;
+	private int currentBtnSet = 0, width, height;
+
+	private JLabel display;
+	private JButton btnExit, btnConfigure, btnSwap, btnStop, btnVolUp, btnVolDown;
 	private JPanel contentPane;
-	private File audio;
-	private String name, no = "TalkBoxData/no.wav", strong_no = "TalkBoxData/strong_no.wav",
-			yes = "TalkBoxData/yes.wav", hell_yeah = "TalkBoxData/hell_yeah.wav", bruh = "TalkBoxData/bruh.mp3",
-			bye_have_a_beautiful_time = "TalkBoxData/bye_have_a_beautiful_time.mp3",
-			hello_cherie = "TalkBoxData/hello_cherie.mp3", hello_there = "TalkBoxData/hello_there.mp3",
-			hello = "TalkBoxData/hello.mp3", just_do_it = "TalkBoxData/just_do_it.mp3",
-			tadaah = "TalkBoxData/tadaah.mp3";
-	private AudioInputStream audioIn;
-	private Clip clip = null;
-	private ArrayList<String> clips = new ArrayList<String>();
-	private ArrayList<JToggleButton> tButtons = new ArrayList<JToggleButton>();
+	Font font;
 
 	/**
 	 * Launch the application.
@@ -63,206 +74,196 @@ public class TalkBoxGui extends JFrame {
 	}
 
 	/**
-	 * Create the frame.
+	 * Create default Simulator the frame.
 	 */
 	public TalkBoxGui() {
-
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		width = (int) screenSize.getWidth() / 2;
+		height = (int) screenSize.getHeight() / 2;
+		setResizable(true);
 		setAlwaysOnTop(true);
+		setTitle("Simulator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 711, 622);
+		setSize( width, height);
+		setLocationRelativeTo(null);
+		font = new Font("Stencil", Font.BOLD, width / 50);
+
+		getSetting();
+		init();
+		putButtons(currentBtnSet);
+	}
+
+	public void reset() {
+		getSetting();
+		init();
+		putButtons(currentBtnSet);
+	}
+
+	/*
+	 * Get .tbc settings and initiate sound, buttongroup, talkbox object
+	 */
+	private void getSetting() {
+		try {
+			sound = new Sound();
+			btngroup = new ButtonGroup();
+			FileInputStream fileInputStream = new FileInputStream("TalkBoxData/configure.tbc");
+			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+			talkbox = (TalkBox) objectInputStream.readObject();
+			audioFileNames = talkbox.getAudioFileNames();
+			audioFileButtons = new JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
+			objectInputStream.close();
+		} catch (IOException | ClassNotFoundException | LineUnavailableException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void init() {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		init();
-		addComp();
-
-		btnSound1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				selectBtn(0);
-				getName(no);
-				playSound(clips.get(0));
-
-			}
-		});
-
-		btnSound2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				selectBtn(1);
-				getName(strong_no);
-				playSound(clips.get(1));
-			}
-		});
-
-		btnSound3.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				selectBtn(2);
-				getName(yes);
-				playSound(clips.get(2));
-			}
-		});
-
-		btnSound4.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				selectBtn(3);
-				getName(hell_yeah);
-				playSound(clips.get(3));
-			}
-		});
+		int gap = height / 30, btnWidth = (width - 8 * gap)	/ 6;
+		btnSwap = new JButton("Swap");
+		btnSwap.setFont(font);
+		btnSwap.setBounds(gap + 1 * btnWidth + 1 * gap, height / 3, btnWidth, height / 6);
+		contentPane.add(btnSwap);
 		
-		/*
-		btnPlaySound.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				for (int i = 0; i < tButtons.size(); i++) {
-					if (tButtons.get(i).isSelected()) {
-						playSound(clips.get(i));
-						Display.setText(name + " Pressed!");
-					}
-				}
-
-			}
-		});
-		 */
+		btnStop = new JButton("Stop");
+		btnStop.setFont(font);
+		btnStop.setBounds(gap + 2 * btnWidth + 2 * gap, height / 3, btnWidth, height / 6);
+		contentPane.add(btnStop);
 		
+		btnVolUp = new JButton("Vol Up");
+		btnVolUp.setFont(font);
+		btnVolUp.setBounds(gap + 3 * btnWidth + 3 * gap, height / 3, btnWidth, height / 6);
+		contentPane.add(btnVolUp);
+		
+		btnVolDown = new JButton("Vol Down");
+		btnVolDown.setFont(font);
+		btnVolDown.setBounds(gap + 4 * btnWidth + 4 * gap, height / 3, btnWidth, height / 6);
+		contentPane.add(btnVolDown);
+
+		display = new JLabel("BUTTON PRESSED!");
+		contentPane.add(display);
+		display.setHorizontalAlignment(SwingConstants.CENTER);
+		display.setFont(font);
+		display.setBounds(width / 2 - width / 8, height / 5 * 3, width / 4, height / 10);
+
+		btnExit = new JButton("Exit");
+		btnExit.setFont(font);
+		btnExit.setBounds(width / 30 * 23, height / 4 * 3, width / 30 * 5, height / 8);
+		contentPane.add(btnExit);
+
+		btnConfigure = new JButton("Configure");
+		btnConfigure.setFont(font);
+		btnConfigure.setBounds(width / 30, height / 4 * 3, width / 30 * 21, height / 8);
+		contentPane.add(btnConfigure);
+
 		btnExit.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
 		});
 
-		btnConfigure.addMouseListener(new MouseAdapter() {
+		btnConfigure.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				ConfigurationApp();
+			public void actionPerformed(ActionEvent e) {
+				sound.stopSound();
+				createConfigure();
 			}
 		});
 
+		btnSwap.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				sound.stopSound();
+				for (int i = 0; i < talkbox.getNumberOfAudioButtons(); i++) {
+					JToggleButton btn = audioFileButtons[currentBtnSet][i];
+					if (btn != null)
+						getContentPane().remove(btn);
+				}
+				contentPane.repaint();
+				currentBtnSet = (currentBtnSet + 1) % talkbox.getNumberOfAudioSets();
+				putButtons(currentBtnSet);
+			}
+		});
+		
+		btnStop.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				sound.stopSound();
+			}
+		});
 	}
 
-	protected void ConfigurationApp() {
-		this.setVisible(false);
-		new ConfigurationGUI(clips).setVisible(true);
-
-	}
-
-	private void selectBtn(int x) {
-
-		for (int i = 0; i < tButtons.size(); i++) {
-			if (i == x)
-				tButtons.get(i).setSelected(true);
-			else
-				tButtons.get(i).setSelected(false);
-		}
-
-	}
-
-	private void addComp() {
-		clips.add(no);
-		clips.add(strong_no);
-		clips.add(yes);
-		clips.add(hell_yeah);
-		clips.add(bye_have_a_beautiful_time);
-		clips.add(hello);
-		clips.add(hello_cherie);
-		clips.add(hello_there);
-		clips.add(bruh);
-		clips.add(tadaah);
-
-		tButtons.add(btnSound1);
-		tButtons.add(btnSound2);
-		tButtons.add(btnSound3);
-		tButtons.add(btnSound4);
-
-	}
-
-	private void init() {
-
-		getClip();
-
-		Display = new JLabel("BUTTON PRESSED!");
-		contentPane.add(Display);
-		Display.setHorizontalAlignment(SwingConstants.CENTER);
-		Display.setFont(new Font("Stencil", Font.BOLD, 48));
-		Display.setBounds(10, 320, 670, 157);
-
-		btnSound1 = new JToggleButton("NO");
-		btnSound1.setFont(new Font("Stencil", Font.BOLD, 18));
-		contentPane.add(btnSound1);
-		btnSound1.setBounds(10, 11, 160, 100);
-
-		btnSound2 = new JToggleButton("Strong NO");
-		btnSound2.setFont(new Font("Stencil", Font.BOLD, 18));
-		contentPane.add(btnSound2);
-		btnSound2.setBounds(180, 11, 160, 100);
-
-		btnSound3 = new JToggleButton("YES");
-		btnSound3.setFont(new Font("Stencil", Font.BOLD, 18));
-		contentPane.add(btnSound3);
-		btnSound3.setBounds(350, 11, 160, 100);
-
-		btnSound4 = new JToggleButton("HELL YEAH");
-		btnSound4.setFont(new Font("Stencil", Font.BOLD, 18));
-		contentPane.add(btnSound4);
-		btnSound4.setBounds(520, 11, 160, 100);
-
-		btnExit = new JButton("Exit");
-		btnExit.setFont(new Font("Stencil", Font.BOLD, 20));
-		btnExit.setBounds(591, 514, 89, 58);
-		contentPane.add(btnExit);
-
-		btnConfigure = new JButton("Configure");
-		btnConfigure.setFont(new Font("Stencil", Font.BOLD, 20));
-		btnConfigure.setBounds(10, 514, 582, 58);
-		contentPane.add(btnConfigure);
-	}
-
-	private void getClip() {
-		try {
-			clip = AudioSystem.getClip();
-		} catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	/*
+	 * create button in button set setNumber
+	 */
+	private void putButtons(int setNumber) {
+		for (int i = 0; i < talkbox.getNumberOfAudioButtons(); i++) {
+			String fileName = audioFileNames[setNumber][i];
+			if (fileName != null) {
+				int gap = height / 30, btnWidth = (width - (talkbox.getNumberOfAudioButtons() + 2) * gap)
+						/ talkbox.getNumberOfAudioButtons();
+				JToggleButton btn = new JToggleButton(
+						fileName.substring(fileName.indexOf("/") + 1, fileName.indexOf(".")));
+				btn.setFont(font);
+				btn.setBounds(gap + i * btnWidth + i * gap, height / 30, btnWidth, height / 5);
+				btn.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						sound.playSound(fileName);
+					}
+				});
+				btngroup.add(btn);
+				audioFileButtons[setNumber][i] = btn;
+				contentPane.add(btn);
+			}
 		}
 	}
 
-	private String getFileExtension(File file) {
-		String name = file.getName();
-		int lastIndexOf = name.lastIndexOf(".");
-		if (lastIndexOf == -1) {
-			return ""; // empty extension
-		}
-		return name.substring(lastIndexOf);
-	}
+	private void createConfigure() {
+		ConfigurationGUI gui = new ConfigurationGUI(this);
+//		setTitle("Simulator");
+//		setVisible(false);
+//		setVisible(true);
+//		contentPane.removeAll();
+//		contentPane.repaint();
 
-	private void playSound(String audioFile) {
-
-		clip.stop();
-		clip.close();
-
-		getName(audioFile);
-		audio = new File(audioFile);
-		try {
-			audioIn = AudioSystem.getAudioInputStream(audio.toURI().toURL());
-			clip.open(audioIn);
-			clip.start();
-		} catch (UnsupportedAudioFileException ee) {
-			ee.printStackTrace();
-		} catch (IOException ee) {
-			ee.printStackTrace();
-		} catch (LineUnavailableException ee) {
-			ee.printStackTrace();
-		}
-	}
-
-	private void setVolume() {
-		FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-		double gain = 0.25;
-		float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
-		gainControl.setValue(dB);
-	}
-
-	private void getName(String audioFile) {
-		name = audioFile.substring(audioFile.indexOf("/") + 1, audioFile.indexOf("."));
+		// JFrame parentFrame = this;
+//		parentFrame.setVisible(false);
+//		EventQueue.invokeLater(new Runnable() {
+//			@Override
+//			public void run() {
+//				JFrame frame = new JFrame("Test");
+//				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//				JPanel panel = new JPanel();
+//				panel.setOpaque(true);
+//				JTextArea textArea = new JTextArea(15, 50);
+//				textArea.setWrapStyleWord(true);
+//				textArea.setEditable(false);
+//				textArea.setFont(Font.getFont(Font.SANS_SERIF));
+//				JScrollPane scroller = new JScrollPane(textArea);
+//				scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+//				scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+//				JPanel inputpanel = new JPanel();
+//				inputpanel.setLayout(new FlowLayout());
+//				JTextField input = new JTextField(20);
+//				JButton button = new JButton("Enter");
+//				DefaultCaret caret = (DefaultCaret) textArea.getCaret();
+//				caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+//				panel.add(scroller);
+//				inputpanel.add(input);
+//				inputpanel.add(button);
+//				panel.add(inputpanel);
+//				frame.getContentPane().add(BorderLayout.CENTER, panel);
+//				frame.pack();
+//				frame.setLocationByPlatform(true);
+//				frame.setVisible(true);
+//				frame.setResizable(false);
+//				input.requestFocus();
+//			}
+//		});
 	}
 }
