@@ -78,16 +78,14 @@ public class TalkBoxGui extends JFrame {
 	 */
 	public TalkBoxGui() {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//		test Full HD resolution
-//		width = 1920 / 2;
-//		height = 1080 / 2;
 		width = (int) screenSize.getWidth() / 2;
 		height = (int) screenSize.getHeight() / 2;
 		setResizable(true);
 		setAlwaysOnTop(true);
 		setTitle("Simulator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, width, height);
+		setSize( width, height);
+		setLocationRelativeTo(null);
 		font = new Font("Stencil", Font.BOLD, width / 50);
 
 		getSetting();

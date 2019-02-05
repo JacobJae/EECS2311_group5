@@ -53,7 +53,7 @@ public class ConfigurationGUI extends JFrame {
 	private int currentBtnSet = 0, width, height;
 	private int selectedBtnIndex = 0;
 	private boolean recording;
-	
+
 	/**
 	 * Launch the application.
 	 */
@@ -80,12 +80,10 @@ public class ConfigurationGUI extends JFrame {
 			}
 		});
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//		test Full HD resolution
-//		width = 1920 / 2;
-//		height = 1080 / 2;
 		width = (int) screenSize.getWidth() / 2;
 		height = (int) screenSize.getHeight() / 2;
-		setBounds(100, 100, width, height);
+		setSize(width, height);
+		setLocationRelativeTo(null);
 		font = new Font("Stencil", Font.BOLD, width / 50);
 		getSetting();
 		init();
@@ -378,16 +376,22 @@ public class ConfigurationGUI extends JFrame {
 		btnReturn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//
+				openTalkBox();
 			}
 		});
 	}
 
+	private void openTalkBox()
+	{
+		this.setVisible(false);
+		new TalkBoxGui().setVisible(true);
+	}
+	
 	/*
 	 * create button in button set setNumber
 	 */
 	private void putButtons(int setNumber) {
-		String AudioFileNames [][] = talkbox.getAudioFileNames();
+		String AudioFileNames[][] = talkbox.getAudioFileNames();
 		for (int i = 0; i < talkbox.getNumberOfAudioButtons(); i++) {
 			String fileName = AudioFileNames[setNumber][i];
 			if (fileName != null) {
