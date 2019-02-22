@@ -122,120 +122,125 @@ public class ConfigurationGUI extends JFrame {
 		scrollerButtons.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollerButtons.setBounds(gap + 1 * btnWidth + 1 * gap, height / 3, btnWidth, height / 6);
 		contentPane.add(scrollerButtons);
+//-------------------------------------EDIT-----------------------------------------------------------------------------
+		btnIncBtnSet = new JButton("Inc Btn Set");
+		btnIncBtnSet.setFont(new Font("Serif", Font.PLAIN, width / 50));
+		btnIncBtnSet.setBounds(gap + 0 * btnWidth + 0 * gap, height / 64 * 17, btnWidth, height / 16);
+		btnIncBtnSet.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int currentSet = talkbox.getNumberOfAudioSets();
+				talkbox.setNumberOfAudioSets(currentSet + 1);
+				if (talkbox.getAudioFileNames().length < talkbox.getNumberOfAudioSets()) {
+					String pre[][] = talkbox.getAudioFileNames();
+					String newNames[][] = new String[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
+					for (int i = 0; i < talkbox.getNumberOfAudioSets() - 1; i++) {
+						for (int j = 0; j < talkbox.getNumberOfAudioButtons(); j++) {
+							newNames[i][j] = pre[i][j];
+						}
+					}
+					talkbox.setAudioFileNames(newNames);
+				}
+				audioFileButtons = new JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
+				init();
+				putButtons(currentBtnSet);
+				setDisplay("Number of Button set has been increased from " + currentSet + " to " + (currentSet + 1));
+			}
+		});
+		contentPane.add(btnIncBtnSet);
 
-//		btnIncBtnSet = new JButton("Inc Btn Set");
-//		btnIncBtnSet.setFont(new Font("Serif", Font.PLAIN, width / 50));
-//		btnIncBtnSet.setBounds(gap + 0 * btnWidth + 0 * gap, height / 64 * 17, btnWidth, height / 16);
-//		btnIncBtnSet.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				int currentSet = talkbox.getNumberOfAudioSets();
-//				talkbox.setNumberOfAudioSets(currentSet + 1);
-//				if (talkbox.getAudioFileNames().length < talkbox.getNumberOfAudioSets()) {
-//					String pre[][] = talkbox.getAudioFileNames();
-//					String newNames[][] = new String[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
-//					for (int i = 0; i < pre.length; i++) {
-//						for (int j = 0; j < pre[0].length; j++) {
-//							newNames[i][j] = pre[i][j];
-//						}
-//					}
-//					talkbox.setAudioFileNames(newNames);
-//				}
-//				audioFileButtons = new JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
-//				putButtons(currentBtnSet);
-//				setDisplay("Number of Button set has been increased from " + currentSet + " to " + (currentSet + 1));
-//			}
-//		});
-//		contentPane.add(btnIncBtnSet);
-//
-//		btnDecBtnSet = new JButton("Dec Btn Set");
-//		btnDecBtnSet.setFont(new Font("Serif", Font.PLAIN, width / 50));
-//		btnDecBtnSet.setBounds(gap + 1 * btnWidth + 1 * gap, height / 64 * 17, btnWidth, height / 16);
-//		btnDecBtnSet.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				int currentSet = talkbox.getNumberOfAudioSets();
-//				if (currentSet < 2) {
-//					setDisplay("Number of Audio sets can not be lower than 1");
-//				} else {
-//					talkbox.setNumberOfAudioSets(currentSet - 1);
-//					audioFileButtons = new JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
-//					if (currentSet - 1 == currentBtnSet) {
-//						currentBtnSet = 0;
-//						putButtons(0);
-//						selectedBtnIndex = 0;
-//					} else {
-//						putButtons(currentBtnSet);
-//						selectedBtnIndex = 0;
-//					}
-//					setDisplay(
-//							"Number of Button set has been decreased from " + currentSet + " to " + (currentSet - 1));
-//					contentPane.repaint();
-//				}
-//			}
-//		});
-//		contentPane.add(btnDecBtnSet);
-//
-//		btnIncBtnNum = new JButton("Inc Btn Num");
-//		btnIncBtnNum.setFont(new Font("Serif", Font.PLAIN, width / 50));
-//		btnIncBtnNum.setBounds(gap + 2 * btnWidth + 2 * gap, height / 64 * 17, btnWidth, height / 16);
-//		btnIncBtnNum.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				int currentBtn = talkbox.getNumberOfAudioButtons();
-//				for (int i = 0; i < talkbox.getNumberOfAudioButtons(); i++) {
-//					JToggleButton btn = audioFileButtons[currentBtnSet][i];
-//					if (btn != null)
-//						getContentPane().remove(btn);
-//				}
-//				talkbox.setNumberOfAudioButtons(currentBtn + 1);
-//				if (talkbox.getAudioFileNames()[0].length < talkbox.getNumberOfAudioButtons()) {
-//					String pre[][] = talkbox.getAudioFileNames();
-//					String newNames[][] = new String[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
-//					for (int i = 0; i < pre.length; i++) {
-//						for (int j = 0; j < pre[0].length; j++) {
-//							newNames[i][j] = pre[i][j];
-//						}
-//					}
-//					talkbox.setAudioFileNames(newNames);
-//				}
-//				audioFileButtons = new JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
-//				putButtons(currentBtnSet);
-//				setDisplay("Number of Button set has been increased from " + currentBtn + " to " + (currentBtn + 1));
-//				contentPane.repaint();
-//				selectedBtnIndex = 0;
-//
-//			}
-//		});
-//		contentPane.add(btnIncBtnNum);
-//
-//		btnDecBtnNum = new JButton("Dec Btn Num");
-//		btnDecBtnNum.setFont(new Font("Serif", Font.PLAIN, width / 50));
-//		btnDecBtnNum.setBounds(gap + 3 * btnWidth + 3 * gap, height / 64 * 17, btnWidth, height / 16);
-//		btnDecBtnNum.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				int currentBtn = talkbox.getNumberOfAudioButtons();
-//				if (currentBtn < 2) {
-//					setDisplay("Number of Audio buttons can not be lower than 1");
-//				} else {
-//					for (int i = 0; i < talkbox.getNumberOfAudioButtons(); i++) {
-//						JToggleButton btn = audioFileButtons[currentBtnSet][i];
-//						if (btn != null)
-//							getContentPane().remove(btn);
-//					}
-//					talkbox.setNumberOfAudioButtons(currentBtn - 1);
-//					audioFileButtons = new JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
-//					putButtons(currentBtnSet);
-//					setDisplay(
-//							"Number of Button set has been decreased from " + currentBtn + " to " + (currentBtn - 1));
-//					contentPane.repaint();
-//					selectedBtnIndex = 0;
-//				}
-//			}
-//		});
-//		contentPane.add(btnDecBtnNum);
+		btnDecBtnSet = new JButton("Dec Btn Set");
+		btnDecBtnSet.setFont(new Font("Serif", Font.PLAIN, width / 50));
+		btnDecBtnSet.setBounds(gap + 1 * btnWidth + 1 * gap, height / 64 * 17, btnWidth, height / 16);
+		btnDecBtnSet.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int currentSet = talkbox.getNumberOfAudioSets();
+				if (currentSet < 2) {
+					setDisplay("Number of Audio sets can not be lower than 1");
+				} else {
+					talkbox.setNumberOfAudioSets(currentSet - 1);
+					audioFileButtons = new JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
+					if (currentSet - 1 == currentBtnSet) {
+						currentBtnSet = 0;
+						putButtons(0);
+						selectedBtnIndex = 0;
+					} else {
+						putButtons(currentBtnSet);
+						selectedBtnIndex = 0;
+					}
+					init();
+					putButtons(currentBtnSet);
+					setDisplay(
+							"Number of Button set has been decreased from " + currentSet + " to " + (currentSet - 1));
+					contentPane.repaint();
+				}
+			}
+		});
+		contentPane.add(btnDecBtnSet);
 
+		btnIncBtnNum = new JButton("Inc Btn Num");
+		btnIncBtnNum.setFont(new Font("Serif", Font.PLAIN, width / 50));
+		btnIncBtnNum.setBounds(gap + 2 * btnWidth + 2 * gap, height / 64 * 17, btnWidth, height / 16);
+		btnIncBtnNum.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int currentBtn = talkbox.getNumberOfAudioButtons();
+				for (int i = 0; i < talkbox.getNumberOfAudioButtons(); i++) {
+					JToggleButton btn = audioFileButtons[currentBtnSet][i];
+					if (btn != null)
+						getContentPane().remove(btn);
+				}
+				talkbox.setNumberOfAudioButtons(currentBtn + 1);
+				if (talkbox.getAudioFileNames()[0].length < talkbox.getNumberOfAudioButtons()) {
+					String pre[][] = talkbox.getAudioFileNames();
+					String newNames[][] = new String[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
+					for (int i = 0; i < talkbox.getNumberOfAudioSets(); i++) {
+						for (int j = 0; j < talkbox.getNumberOfAudioButtons() - 1; j++) {
+							newNames[i][j] = pre[i][j];
+						}
+					}
+					talkbox.setAudioFileNames(newNames);
+				}
+				audioFileButtons = new JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
+				init();
+				putButtons(currentBtnSet);
+				setDisplay("Number of Button set has been increased from " + currentBtn + " to " + (currentBtn + 1));
+				contentPane.repaint();
+				selectedBtnIndex = 0;
+
+			}
+		});
+		contentPane.add(btnIncBtnNum);
+
+		btnDecBtnNum = new JButton("Dec Btn Num");
+		btnDecBtnNum.setFont(new Font("Serif", Font.PLAIN, width / 50));
+		btnDecBtnNum.setBounds(gap + 3 * btnWidth + 3 * gap, height / 64 * 17, btnWidth, height / 16);
+		btnDecBtnNum.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int currentBtn = talkbox.getNumberOfAudioButtons();
+				if (currentBtn < 2) {
+					setDisplay("Number of Audio buttons can not be lower than 1");
+				} else {
+					for (int i = 0; i < talkbox.getNumberOfAudioButtons(); i++) {
+						JToggleButton btn = audioFileButtons[currentBtnSet][i];
+						if (btn != null)
+							getContentPane().remove(btn);
+					}
+					talkbox.setNumberOfAudioButtons(currentBtn - 1);
+					audioFileButtons = new JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
+					init();
+					putButtons(currentBtnSet);
+					setDisplay(
+							"Number of Button set has been decreased from " + currentBtn + " to " + (currentBtn - 1));
+					contentPane.repaint();
+					selectedBtnIndex = 0;
+				}
+			}
+		});
+		contentPane.add(btnDecBtnNum);
+//-----------------------------------------------------------------------------------------------------------------------
 		btnSwap = new JButton("Swap");
 		btnSwap.setFont(font);
 		btnSwap.setBounds(gap + 2 * btnWidth + 2 * gap, height / 3, btnWidth, height / 6);
@@ -363,8 +368,36 @@ public class ConfigurationGUI extends JFrame {
 		btnSave.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				SetSetting();
 				setDisplay("New setting has been saved");
+				String temp[][] = talkbox.getAudioFileNames();
+				boolean isNullSet = false;
+				int setNum = 1;
+				List<Integer> nullSetList = new ArrayList<>();
+				List<String[]> setList = new ArrayList<>();
+				for (String items[] : temp) {
+					boolean nullSet = true;
+					for (String str : items) {
+						if (str != null)
+							nullSet = false;
+					}
+					if (nullSet) {
+						isNullSet = true;
+						nullSetList.add(setNum);
+					} else {
+						setList.add(items);
+					}
+					setNum++;
+				}
+				if (isNullSet) {
+					String temp2[][] = new String[setList.size()][talkbox.getNumberOfAudioButtons()];
+					for (int i = 0; i < setList.size(); i++) {
+						temp2[i] = setList.get(i);
+					}
+					talkbox.setAudioFileNames(temp2);
+					talkbox.setNumberOfAudioSets(setList.size());
+					display.setText(display.getText() + "\n" + "Empty sets " + nullSetList.toString() + "has been deleted");
+				}
+				SetSetting();
 			}
 		});
 
