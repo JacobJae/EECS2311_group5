@@ -133,9 +133,9 @@ public class ConfigurationGUI extends JFrame {
 				talkbox.setNumberOfAudioSets(currentSet + 1);
 				if (talkbox.getAudioFileNames().length < talkbox.getNumberOfAudioSets()) {
 					String pre[][] = talkbox.getAudioFileNames();
-					String newNames[][] = new String[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
-					for (int i = 0; i < talkbox.getNumberOfAudioSets() - 1; i++) {
-						for (int j = 0; j < talkbox.getNumberOfAudioButtons(); j++) {
+					String newNames[][] = new String[pre.length + 1][pre[0].length];
+					for (int i = 0; i < pre.length; i++) {
+						for (int j = 0; j < pre[0].length; j++) {
 							newNames[i][j] = pre[i][j];
 						}
 					}
