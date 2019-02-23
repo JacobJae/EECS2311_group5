@@ -59,6 +59,95 @@ public class TalkBox implements TalkBoxConfiguration {
 	private String[][] audioFileNames;
 	
 	/**
+     * Increase Number of audio sets.
+     */
+	public void incAudioSets() {
+		setNumberOfAudioSets(getNumberOfAudioSets() + 1);
+		if (getAudioFileNames().length < getNumberOfAudioSets()) {
+			String pre[][] = getAudioFileNames();
+			String newNames[][] = new String[pre.length + 1][pre[0].length];
+			for (int i = 0; i < pre.length; i++) {
+				for (int j = 0; j < pre[0].length; j++) {
+					newNames[i][j] = pre[i][j];
+				}
+			}
+			setAudioFileNames(newNames);
+		}
+	}
+	
+	/**
+     * Decrease Number of audio sets.
+     */
+	public void decAudioSets() {
+		if (getNumberOfAudioSets() > 1)
+			setNumberOfAudioSets(getNumberOfAudioSets() - 1);
+	}
+	
+	/**
+     * Increase Number of audio sets.
+     */
+	public void incAudioButtons() {
+		setNumberOfAudioButtons(getNumberOfAudioButtons() + 1);
+		if (getAudioFileNames()[0].length < getNumberOfAudioButtons()) {
+			String pre[][] = getAudioFileNames();
+			String newNames[][] = new String[getNumberOfAudioSets()][getNumberOfAudioButtons()];
+			for (int i = 0; i < getNumberOfAudioSets(); i++) {
+				for (int j = 0; j < getNumberOfAudioButtons() - 1; j++) {
+					newNames[i][j] = pre[i][j];
+				}
+			}
+			setAudioFileNames(newNames);
+		}
+	}
+	
+	/**
+     * Decrease Number of audio sets.
+     */
+	public void decAudioButtons() {
+		if (getNumberOfAudioButtons() > 1)
+			setNumberOfAudioButtons(getNumberOfAudioButtons() - 1);
+	}
+	
+	/**
+     * Add audio file
+     * 
+     * @param int currentBtnSet positive integer
+     * @param int btnPosition positive integer
+     * @param String audioName Audio File Name
+     */
+	public void addAudio(int currentBtnSet, int btnPosition, String audioName) {
+		String names[][] = getAudioFileNames();
+		names[currentBtnSet][btnPosition - 1] = "TalkBoxData/" + audioName;
+		setAudioFileNames(names);
+	}
+	
+	/**
+     * Remove audio file
+     * 
+     * @param int currentBtnSet positive integer
+     * @param int selectedBtnIndex positive integer
+     */
+	public void removeAudio(int currentBtnSet, int selectedBtnIndex) {
+		String names[][] = getAudioFileNames();
+		names[currentBtnSet][selectedBtnIndex - 1] = null;
+		setAudioFileNames(names);
+	}
+	
+	/**
+     * Finalize instance
+     */
+	public void finalize() {
+		String names[][] = getAudioFileNames();
+		String result[][] = new String[getNumberOfAudioSets()][getNumberOfAudioButtons()];
+		for (int i = 0; i < result.length; i++) {
+			for (int j = 0; j < result[0].length; j++) {
+				result[i][j] = names[i][j];
+			}
+		}
+		setAudioFileNames(result);
+	}
+	
+	/**
      * Set the number of physical buttons that when pressed will play an audio file.
      * 
      * @param int numberOfAudioButtons positive integer

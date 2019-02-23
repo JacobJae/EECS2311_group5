@@ -130,17 +130,7 @@ public class ConfigurationGUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int currentSet = talkbox.getNumberOfAudioSets();
-				talkbox.setNumberOfAudioSets(currentSet + 1);
-				if (talkbox.getAudioFileNames().length < talkbox.getNumberOfAudioSets()) {
-					String pre[][] = talkbox.getAudioFileNames();
-					String newNames[][] = new String[pre.length + 1][pre[0].length];
-					for (int i = 0; i < pre.length; i++) {
-						for (int j = 0; j < pre[0].length; j++) {
-							newNames[i][j] = pre[i][j];
-						}
-					}
-					talkbox.setAudioFileNames(newNames);
-				}
+				talkbox.incAudioSets();
 				audioFileButtons = new JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
 				init();
 				putButtons(currentBtnSet);
@@ -159,7 +149,7 @@ public class ConfigurationGUI extends JFrame {
 				if (currentSet < 2) {
 					setDisplay("Number of Audio sets can not be lower than 1");
 				} else {
-					talkbox.setNumberOfAudioSets(currentSet - 1);
+					talkbox.decAudioSets();
 					audioFileButtons = new JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
 					if (currentSet - 1 == currentBtnSet) {
 						currentBtnSet = 0;
@@ -191,17 +181,7 @@ public class ConfigurationGUI extends JFrame {
 					if (btn != null)
 						getContentPane().remove(btn);
 				}
-				talkbox.setNumberOfAudioButtons(currentBtn + 1);
-				if (talkbox.getAudioFileNames()[0].length < talkbox.getNumberOfAudioButtons()) {
-					String pre[][] = talkbox.getAudioFileNames();
-					String newNames[][] = new String[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
-					for (int i = 0; i < talkbox.getNumberOfAudioSets(); i++) {
-						for (int j = 0; j < talkbox.getNumberOfAudioButtons() - 1; j++) {
-							newNames[i][j] = pre[i][j];
-						}
-					}
-					talkbox.setAudioFileNames(newNames);
-				}
+				talkbox.incAudioButtons();
 				audioFileButtons = new JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
 				init();
 				putButtons(currentBtnSet);
@@ -228,7 +208,7 @@ public class ConfigurationGUI extends JFrame {
 						if (btn != null)
 							getContentPane().remove(btn);
 					}
-					talkbox.setNumberOfAudioButtons(currentBtn - 1);
+					talkbox.decAudioButtons();
 					audioFileButtons = new JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
 					init();
 					putButtons(currentBtnSet);
@@ -275,11 +255,9 @@ public class ConfigurationGUI extends JFrame {
 					setDisplay("Select button position from list");
 				} else {
 //					sound.stopSound();
-					String names[][] = talkbox.getAudioFileNames();
 					String str = listAreaAudio.getSelectedValue();
 					int num = listAreaBtn.getSelectedValue();
-					names[currentBtnSet][num - 1] = "TalkBoxData/" + str;
-					talkbox.setAudioFileNames(names);
+					talkbox.addAudio(currentBtnSet, num, str);
 
 					init();
 					putButtons(currentBtnSet);
@@ -301,10 +279,9 @@ public class ConfigurationGUI extends JFrame {
 					setDisplay("Choose Button First");
 				} else {
 //					sound.stopSound();
-					String names[][] = talkbox.getAudioFileNames();
-					String str = names[currentBtnSet][selectedBtnIndex - 1];
-					names[currentBtnSet][selectedBtnIndex - 1] = null;
-					talkbox.setAudioFileNames(names);
+					String str = talkbox.getAudioFileNames()[currentBtnSet][selectedBtnIndex - 1];
+					talkbox.removeAudio(currentBtnSet, selectedBtnIndex);
+					
 					init();
 					putButtons(currentBtnSet);
 					setDisplay("Audio File \"" + str + "\" was removed from set" + (currentBtnSet + 1));
@@ -369,34 +346,35 @@ public class ConfigurationGUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				setDisplay("New setting has been saved");
-				String temp[][] = talkbox.getAudioFileNames();
-				boolean isNullSet = false;
-				int setNum = 1;
-				List<Integer> nullSetList = new ArrayList<>();
-				List<String[]> setList = new ArrayList<>();
-				for (String items[] : temp) {
-					boolean nullSet = true;
-					for (String str : items) {
-						if (str != null)
-							nullSet = false;
-					}
-					if (nullSet) {
-						isNullSet = true;
-						nullSetList.add(setNum);
-					} else {
-						setList.add(items);
-					}
-					setNum++;
-				}
-				if (isNullSet) {
-					String temp2[][] = new String[setList.size()][talkbox.getNumberOfAudioButtons()];
-					for (int i = 0; i < setList.size(); i++) {
-						temp2[i] = setList.get(i);
-					}
-					talkbox.setAudioFileNames(temp2);
-					talkbox.setNumberOfAudioSets(setList.size());
-					display.setText(display.getText() + "\n" + "Empty sets " + nullSetList.toString() + "has been deleted");
-				}
+				talkbox.finalize();
+//				String temp[][] = talkbox.getAudioFileNames();
+//				boolean isNullSet = false;
+//				int setNum = 1;
+//				List<Integer> nullSetList = new ArrayList<>();
+//				List<String[]> setList = new ArrayList<>();
+//				for (String items[] : temp) {
+//					boolean nullSet = true;
+//					for (String str : items) {
+//						if (str != null)
+//							nullSet = false;
+//					}
+//					if (nullSet) {
+//						isNullSet = true;
+//						nullSetList.add(setNum);
+//					} else {
+//						setList.add(items);
+//					}
+//					setNum++;
+//				}
+//				if (isNullSet) {
+//					String temp2[][] = new String[setList.size()][talkbox.getNumberOfAudioButtons()];
+//					for (int i = 0; i < setList.size(); i++) {
+//						temp2[i] = setList.get(i);
+//					}
+//					talkbox.setAudioFileNames(temp2);
+//					talkbox.setNumberOfAudioSets(setList.size());
+//					display.setText(display.getText() + "\n" + "Empty sets " + nullSetList.toString() + "has been deleted");
+//				}
 				SetSetting();
 			}
 		});
