@@ -57,8 +57,6 @@ public class TalkBox implements TalkBoxConfiguration {
 	private int numberOfAudioButtons;
 	private int numberOfAudioSets;
 	private String[][] audioFileNames;
-<<<<<<< HEAD
-=======
 	private Path absolutePath;
 	
 	public void setAbsolutePath(Path absolutePath) {
@@ -159,7 +157,6 @@ public class TalkBox implements TalkBoxConfiguration {
 		}
 		setAudioFileNames(result);
 	}
->>>>>>> branch 'master' of https://github.com/JacobJae/EECS2311_group5
 	
 	/**
      * Set the number of physical buttons that when pressed will play an audio file.
@@ -226,7 +223,7 @@ public class TalkBox implements TalkBoxConfiguration {
      */
 	@Override
 	public Path getRelativePathToAudioFiles() {
-		return Paths.get("TalkBoxData//");
+		return Paths.get(System.getProperty("user.dir"));
 	}
 
 	/**

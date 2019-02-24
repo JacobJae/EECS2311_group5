@@ -1,45 +1,30 @@
 package talkAppV1;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.JToggleButton;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.DefaultCaret;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileSystemView;
 
 public class TalkBoxGui extends JFrame {
 	/**
@@ -55,7 +40,8 @@ public class TalkBoxGui extends JFrame {
 	private JLabel display;
 	private JButton btnExit, btnConfigure, btnSwap, btnStop, btnVolUp, btnVolDown;
 	private JPanel contentPane;
-	Font font;
+	private Font font;
+	private Path path;
 
 	/**
 	 * Launch the application.
@@ -94,7 +80,7 @@ public class TalkBoxGui extends JFrame {
 		putButtons(currentBtnSet);
 	}
 
-	public void reset() {
+	public void reset(TalkBox t) {
 		getSetting();
 		init();
 		putButtons(currentBtnSet);
@@ -105,14 +91,50 @@ public class TalkBoxGui extends JFrame {
 	 */
 	private void getSetting() {
 		try {
+			if (path == null) {
+				JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+				jfc.setDialogTitle("Select Setting(.tbc)");
+				jfc.setAcceptAllFileFilterUsed(false);
+				jfc.addChoosableFileFilter(new FileFilter() {
+				    public String getDescription() {
+				        return "TalkBoxConfiguration Settings (*.tbc)";
+				    }
+				    public boolean accept(File f) {
+				        if (f.isDirectory()) {
+				            return true;
+				        } else {
+				            return f.getName().toLowerCase().endsWith(".tbc");
+				        }
+				    }
+				});
+				File selectedFile;
+				
+				
+
+				int returnValue = jfc.showOpenDialog(null);
+				// int returnValue = jfc.showSaveDialog(null);
+
+//				if (returnValue == JFileChooser.APPROVE_OPTION) {
+					selectedFile = jfc.getSelectedFile();
+					path = Paths.get(selectedFile.getAbsolutePath());
+//				}
+				FileInputStream fileInputStream = new FileInputStream(selectedFile);
+				ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+				talkbox = (TalkBox) objectInputStream.readObject();
+				audioFileNames = talkbox.getAudioFileNames();
+				audioFileButtons = new JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
+				objectInputStream.close();
+			} else {
+				FileInputStream fileInputStream = new FileInputStream(new File(path.toString()));
+				ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+				talkbox = (TalkBox) objectInputStream.readObject();
+				audioFileNames = talkbox.getAudioFileNames();
+				audioFileButtons = new JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
+				objectInputStream.close();
+			}
 			sound = new Sound();
 			btngroup = new ButtonGroup();
-			FileInputStream fileInputStream = new FileInputStream("TalkBoxData/configure.tbc");
-			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-			talkbox = (TalkBox) objectInputStream.readObject();
-			audioFileNames = talkbox.getAudioFileNames();
-			audioFileButtons = new JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
-			objectInputStream.close();
+			
 		} catch (IOException | ClassNotFoundException | LineUnavailableException e) {
 			e.printStackTrace();
 		}
@@ -214,7 +236,7 @@ public class TalkBoxGui extends JFrame {
 				btn.setBounds(gap + i * btnWidth + i * gap, height / 30, btnWidth, height / 5);
 				btn.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						sound.playSound(fileName);
+						sound.playSound("../" + fileName);
 					}
 				});
 				btngroup.add(btn);
@@ -225,46 +247,6 @@ public class TalkBoxGui extends JFrame {
 	}
 
 	private void createConfigure() {
-		ConfigurationGUI gui = new ConfigurationGUI(this);
-//		setTitle("Simulator");
-//		setVisible(false);
-//		setVisible(true);
-//		contentPane.removeAll();
-//		contentPane.repaint();
-
-		// JFrame parentFrame = this;
-//		parentFrame.setVisible(false);
-//		EventQueue.invokeLater(new Runnable() {
-//			@Override
-//			public void run() {
-//				JFrame frame = new JFrame("Test");
-//				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//				JPanel panel = new JPanel();
-//				panel.setOpaque(true);
-//				JTextArea textArea = new JTextArea(15, 50);
-//				textArea.setWrapStyleWord(true);
-//				textArea.setEditable(false);
-//				textArea.setFont(Font.getFont(Font.SANS_SERIF));
-//				JScrollPane scroller = new JScrollPane(textArea);
-//				scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-//				scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-//				JPanel inputpanel = new JPanel();
-//				inputpanel.setLayout(new FlowLayout());
-//				JTextField input = new JTextField(20);
-//				JButton button = new JButton("Enter");
-//				DefaultCaret caret = (DefaultCaret) textArea.getCaret();
-//				caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-//				panel.add(scroller);
-//				inputpanel.add(input);
-//				inputpanel.add(button);
-//				panel.add(inputpanel);
-//				frame.getContentPane().add(BorderLayout.CENTER, panel);
-//				frame.pack();
-//				frame.setLocationByPlatform(true);
-//				frame.setVisible(true);
-//				frame.setResizable(false);
-//				input.requestFocus();
-//			}
-//		});
+		ConfigurationGUI gui = new ConfigurationGUI(this, talkbox);
 	}
 }
