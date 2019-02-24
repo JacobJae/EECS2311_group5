@@ -57,6 +57,15 @@ public class TalkBox implements TalkBoxConfiguration {
 	private int numberOfAudioButtons;
 	private int numberOfAudioSets;
 	private String[][] audioFileNames;
+	private Path absolutePath;
+	
+	public void setAbsolutePath(Path absolutePath) {
+		this.absolutePath = absolutePath;
+	}
+	
+	public Path getAbsolutePath() {
+		return this.absolutePath;
+	}
 	
 	/**
      * Increase Number of audio sets.
@@ -212,7 +221,7 @@ public class TalkBox implements TalkBoxConfiguration {
      */
 	@Override
 	public Path getRelativePathToAudioFiles() {
-		return Paths.get("TalkBoxData//");
+		return Paths.get(System.getProperty("user.dir"));
 	}
 
 	/**

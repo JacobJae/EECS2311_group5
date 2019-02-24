@@ -16,13 +16,23 @@ import talkAppV1.*;
 public class Main {
 
 	public static void main(String[] args) {
-		System.out.println("Fun with Git!");
-		System.out.println("Peter Pushed this...");
-		System.out.println("Karmit Pushed this...");
-		System.out.println("Jacob Pushed this...");
-		System.out.println("Creating develop branch");
-
+//		System.out.println("Fun with Git!");
+//		System.out.println("Peter Pushed this...");
+//		System.out.println("Karmit Pushed this...");
+//		System.out.println("Jacob Pushed this...");
+//		System.out.println("Creating develop branch");
+		
 		createSetting();
+		try {
+		FileInputStream fileInputStream = new FileInputStream("TalkBoxData/configure.tbc");
+	    ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+	    TalkBox t = (TalkBox) objectInputStream.readObject();
+	    System.out.println(t.getNumberOfAudioSets());
+	    System.out.println(t.getRelativePathToAudioFiles().toRealPath());
+	    objectInputStream.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void createSetting() {
