@@ -82,7 +82,7 @@ public class TalkBoxGui extends JFrame {
 		width = (int) screenSize.getWidth() / 2;
 		height = (int) screenSize.getHeight() / 2;
 		setResizable(true);
-		setAlwaysOnTop(true);
+//		setAlwaysOnTop(true);
 		setTitle("Simulator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize( width, height);
@@ -135,15 +135,15 @@ public class TalkBoxGui extends JFrame {
 		btnStop.setBounds(gap + 2 * btnWidth + 2 * gap, height / 3, btnWidth, height / 6);
 		contentPane.add(btnStop);
 		
-		btnVolUp = new JButton("Vol Up");
-		btnVolUp.setFont(font);
-		btnVolUp.setBounds(gap + 3 * btnWidth + 3 * gap, height / 3, btnWidth, height / 6);
-		contentPane.add(btnVolUp);
-		
-		btnVolDown = new JButton("Vol Down");
-		btnVolDown.setFont(font);
-		btnVolDown.setBounds(gap + 4 * btnWidth + 4 * gap, height / 3, btnWidth, height / 6);
-		contentPane.add(btnVolDown);
+//		btnVolUp = new JButton("Vol Up");
+//		btnVolUp.setFont(font);
+//		btnVolUp.setBounds(gap + 3 * btnWidth + 3 * gap, height / 3, btnWidth, height / 6);
+//		contentPane.add(btnVolUp);
+//		
+//		btnVolDown = new JButton("Vol Down");
+//		btnVolDown.setFont(font);
+//		btnVolDown.setBounds(gap + 4 * btnWidth + 4 * gap, height / 3, btnWidth, height / 6);
+//		contentPane.add(btnVolDown);
 
 		display = new JLabel("BUTTON PRESSED!");
 		contentPane.add(display);
