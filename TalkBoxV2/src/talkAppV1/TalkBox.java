@@ -96,16 +96,18 @@ public class TalkBox implements TalkBoxConfiguration {
      * Increase Number of audio sets.
      */
 	public void incAudioButtons() {
-		setNumberOfAudioButtons(getNumberOfAudioButtons() + 1);
-		if (getAudioFileNames()[0].length < getNumberOfAudioButtons()) {
-			String pre[][] = getAudioFileNames();
-			String newNames[][] = new String[getNumberOfAudioSets()][getNumberOfAudioButtons()];
-			for (int i = 0; i < getNumberOfAudioSets(); i++) {
-				for (int j = 0; j < getNumberOfAudioButtons() - 1; j++) {
-					newNames[i][j] = pre[i][j];
+		if (getNumberOfAudioButtons() < 8) {
+			setNumberOfAudioButtons(getNumberOfAudioButtons() + 1);
+			if (getAudioFileNames()[0].length < getNumberOfAudioButtons()) {
+				String pre[][] = getAudioFileNames();
+				String newNames[][] = new String[getNumberOfAudioSets()][getNumberOfAudioButtons()];
+				for (int i = 0; i < getNumberOfAudioSets(); i++) {
+					for (int j = 0; j < getNumberOfAudioButtons() - 1; j++) {
+						newNames[i][j] = pre[i][j];
+					}
 				}
+				setAudioFileNames(newNames);
 			}
-			setAudioFileNames(newNames);
 		}
 	}
 	

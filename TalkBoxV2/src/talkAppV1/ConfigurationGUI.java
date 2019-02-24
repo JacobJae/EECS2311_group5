@@ -180,7 +180,11 @@ public class ConfigurationGUI extends JFrame {
 				audioFileButtons = new JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons()];
 				init();
 				putButtons(currentBtnSet);
-				setDisplay("Number of Button set has been increased from " + currentBtn + " to " + (currentBtn + 1));
+				if (currentBtn < 8) {
+					setDisplay("Number of Audio Buttons has been increased from " + currentBtn + " to " + (currentBtn + 1));
+				} else {
+					setDisplay("Number of Audio Buttons can not exceed 8");
+				}
 				contentPane.repaint();
 				selectedBtnIndex = 0;
 
@@ -208,7 +212,7 @@ public class ConfigurationGUI extends JFrame {
 					init();
 					putButtons(currentBtnSet);
 					setDisplay(
-							"Number of Button set has been decreased from " + currentBtn + " to " + (currentBtn - 1));
+							"Number of Audio Buttons has been decreased from " + currentBtn + " to " + (currentBtn - 1));
 					contentPane.repaint();
 					selectedBtnIndex = 0;
 				}
