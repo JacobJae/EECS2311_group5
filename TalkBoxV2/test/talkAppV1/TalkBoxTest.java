@@ -22,12 +22,52 @@ class TalkBoxTest extends TalkBox {
 		box.setNumberOfAudioButtons(4);
 		assertEquals(4, box.getNumberOfAudioButtons());
 	}
+	
+	@Test
+	void NumberOfAudioButtons_increase_test() {
+		TalkBox box = new TalkBox();
+		String[][] names = { { "hello", "mark" }, { "micheal", "jones" } };
+		box.setAudioFileNames(names);
+		box.setNumberOfAudioButtons(4);
+		box.incAudioButtons();
+		assertEquals(5, box.getNumberOfAudioButtons());
+	}
+	
+	@Test
+	void NumberOfAudioButtons_decrease_test() {
+		TalkBox box = new TalkBox();
+		String[][] names = { { "hello", "mark" }, { "micheal", "jones" } };
+		box.setAudioFileNames(names);
+		box.setNumberOfAudioButtons(4);
+		box.decAudioButtons();
+		assertEquals(3, box.getNumberOfAudioButtons());
+	}
 
 	@Test
 	void setNumberOfAudioSets_test() {
 		TalkBox box = new TalkBox();
 		box.setNumberOfAudioSets(2);
 		assertEquals(2, box.getNumberOfAudioSets());
+	}
+	
+	@Test
+	void NumberOfAudioSets_increase_test() {
+		TalkBox box = new TalkBox();
+		String[][] names = { { "hello", "mark" }, { "micheal", "jones" } };
+		box.setAudioFileNames(names);
+		box.setNumberOfAudioSets(2);
+		box.incAudioSets();
+		assertEquals(3, box.getNumberOfAudioSets());
+	}
+	
+	@Test
+	void NumberOfAudioSets_decrease_test() {
+		TalkBox box = new TalkBox();
+		String[][] names = { { "hello", "mark" }, { "micheal", "jones" } };
+		box.setAudioFileNames(names);
+		box.setNumberOfAudioSets(2);
+		box.decAudioSets();
+		assertEquals(1, box.getNumberOfAudioSets());
 	}
 
 	@Test
@@ -59,6 +99,6 @@ class TalkBoxTest extends TalkBox {
 	@Test
 	void getRelativePathToAudioFiles_test() {
 		TalkBox box = new TalkBox();
-		assertEquals(Paths.get("TalkBoxData//"), box.getRelativePathToAudioFiles());
+		assertEquals(Paths.get(System.getProperty("user.dir")), box.getRelativePathToAudioFiles());
 	}
 }
