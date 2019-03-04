@@ -2,6 +2,8 @@ package talkAppV1;
 
 import org.junit.jupiter.api.*;
 
+import TalkBox.Sound;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.FileNotFoundException;

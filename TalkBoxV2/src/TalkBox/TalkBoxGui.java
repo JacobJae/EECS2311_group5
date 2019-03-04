@@ -1,4 +1,4 @@
-package talkAppV1;
+package TalkBox;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;

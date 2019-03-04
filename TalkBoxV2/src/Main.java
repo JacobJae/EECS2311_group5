@@ -11,7 +11,7 @@ import java.util.List;
 
 import javax.sound.sampled.LineUnavailableException;
 
-import talkAppV1.*;
+import TalkBox.*;
 
 public class Main {
 

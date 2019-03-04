@@ -23,7 +23,7 @@
  *
  */
 
-package talkAppV1;
+package TalkBox;
 
 import java.io.File;
 import java.io.IOException;
