@@ -1,4 +1,4 @@
-package talkAppV1;
+package TalkBox;
 
 import org.junit.jupiter.api.*;
 
