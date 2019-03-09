@@ -121,6 +121,7 @@ public class TalkBoxGui extends JFrame {
 ////				}
 //				FileInputStream fileInputStream = new FileInputStream(selectedFile);
 //				FileInputStream fileInputStream = new FileInputStream("TalkBoxData/configure.tbc");
+				System.out.println("Test Circle CI");
 				FileInputStream fileInputStream = new FileInputStream(Paths.get(System.getProperty("user.dir"), "TalkBoxData", "configure.tbc").toString());
 				ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 				talkbox = (TalkBox) objectInputStream.readObject();
