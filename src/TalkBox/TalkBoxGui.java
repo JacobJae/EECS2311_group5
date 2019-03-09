@@ -92,33 +92,35 @@ public class TalkBoxGui extends JFrame {
 	private void getSetting() {
 		try {
 			if (path == null) {
-				JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-				jfc.setDialogTitle("Select Setting(.tbc)");
-				jfc.setAcceptAllFileFilterUsed(false);
-				jfc.addChoosableFileFilter(new FileFilter() {
-				    public String getDescription() {
-				        return "TalkBoxConfiguration Settings (*.tbc)";
-				    }
-				    public boolean accept(File f) {
-				        if (f.isDirectory()) {
-				            return true;
-				        } else {
-				            return f.getName().toLowerCase().endsWith(".tbc");
-				        }
-				    }
-				});
-				File selectedFile;
-				
-				
-
-				int returnValue = jfc.showOpenDialog(null);
-				// int returnValue = jfc.showSaveDialog(null);
-
-//				if (returnValue == JFileChooser.APPROVE_OPTION) {
-					selectedFile = jfc.getSelectedFile();
-					path = Paths.get(selectedFile.getAbsolutePath());
-//				}
-				FileInputStream fileInputStream = new FileInputStream(selectedFile);
+// 			This part will be used in setting
+//				JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+//				jfc.setDialogTitle("Select Setting(.tbc)");
+//				jfc.setAcceptAllFileFilterUsed(false);
+//				jfc.addChoosableFileFilter(new FileFilter() {
+//				    public String getDescription() {
+//				        return "TalkBoxConfiguration Settings (*.tbc)";
+//				    }
+//				    public boolean accept(File f) {
+//				        if (f.isDirectory()) {
+//				            return true;
+//				        } else {
+//				            return f.getName().toLowerCase().endsWith(".tbc");
+//				        }
+//				    }
+//				});
+//				File selectedFile;
+//				
+//				
+//
+//				int returnValue = jfc.showOpenDialog(null);
+//				// int returnValue = jfc.showSaveDialog(null);
+//
+////				if (returnValue == JFileChooser.APPROVE_OPTION) {
+//					selectedFile = jfc.getSelectedFile();
+//					path = Paths.get(selectedFile.getAbsolutePath());
+////				}
+//				FileInputStream fileInputStream = new FileInputStream(selectedFile);
+				FileInputStream fileInputStream = new FileInputStream("TalkBoxData/configure.tbc");
 				ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 				talkbox = (TalkBox) objectInputStream.readObject();
 				audioFileNames = talkbox.getAudioFileNames();
@@ -236,7 +238,8 @@ public class TalkBoxGui extends JFrame {
 				btn.setBounds(gap + i * btnWidth + i * gap, height / 30, btnWidth, height / 5);
 				btn.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						sound.playSound("../" + fileName);
+//						sound.playSound("../" + fileName);
+						sound.playSound(fileName);
 					}
 				});
 				btngroup.add(btn);
