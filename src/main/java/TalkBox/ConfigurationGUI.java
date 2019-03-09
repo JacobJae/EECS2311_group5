@@ -1,4 +1,4 @@
-package TalkBox;
+package main.java.TalkBox;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;

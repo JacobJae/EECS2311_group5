@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import TalkBox.*;
+import main.java.TalkBox.TalkBox;
 
 public class Main {
 

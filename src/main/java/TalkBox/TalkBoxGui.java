@@ -1,4 +1,4 @@
-package TalkBox;
+package main.java.TalkBox;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -120,7 +120,8 @@ public class TalkBoxGui extends JFrame {
 //					path = Paths.get(selectedFile.getAbsolutePath());
 ////				}
 //				FileInputStream fileInputStream = new FileInputStream(selectedFile);
-				FileInputStream fileInputStream = new FileInputStream("TalkBoxData/configure.tbc");
+//				FileInputStream fileInputStream = new FileInputStream("TalkBoxData/configure.tbc");
+				FileInputStream fileInputStream = new FileInputStream(Paths.get(System.getProperty("user.dir"), "TalkBoxData", "configure.tbc").toString());
 				ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 				talkbox = (TalkBox) objectInputStream.readObject();
 				audioFileNames = talkbox.getAudioFileNames();
