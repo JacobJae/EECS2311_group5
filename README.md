@@ -12,7 +12,7 @@ Is fully tested to behave as the hardware device.
 The current version of TalkBox.jar requires the TalkBoxData folder for all the audio files and configuration.
 Hence in order to work properly, *do not move* TalkBox.jar file in different location.
 
-This software requires physical devices such as monitor(for user interface), audio input(to record, eg. microphone) and output(to play sound, eg. speaker). System requirements are stated in 'Requirements_Document.pdf' inside of [Documentation][2] folder
+This software requires physical devices such as monitor(for user interface), audio input(to record, eg. mic) and output(to play sound, eg. speaker). System requirements are stated in 'Requirements_Document.pdf' inside of [Documentation][2] folder
 
 >**Get start:** Check out the [User Manual][1] for quick start
 
