@@ -73,7 +73,18 @@ public class ConfigurationGUI extends JFrame {
 				talkboxgui.setVisible(true);
 				talkboxgui.reset(talkbox);
 			}
+
+			@Override
+			public void windowStateChanged(WindowEvent e) {
+				super.windowStateChanged(e);
+				
+				width = (int) e.getWindow().getSize().getWidth();
+				height = (int) e.getWindow().getSize().getHeight();
+			}
+			
+			
 		});
+		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		width = (int) screenSize.getWidth() / 2;
 		height = (int) screenSize.getHeight() / 2;
