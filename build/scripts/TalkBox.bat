@@ -66,7 +66,7 @@ set CMD_LINE_ARGS=%*
 set CLASSPATH=%APP_HOME%\lib\TalkBox.jar
 
 @rem Execute TalkBox
-"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %TALK_BOX_OPTS%  -classpath "%CLASSPATH%" TalkBox.TalkBoxGui %CMD_LINE_ARGS%
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %TALK_BOX_OPTS%  -classpath "%CLASSPATH%" TalkBox.controller.Main %CMD_LINE_ARGS%
 
 :end
 @rem End local scope for the variables with windows NT shell

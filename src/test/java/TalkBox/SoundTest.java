@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 
 import org.junit.jupiter.api.*;
 
+import main.java.TalkBox.model.Sound;
+
 class SoundTest {
 
 	@Test
