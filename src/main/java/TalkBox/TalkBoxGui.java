@@ -4,9 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -17,7 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +33,6 @@ import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 
-import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 public class TalkBoxGui extends JFrame {
 	/**
@@ -562,7 +558,6 @@ public class TalkBoxGui extends JFrame {
 						.addComponent(btnExit)))
 		);
 		configExitPanel.setLayout(gl_configExitPanel);
-		//configExitPanel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[] { btnConfig, btnExit }));
 		btnExit.addActionListener(new ActionListener() {
 
 			@Override
@@ -615,19 +610,17 @@ public class TalkBoxGui extends JFrame {
 	private void getSetting() {
 		try {
 			String path = "TalkBoxData/" + currentSettings + ".tbc";
-			TalkBox temp;
 			FileInputStream fileInputStream = new FileInputStream(new File(path));
 			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-			temp = (TalkBox) objectInputStream.readObject();
+			talkbox = (TalkBox) objectInputStream.readObject();
 
-			audioFileNames = temp.getAudioFileNames();
-			totAudioBtns = temp.getNumberOfAudioButtons();
-			audioSets = temp.getNumberOfAudioSets();
-			hasSound = temp.getHasAudio();
-			sFile = temp.getsFile();
-			setNames = temp.getSetNames();
-			tbcFiles = temp.getSettingsList();
-			talkbox = temp;
+			audioFileNames = talkbox.getAudioFileNames();
+			totAudioBtns = talkbox.getNumberOfAudioButtons();
+			audioSets = talkbox.getNumberOfAudioSets();
+			hasSound = talkbox.getHasAudio();
+			sFile = talkbox.getsFile();
+			setNames = talkbox.getSetNames();
+			tbcFiles = talkbox.getSettingsList();
 
 			sound = new Sound();
 			objectInputStream.close();

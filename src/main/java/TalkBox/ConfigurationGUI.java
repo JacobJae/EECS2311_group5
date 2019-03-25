@@ -318,6 +318,7 @@ public class ConfigurationGUI extends JFrame {
 
 	}
 
+	//configExitPanel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[] { btnConfig, btnExit }));
 	/*
 	 * Add onClick Actions for every element
 	 */
@@ -411,6 +412,19 @@ public class ConfigurationGUI extends JFrame {
 
 			}
 		});
+		
+		for(int i=0;i<6;i++)
+		{
+			imageBtns[i].addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					
+					// Add the windows chooser here
+					
+				}
+			});
+		}
 
 	}
 
