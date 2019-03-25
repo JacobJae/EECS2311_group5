@@ -1,4 +1,4 @@
-package main.java.TalkBox;
+package view;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -37,6 +37,9 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
+
+import model.Sound;
+import model.TalkBox;
 
 public class TalkBoxGui extends JFrame {
 	/**

@@ -23,7 +23,7 @@
  *
  */
 
-package main.java.TalkBox;
+package model;
 
 import java.io.File;
 import java.nio.file.Path;
