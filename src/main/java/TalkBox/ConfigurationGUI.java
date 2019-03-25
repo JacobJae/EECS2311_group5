@@ -48,14 +48,7 @@ import java.awt.event.FocusEvent;
 import java.awt.FlowLayout;
 
 public class ConfigurationGUI extends JFrame {
-	// private JScrollPane scrollerAudio, scrollerButtons;
-	// private JList<String> listAreaAudio;
-	// private JList<Integer> listAreaBtn;
-	// private JTextField textField;
 	private JLabel display;
-	// private JButton btnIncBtnSet, btnDecBtnSet, btnIncBtnNum, btnDecBtnNum,
-	// btnSwap, btnAdd, btnRemove, btnRecord,
-	// btnSave, btnReturn;
 	private JToggleButton[][] audioFileButtons;
 	private JPanel contentPane;
 	private Font font;
@@ -64,10 +57,9 @@ public class ConfigurationGUI extends JFrame {
 	private TalkBox talkbox = new TalkBox();
 	private int currentBtnSet = 0, width, height;
 	private int selectedBtnIndex = -1, selectedListIndex = -1;
-	private boolean recording;
 	private TalkBoxGui talkboxgui;
 	private final ButtonGroup currentBtnGrp = new ButtonGroup();
-	private JList listAudioList;
+	private JList<String> listAudioList;
 	private JToggleButton btnSound1;
 	private JToggleButton btnSound2;
 	private JToggleButton btnSound3;
@@ -128,16 +120,14 @@ public class ConfigurationGUI extends JFrame {
 	private int audioSets;
 	private String[][] audioFileNames;
 	private boolean[][] hasSound;
-	private Toolkit tool;
-	private List<String> audioList = new ArrayList();
 	private List<File> allFiles;
 	private File[] sFile;
 	private ArrayList<String> names;
-	private String currentSettings, path, ext = ".wav";
+	private String currentSettings, path;
 	private String[] setNames;
 	private JTextField lblTitle;
 	private JComboBox<String> tbcLoader;
-	private List<String> tbcFiles = new ArrayList();
+	private List<String> tbcFiles = new ArrayList<String>();
 
 	/**
 	 * Launch the application.
@@ -178,6 +168,9 @@ public class ConfigurationGUI extends JFrame {
 		addActions();
 	}
 
+	/*
+	 * Adds every button to seperate Arrays for further use
+	 */
 	private void setVariables() {
 
 		// Add Current Buttons and TextPanes
@@ -234,6 +227,9 @@ public class ConfigurationGUI extends JFrame {
 
 	}
 
+	/*
+	 * Loads default values with all the buttons and everything
+	 */
 	private void loadDefaults() {
 
 		path = "TalkBoxData/";
@@ -293,6 +289,9 @@ public class ConfigurationGUI extends JFrame {
 
 	}
 
+	/*
+	 * Set values to buttons
+	 */
 	private void setButtons(int currentSet) {
 
 		for (int i = 0; i < 6; i++) {
@@ -300,7 +299,7 @@ public class ConfigurationGUI extends JFrame {
 			currentAudioBtns[i].setText(getName(audioFileNames[currentBtnSet][i]));
 		}
 
-		List<String> finalNames = new ArrayList();
+		List<String> finalNames = new ArrayList<String>();
 		for (String s : names)
 			finalNames.add(s);
 
@@ -318,6 +317,9 @@ public class ConfigurationGUI extends JFrame {
 
 	}
 
+	/*
+	 * Add onClick Actions for every element
+	 */
 	private void addActions() {
 
 		for (int i = 0; i < 6; i++) {
@@ -650,7 +652,7 @@ public class ConfigurationGUI extends JFrame {
 		btnRecord_1 = new JButton("Record");
 
 		JPanel loadPanel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) loadPanel.getLayout();
+		loadPanel.getLayout();
 		loadPanel.setBackground(Color.WHITE);
 		GroupLayout gl_saveLoadPanel = new GroupLayout(saveLoadPanel);
 		gl_saveLoadPanel.setHorizontalGroup(gl_saveLoadPanel.createParallelGroup(Alignment.TRAILING)
@@ -673,7 +675,7 @@ public class ConfigurationGUI extends JFrame {
 		lblLoad.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		loadPanel.add(lblLoad);
 
-		tbcLoader = new JComboBox();
+		tbcLoader = new JComboBox<String>();
 		tbcLoader.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		loadPanel.add(tbcLoader);
 		saveLoadPanel.setLayout(gl_saveLoadPanel);
@@ -728,7 +730,7 @@ public class ConfigurationGUI extends JFrame {
 
 		JLabel lblCurrentAudioSet = new JLabel("Current Audio Set:");
 
-		setSelector = new JComboBox();
+		setSelector = new JComboBox<String>();
 		GroupLayout gl_setSelPanel = new GroupLayout(setSelPanel);
 		gl_setSelPanel.setHorizontalGroup(gl_setSelPanel.createParallelGroup(Alignment.LEADING).addGroup(gl_setSelPanel
 				.createSequentialGroup().addContainerGap()
@@ -751,7 +753,7 @@ public class ConfigurationGUI extends JFrame {
 
 		JLabel lblAudioSelector = new JLabel("Audio Selector");
 
-		listAudioList = new JList();
+		listAudioList = new JList<String>();
 		GroupLayout gl_audioSelPanel = new GroupLayout(audioSelPanel);
 		gl_audioSelPanel.setHorizontalGroup(gl_audioSelPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(Alignment.TRAILING, gl_audioSelPanel.createSequentialGroup().addContainerGap()

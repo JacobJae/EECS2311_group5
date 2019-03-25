@@ -25,6 +25,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class RecordGUI extends JFrame {
 
@@ -53,11 +55,19 @@ public class RecordGUI extends JFrame {
 
 		this.confGui = confGui;
 		
-		setSize(new Dimension(400, 400));
+		setSize(new Dimension(600, 600));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				e.getWindow().dispose();
+				confGui.setEnabled(true);
+				confGui.setVisible(true);
+				dispose();
+			}
+		});
 		
 		try {
 			sound = new Sound();
@@ -78,6 +88,8 @@ public class RecordGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				recording = false;
 				sound.stopRecording();
+				confGui.setEnabled(true);
+				confGui.setVisible(true);
 				confGui.refresh();
 				dispose();
 			}

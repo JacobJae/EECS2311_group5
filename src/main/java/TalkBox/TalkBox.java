@@ -49,6 +49,9 @@ import java.util.List;
 public class TalkBox implements TalkBoxConfiguration {
 	
 	/**
+	 * 
+	 */
+	/**
 	 * Private fields
 	 */
 	private int numberOfAudioButtons;
