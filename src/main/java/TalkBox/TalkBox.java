@@ -46,7 +46,7 @@ import java.util.List;
  * @author  Peter Saleeb
  */
 
-public class TalkBox implements TalkBoxConfiguration {
+public class TalkBox<E> implements TalkBoxConfiguration{
 	
 	/**
 	 * 
