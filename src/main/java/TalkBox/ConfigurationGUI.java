@@ -411,43 +411,6 @@ public class ConfigurationGUI extends JFrame {
 			}
 		});
 
-		btnAddNewSet.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				String[][] temp = new String[audioFileNames.length + 1][6];
-				boolean[][] tempA = new boolean[hasSound.length + 1][6];
-
-				for (int i = 0; i < audioFileNames.length; i++) {
-					for (int j = 0; j < 6; j++) {
-						temp[i][j] = audioFileNames[i][j];
-						tempA[i][j] = hasSound[i][j];
-					}
-				}
-
-				for (int i = 0; i < 6; i++) {
-					temp[audioFileNames.length][i] = "Press to Configure!.";
-					tempA[audioFileNames.length][i] = false;
-				}
-
-				audioFileNames = new String[temp.length][6];
-				hasSound = new boolean[tempA.length][6];
-
-				for (int i = 0; i < temp.length; i++) {
-					for (int j = 0; j < 6; j++) {
-						audioFileNames[i][j] = temp[i][j];
-						hasSound[i][j] = tempA[i][j];
-					}
-				}
-				
-				audioSets++;
-				currentBtnSet++;
-				setButtons(audioSets-1);
-
-			}
-		});
-
 	}
 
 	/*
@@ -457,7 +420,7 @@ public class ConfigurationGUI extends JFrame {
 		for (int i = 0; i < audioSets; i++) {
 			setNames[i] = "Audio Set " + (i + 1);
 		}
-
+		
 		DefaultComboBoxModel<String> aModel = new DefaultComboBoxModel<>();
 		for (int i = 0; i < setNames.length; i++) {
 			aModel.addElement(setNames[i]);
@@ -479,8 +442,9 @@ public class ConfigurationGUI extends JFrame {
 		tbcLoader.setSelectedItem(currentSettings);
 
 	}
-
-	public void setCurrentSettings(String name) {
+	
+	public void setCurrentSettings(String name)
+	{
 		this.currentSettings = name;
 	}
 

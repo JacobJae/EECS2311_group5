@@ -43,8 +43,6 @@ public class TalkBoxGui extends JFrame {
 	 * 
 	 */
 	private TalkBox talkbox;
-	private TalkBox[] talkboxes;
-	private String[] paths;
 	private String[][] audioFileNames;
 	private Sound sound;
 	private int currentBtnSet = 0, width, height, audioSets, totAudioBtns;
@@ -68,7 +66,7 @@ public class TalkBoxGui extends JFrame {
 	private List<String> tbcFiles = new ArrayList<String>();
 	private String[] setNames;
 	private JLabel lblTitle;
-	private int currentSettings = 0;
+	private String currentSettings = "default";
 	private File[] sFile;
 	private List<File> allFiles;
 
@@ -103,8 +101,7 @@ public class TalkBoxGui extends JFrame {
 
 		init();
 		setVariables();
-		getNumberOfSettings();
-		getSetting(0);
+		getSetting();
 		setSettingsList();
 		setActions();
 	}
@@ -212,9 +209,8 @@ public class TalkBoxGui extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				currentSettings = tbcLoader.getSelectedIndex();
-				System.out.println(currentSettings);
-				getSetting(currentSettings);
+				currentSettings = tbcLoader.getSelectedItem().toString().toLowerCase();
+				getSetting();
 
 			}
 		});
@@ -231,29 +227,6 @@ public class TalkBoxGui extends JFrame {
 
 	}
 
-	private void getNumberOfSettings() {
-		String path = "TalkBoxData/";
-		allFiles = Arrays.asList(new File(path).listFiles());
-		int j = 0;
-
-		for (File f : allFiles) {
-			if (isTbc(f.toString())) {
-				j++;
-			}
-		}
-
-		paths = new String[j];
-		talkboxes = new TalkBox[j];
-		j = 0;
-		for (File f : allFiles) {
-			if (isTbc(f.toString())) {
-				System.out.println(getName(f.toString()));
-				paths[j] = "TalkBoxData/" + getName(f.toString()) + ".tbc";
-				j++;
-			}
-		}
-	}
-
 	private void setSettingsList() {
 
 		DefaultComboBoxModel<String> aModel = new DefaultComboBoxModel<>();
@@ -265,10 +238,8 @@ public class TalkBoxGui extends JFrame {
 
 	}
 
-	
-	public void setCurrentSettings(int num) {
-		this.currentSettings = num;
-		tbcLoader.setSelectedIndex(num);
+	public void setCurrentSettings(String name) {
+		this.currentSettings = name;
 	}
 
 	private void changeSet(int t) {
@@ -308,9 +279,9 @@ public class TalkBoxGui extends JFrame {
 	}
 
 	public void reset(String name) {
-		setCurrentSettings(0);
+		setCurrentSettings(name);
 		setSettingsList();
-		getSetting(0);
+		getSetting();
 		init();
 	}
 
@@ -537,15 +508,22 @@ public class TalkBoxGui extends JFrame {
 		btnPanel.setLayout(gl_btnPanel);
 		GroupLayout gl_mainPanel = new GroupLayout(mainPanel);
 		gl_mainPanel.setAutoCreateGaps(true);
-		gl_mainPanel.setHorizontalGroup(gl_mainPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_mainPanel.createSequentialGroup().addGap(10).addComponent(btnPrevSet).addGap(6)
-						.addComponent(btnPanel, GroupLayout.PREFERRED_SIZE, 848, GroupLayout.PREFERRED_SIZE).addGap(6)
-						.addComponent(button)));
-		gl_mainPanel.setVerticalGroup(gl_mainPanel.createParallelGroup(Alignment.LEADING)
+		gl_mainPanel.setHorizontalGroup(
+			gl_mainPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_mainPanel.createSequentialGroup()
+					.addGap(10)
+					.addComponent(btnPrevSet)
+					.addGap(6)
+					.addComponent(btnPanel, GroupLayout.PREFERRED_SIZE, 848, GroupLayout.PREFERRED_SIZE)
+					.addGap(6)
+					.addComponent(button))
+		);
+		gl_mainPanel.setVerticalGroup(
+			gl_mainPanel.createParallelGroup(Alignment.LEADING)
 				.addComponent(btnPrevSet, GroupLayout.PREFERRED_SIZE, 242, GroupLayout.PREFERRED_SIZE)
-				.addComponent(btnPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-						GroupLayout.PREFERRED_SIZE)
-				.addComponent(button, GroupLayout.PREFERRED_SIZE, 242, GroupLayout.PREFERRED_SIZE));
+				.addComponent(btnPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+				.addComponent(button, GroupLayout.PREFERRED_SIZE, 242, GroupLayout.PREFERRED_SIZE)
+		);
 		mainPanel.setLayout(gl_mainPanel);
 		// mainPanel.setFocusTraversalPolicy(
 		// new FocusTraversalOnArray(new Component[] { btnPrevSet, btnPanel, Button0,
@@ -568,14 +546,23 @@ public class TalkBoxGui extends JFrame {
 		GroupLayout gl_configExitPanel = new GroupLayout(configExitPanel);
 		gl_configExitPanel.setAutoCreateContainerGaps(true);
 		gl_configExitPanel.setHorizontalGroup(
-				gl_configExitPanel.createParallelGroup(Alignment.LEADING).addGroup(gl_configExitPanel
-						.createSequentialGroup().addGap(381).addComponent(btnConfig).addGap(5).addComponent(btnExit)));
-		gl_configExitPanel.setVerticalGroup(gl_configExitPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_configExitPanel.createSequentialGroup().addGap(5).addGroup(gl_configExitPanel
-						.createParallelGroup(Alignment.LEADING).addComponent(btnConfig).addComponent(btnExit))));
+			gl_configExitPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_configExitPanel.createSequentialGroup()
+					.addGap(381)
+					.addComponent(btnConfig)
+					.addGap(5)
+					.addComponent(btnExit))
+		);
+		gl_configExitPanel.setVerticalGroup(
+			gl_configExitPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_configExitPanel.createSequentialGroup()
+					.addGap(5)
+					.addGroup(gl_configExitPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnConfig)
+						.addComponent(btnExit)))
+		);
 		configExitPanel.setLayout(gl_configExitPanel);
-		// configExitPanel.setFocusTraversalPolicy(new FocusTraversalOnArray(new
-		// Component[] { btnConfig, btnExit }));
+		//configExitPanel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[] { btnConfig, btnExit }));
 		btnExit.addActionListener(new ActionListener() {
 
 			@Override
@@ -603,13 +590,13 @@ public class TalkBoxGui extends JFrame {
 	 */
 	private void setSetting() {
 		try {
-			talkboxes[currentSettings].setAudioFileNames(audioFileNames);
-			talkboxes[currentSettings].setHasAudio(hasSound);
-			talkboxes[currentSettings].setNumberOfAudioSets(audioSets);
-			talkboxes[currentSettings].setNumberOfAudioButtons(6);
-			talkboxes[currentSettings].setsFile(sFile);
-			talkboxes[currentSettings].setSetNames(setNames);
-			talkboxes[currentSettings].setSettingsList(tbcFiles);
+			talkbox.setAudioFileNames(audioFileNames);
+			talkbox.setHasAudio(hasSound);
+			talkbox.setNumberOfAudioSets(audioSets);
+			talkbox.setNumberOfAudioButtons(6);
+			talkbox.setsFile(sFile);
+			talkbox.setSetNames(setNames);
+			talkbox.setSettingsList(tbcFiles);
 
 			String filePath = "TalkBoxData/" + currentSettings + ".tbc";
 			FileOutputStream fileOutputStream = new FileOutputStream(filePath);
@@ -625,22 +612,22 @@ public class TalkBoxGui extends JFrame {
 	/*
 	 * Get .tbc settings and initiate sound, buttongroup, talkbox object
 	 */
-	private void getSetting(int currentSettings) {
+	private void getSetting() {
 		try {
-			String path = paths[currentSettings];
-			
+			String path = "TalkBoxData/" + currentSettings + ".tbc";
+			TalkBox temp;
 			FileInputStream fileInputStream = new FileInputStream(new File(path));
 			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-			talkboxes[currentSettings] = (TalkBox) objectInputStream.readObject();
+			temp = (TalkBox) objectInputStream.readObject();
 
-			audioFileNames = talkboxes[currentSettings].getAudioFileNames();
-			totAudioBtns = talkboxes[currentSettings].getNumberOfAudioButtons();
-			audioSets = talkboxes[currentSettings].getNumberOfAudioSets();
-			hasSound = talkboxes[currentSettings].getHasAudio();
-			sFile = talkboxes[currentSettings].getsFile();
-			setNames = talkboxes[currentSettings].getSetNames();
-			tbcFiles = talkboxes[currentSettings].getSettingsList();
-			talkbox = talkboxes[currentSettings];
+			audioFileNames = temp.getAudioFileNames();
+			totAudioBtns = temp.getNumberOfAudioButtons();
+			audioSets = temp.getNumberOfAudioSets();
+			hasSound = temp.getHasAudio();
+			sFile = temp.getsFile();
+			setNames = temp.getSetNames();
+			tbcFiles = temp.getSettingsList();
+			talkbox = temp;
 
 			objectInputStream.close();
 			fileInputStream.close();
@@ -665,15 +652,12 @@ public class TalkBoxGui extends JFrame {
 				string += f + "\n";
 		}
 		string += "Current Settings: " + currentSettings + "\tCurrent Audio Set: " + currentBtnSet;
-		string+="Paths:";
-		for(String s:paths)
-			string+="\n"+s;
 		return string;
 
 	}
 
 	private void createConfigure() {
 		setSetting();
-		ConfigurationGUI gui = new ConfigurationGUI(this, tbcLoader.getSelectedItem().toString());
+		ConfigurationGUI gui = new ConfigurationGUI(this, currentSettings);
 	}
 }
