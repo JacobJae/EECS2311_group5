@@ -629,6 +629,7 @@ public class TalkBoxGui extends JFrame {
 			tbcFiles = temp.getSettingsList();
 			talkbox = temp;
 
+			sound = new Sound();
 			objectInputStream.close();
 			fileInputStream.close();
 
@@ -636,6 +637,8 @@ public class TalkBoxGui extends JFrame {
 			setButtons(0);
 
 		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (LineUnavailableException e) {
 			e.printStackTrace();
 		}
 	}
