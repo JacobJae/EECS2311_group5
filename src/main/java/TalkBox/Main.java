@@ -1,6 +1,4 @@
-package control;
-
-import view.TalkBoxGui;
+package main.java.TalkBox;
 
 public class Main {
 

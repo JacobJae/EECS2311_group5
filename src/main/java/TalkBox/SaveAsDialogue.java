@@ -1,4 +1,4 @@
-package view;
+package main.java.TalkBox;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;

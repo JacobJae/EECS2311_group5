@@ -1,4 +1,4 @@
-package model;
+package main.java.TalkBox;
 
 import java.io.Serializable;
 import java.nio.file.Path;

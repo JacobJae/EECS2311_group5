@@ -1,4 +1,4 @@
-package view;
+package main.java.TalkBox;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -37,9 +37,6 @@ import javax.swing.JToggleButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListModel;
 import javax.swing.border.EmptyBorder;
-
-import model.Sound;
-import model.TalkBox;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
