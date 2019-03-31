@@ -25,8 +25,13 @@
 
 package main.java.TalkBox;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.ImageIcon;
 
 /**
  * The {@code TalkBox} class contains user setting of TalkBox.
@@ -46,13 +51,87 @@ import java.nio.file.Paths;
 public class TalkBox implements TalkBoxConfiguration {
 	
 	/**
+	 * 
+	 */
+	/**
 	 * Private fields
 	 */
 	private int numberOfAudioButtons;
 	private int numberOfAudioSets;
 	private String[][] audioFileNames;
 	private Path absolutePath;
+	private boolean[][] hasAudio;
+	private String[] setNames;
+	private File[] sFile;
+	private List<String> settingsList;
+	private ImageIcon[][] images;
 	
+	
+	
+	/**
+	 * @return the images
+	 */
+	public ImageIcon[][] getImages() {
+		return images;
+	}
+
+	/**
+	 * @param images the images to set
+	 */
+	public void setImages(ImageIcon[][] images) {
+		this.images = images;
+	}
+
+	/**
+	 * @return the settingsList
+	 */
+	public List<String> getSettingsList() {
+		return settingsList;
+	}
+
+	/**
+	 * @param tbcFiles the settingsList to set
+	 */
+	public void setSettingsList(List<String> tbcFiles) {
+		this.settingsList = tbcFiles;
+	}
+
+	/**
+	 * @return the sFile
+	 */
+	public File[] getsFile() {
+		return sFile;
+	}
+
+	/**
+	 * @param sFile the sFile to set
+	 */
+	public void setsFile(File[] sFile) {
+		this.sFile = sFile;
+	}
+
+	/**
+	 * @return the setNames
+	 */
+	public String[] getSetNames() {
+		return setNames;
+	}
+
+	/**
+	 * @param setNames the setNames to set
+	 */
+	public void setSetNames(String[] setNames) {
+		this.setNames = setNames;
+	}
+
+	public boolean[][] getHasAudio() {
+		return hasAudio;
+	}
+
+	public void setHasAudio(boolean[][] hasAudio) {
+		this.hasAudio = hasAudio;
+	}
+
 	public void setAbsolutePath(Path absolutePath) {
 		this.absolutePath = absolutePath;
 	}

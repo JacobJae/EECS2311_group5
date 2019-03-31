@@ -151,4 +151,9 @@ public class Sound {
 			line = null;
 		}
 	}
+	
+	public boolean isPlaying()
+	{
+		return clip.isRunning();
+	}
 }
