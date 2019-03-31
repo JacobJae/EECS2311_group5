@@ -51,6 +51,7 @@ import java.awt.Dimension;
 import javax.swing.AbstractListModel;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.FlowLayout;
 
 public class ConfigurationGUI extends JFrame {
@@ -136,7 +137,7 @@ public class ConfigurationGUI extends JFrame {
 
 		if (currentSettings.equals("default")) {
 			loadDefaults();
-			btnSaveAs.setEnabled(false);
+			btnSave.setEnabled(false);
 		} else {
 			getSetting();
 		}
@@ -307,6 +308,9 @@ public class ConfigurationGUI extends JFrame {
 
 	}
 
+	/*
+	 * Set default values to certain variables
+	 */
 	private void setDefaults() {
 
 		path = "TalkBoxData/";
@@ -343,6 +347,9 @@ public class ConfigurationGUI extends JFrame {
 
 	}
 
+	/*
+	 * Add actionlisteners to buttons
+	 */
 	private void addActions() {
 
 		for (int i = 0; i < 6; i++) {
@@ -428,15 +435,28 @@ public class ConfigurationGUI extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-
 					createImagechooser();
-
 				}
 			});
 		}
 
+		lblTitle.addFocusListener(new FocusListener() {
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				setNames[currentBtnSet] = lblTitle.getText();
+			}
+
+			@Override
+			public void focusGained(FocusEvent e) {
+			}
+		});
+
 	}
 
+	/*
+	 * Open ImageChooser Dialogue
+	 */
 	protected void createImagechooser() {
 
 		JFileChooser j = new JFileChooser(path);
@@ -477,10 +497,16 @@ public class ConfigurationGUI extends JFrame {
 
 	}
 
+	/*
+	 * Sets currentSettings
+	 */
 	public void setCurrentSettings(String name) {
 		this.currentSettings = name;
 	}
 
+	/*
+	 * Open SavAs Dialogue
+	 */
 	private void createSaveAs() {
 
 		new SaveAsDialogue(this).setVisible(true);
@@ -488,23 +514,26 @@ public class ConfigurationGUI extends JFrame {
 
 	}
 
+	/*
+	 * Open Record Dialogue
+	 */
 	protected void openRecord() {
-
 		new RecordGUI(this).setVisible(true);
 		this.setEnabled(false);
-
 	}
 
-	public void refresh() {
-		loadDefaults();
-	}
-
+	/*
+	 * Get the name of the file
+	 */
 	private String getName(String string) {
 		String name = "";
 		name = string.substring(string.indexOf("\\") + 1, string.indexOf("."));
 		return name;
 	}
 
+	/*
+	 * Check if the file is a .wav file
+	 */
 	private Boolean isWav(String name) {
 		String ext = "";
 		ext = name.substring(name.indexOf("."), name.length());
@@ -514,6 +543,9 @@ public class ConfigurationGUI extends JFrame {
 		return false;
 	}
 
+	/*
+	 * Check if the file is SettingsFile
+	 */
 	private Boolean isTbc(String name) {
 		String ext = "";
 		ext = name.substring(name.indexOf("."), name.length());
@@ -523,6 +555,9 @@ public class ConfigurationGUI extends JFrame {
 		return false;
 	}
 
+	/*
+	 * Check if the file is Image File
+	 */
 	private boolean isImg(String name) {
 		String ext = "";
 		ext = name.substring(name.indexOf("."), name.length());
@@ -532,8 +567,10 @@ public class ConfigurationGUI extends JFrame {
 		return false;
 	}
 
+	/*
+	 * Resize the Image to fit the button
+	 */
 	private ImageIcon resizeImg(String path, JToggleButton currentAudioBtns2) {
-
 		ImageIcon icon = new ImageIcon(path);
 		Image scaleImage = icon.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
 		ImageIcon ic = new ImageIcon(scaleImage);
@@ -541,6 +578,9 @@ public class ConfigurationGUI extends JFrame {
 		return ic;
 	}
 
+	/*
+	 * Sets the model for list
+	 */
 	private void setModel(List<String> finalNames) {
 
 		DefaultListModel<String> listModel = new DefaultListModel<>();
@@ -552,6 +592,9 @@ public class ConfigurationGUI extends JFrame {
 
 	}
 
+	/*
+	 * Deselect Buttons
+	 */
 	private void deslectBtns() {
 
 		selectedBtnIndex = -1;
@@ -568,6 +611,9 @@ public class ConfigurationGUI extends JFrame {
 
 	}
 
+	/*
+	 * Change current set
+	 */
 	private void changeSet() {
 
 		if (currentBtnSet < 0)
@@ -581,6 +627,9 @@ public class ConfigurationGUI extends JFrame {
 
 	}
 
+	/*
+	 * Perform SWAP action
+	 */
 	private void swap() {
 		String temp = "TalkBoxData\\" + listAudioList.getSelectedValue().toString() + ".wav";
 		audioFileNames[currentBtnSet][selectedBtnIndex] = temp;
@@ -590,6 +639,9 @@ public class ConfigurationGUI extends JFrame {
 		setButtons();
 	}
 
+	/*
+	 * Perform DELETE Action
+	 */
 	private void delete() {
 		audioFileNames[currentBtnSet][selectedBtnIndex] = "Press to Configure!.";
 		hasSound[currentBtnSet][selectedBtnIndex] = false;
@@ -598,6 +650,9 @@ public class ConfigurationGUI extends JFrame {
 		setButtons();
 	}
 
+	/*
+	 * Activate Buttons
+	 */
 	private void activateBtns() {
 
 		int index = selectedBtnIndex;
@@ -605,7 +660,6 @@ public class ConfigurationGUI extends JFrame {
 
 		for (int i = 0; i < 6; i++) {
 			if (i == index) {
-
 				disp.setText("Select a File from the List to Swap!");
 				imageBtns[i].setEnabled(true);
 				deleteBtns[i].setEnabled(true);
@@ -615,19 +669,22 @@ public class ConfigurationGUI extends JFrame {
 					disp.setText("Click \"S\" Button to Swap");
 				}
 			} else {
-
 				disp.setText("Select a File from the List to Swap!");
 				imageBtns[i].setEnabled(false);
 				deleteBtns[i].setEnabled(false);
 				btnCtrlPanel[i].setEnabled(false);
-				if (type)
+				if (type) {
 					swapBtns[i].setEnabled(false);
-
+					disp.setText("Click \"S\" Button to Swap");
+				}
 			}
 		}
 
 	}
 
+	/*
+	 * Return selected Button index
+	 */
 	private int getSelectedIndex() {
 
 		for (int i = 0; i < 6; i++) {
@@ -638,10 +695,9 @@ public class ConfigurationGUI extends JFrame {
 
 	}
 
-	private void print(Object o) {
-		System.out.println(o.toString());
-	}
-
+	/*
+	 * Initialize the Display
+	 */
 	private void init() {
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
@@ -1119,6 +1175,9 @@ public class ConfigurationGUI extends JFrame {
 		contentPane.setLayout(gl_contentPane);
 	}
 
+	/*
+	 * Save Settings
+	 */
 	public void setSetting() {
 		try {
 			talkbox.setAudioFileNames(audioFileNames);
@@ -1139,7 +1198,10 @@ public class ConfigurationGUI extends JFrame {
 			e.printStackTrace();
 		}
 	}
-
+	
+	/*
+	 * Save Settings with a given Name
+	 */
 	public void setSetting(String name) {
 		try {
 			talkbox.setAudioFileNames(audioFileNames);
@@ -1156,7 +1218,7 @@ public class ConfigurationGUI extends JFrame {
 			objectOutputStream.flush();
 			objectOutputStream.close();
 
-			talkboxgui.setVisible(true);
+			talkboxgui.dispose();
 			dispose();
 
 		} catch (IOException e) {
@@ -1190,19 +1252,4 @@ public class ConfigurationGUI extends JFrame {
 		}
 	}
 
-	private void setDisplay(String message) {
-		display.setText(message);
-	}
-
-	private List<String> getAudioList() {
-		File f = new File("TalkBoxData/");
-		List<String> names = new ArrayList<String>(Arrays.asList(f.list()));
-		List<String> wavList = new ArrayList<>();
-		for (int i = 0; i < names.size(); i++) {
-			String str = names.get(i);
-			if (str.substring(str.indexOf('.'), str.length()).equals(".wav"))
-				wavList.add(str);
-		}
-		return wavList;
-	}
 }

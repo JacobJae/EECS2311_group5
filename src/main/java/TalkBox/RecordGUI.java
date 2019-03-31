@@ -1,27 +1,8 @@
 package main.java.TalkBox;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.io.File;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
 import java.awt.Color;
 import java.awt.Dimension;
-
-import javax.sound.sampled.LineUnavailableException;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 import java.awt.Font;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.border.BevelBorder;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -29,11 +10,23 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EmptyBorder;
+
 public class RecordGUI extends JFrame {
 
 	private JPanel contentPane;
 	private boolean recording = false;
-	private File recordFile;
 	private String path;
 	private Sound sound;
 	private JTextField nameText;
@@ -91,7 +84,6 @@ public class RecordGUI extends JFrame {
 				sound.stopRecording();
 				confGui.setEnabled(true);
 				confGui.setVisible(true);
-				confGui.refresh();
 				dispose();
 			}
 		});

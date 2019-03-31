@@ -80,6 +80,7 @@ public class SaveAsDialogue extends JDialog {
 				btnSave = new JButton("Save");
 				btnSave.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						name = nameText.getText();
 						if (valid) {
 							dispose();
 							configurationGUI.setEnabled(true);

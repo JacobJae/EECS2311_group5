@@ -101,27 +101,10 @@ public class TalkBoxGui extends JFrame {
 		init();
 		setVariables();
 		loadDefaults();
-		// getSetting();
 		setDefaults();
 		setSettingsList();
 		setButtons(currentBtnSet);
 		setActions();
-	}
-
-	private void setDefaults() {
-
-		imageButtons = new ImageIcon[audioSets][6];
-		
-		for (int i = 0; i < hasSound.length; i++) {
-			for (int k = 0; k < 6; k++) {
-				if (hasSound[i][k]) {
-					imageButtons[i][k] = new ImageIcon("TalkBoxData/smiley_face.jpg");
-				} else {
-					imageButtons[i][k] = new ImageIcon("TalkBoxData/Empty_Btn.png");
-				}
-			}
-		}
-
 	}
 
 	/*
@@ -191,6 +174,28 @@ public class TalkBoxGui extends JFrame {
 
 	}
 
+	/*
+	 * Set Default values to certain variables
+	 */
+	private void setDefaults() {
+
+		imageButtons = new ImageIcon[audioSets][6];
+		
+		for (int i = 0; i < hasSound.length; i++) {
+			for (int k = 0; k < 6; k++) {
+				if (hasSound[i][k]) {
+					imageButtons[i][k] = new ImageIcon("TalkBoxData/smiley_face.jpg");
+				} else {
+					imageButtons[i][k] = new ImageIcon("TalkBoxData/Empty_Btn.png");
+				}
+			}
+		}
+
+	}
+
+	/*
+	 * Set variables to arrays
+	 */
 	private void setVariables() {
 
 		currentBtn[0] = Button0;
@@ -209,6 +214,9 @@ public class TalkBoxGui extends JFrame {
 
 	}
 
+	/*
+	 * Add Actionlisteners to buttons
+	 */
 	private void setActions() {
 		for (int i = 0; i < 6; i++) {
 			currentBtn[i].addMouseListener(new MouseAdapter() {
@@ -242,6 +250,9 @@ public class TalkBoxGui extends JFrame {
 
 	}
 
+	/*
+	 * Set Buttons
+	 */
 	private void setButtons(int currentSet) {
 
 		for (int i = 0; i < 6; i++) {
@@ -252,6 +263,9 @@ public class TalkBoxGui extends JFrame {
 
 	}
 
+	/*
+	 * Set settings List in load ComboBox
+	 */
 	private void setSettingsList() {
 
 		DefaultComboBoxModel<String> aModel = new DefaultComboBoxModel<>();
@@ -263,10 +277,16 @@ public class TalkBoxGui extends JFrame {
 
 	}
 
+	/*
+	 * Set CurrentSettings
+	 */
 	public void setCurrentSettings(String name) {
 		this.currentSettings = name;
 	}
 
+	/*
+	 * Change Current Set
+	 */
 	private void changeSet(int t) {
 
 		currentBtnSet += t;
@@ -280,9 +300,11 @@ public class TalkBoxGui extends JFrame {
 
 	}
 
+	/*
+	 * Play sound on button press
+	 */
 	private void makeSound(JButton button) {
 		String text = button.getText();
-		System.out.println(text);
 		int currentSelected = -1;
 		boolean found = false;
 		for (int i = 0; i < 6; i++) {
@@ -303,6 +325,9 @@ public class TalkBoxGui extends JFrame {
 		}
 	}
 
+	/*
+	 * Reset the display
+	 */
 	public void reset(String name) {
 		setCurrentSettings(name);
 		setSettingsList();
@@ -310,18 +335,18 @@ public class TalkBoxGui extends JFrame {
 		init();
 	}
 
+	/*
+	 * Return the name of the file
+	 */
 	private String getName(String string) {
 		String name = "";
 		name = string.substring(string.indexOf("\\") + 1, string.indexOf("."));
 		return name;
 	}
 
-	private void print(Object[] obj) {
-		for (Object o : obj) {
-			System.out.println(o.toString());
-		}
-	}
-
+	/*
+	 * Check if file is a .wav file
+	 */
 	private boolean isWav(String name) {
 		String ext = "";
 		ext = name.substring(name.indexOf("."), name.length());
@@ -330,7 +355,10 @@ public class TalkBoxGui extends JFrame {
 
 		return false;
 	}
-
+	
+	/*
+	 * Check if the file is .tbc file
+	 */
 	private boolean isTbc(String name) {
 		String ext = "";
 		ext = name.substring(name.indexOf("."), name.length());
@@ -340,6 +368,9 @@ public class TalkBoxGui extends JFrame {
 		return false;
 	}
 
+	/*
+	 * Check if the file is Image file
+	 */
 	private boolean isImg(String name) {
 		String ext = "";
 		ext = name.substring(name.indexOf("."), name.length());
@@ -349,6 +380,9 @@ public class TalkBoxGui extends JFrame {
 		return false;
 	}
 
+	/*
+	 * Resize the Images to fit buttons
+	 */
 	private ImageIcon resizeImg(String path, JButton button) {
 		
 		ImageIcon icon = new ImageIcon(path);
@@ -358,12 +392,9 @@ public class TalkBoxGui extends JFrame {
 		return ic;
 	}
 
-	private String getExt(String name) {
-		String ext = "";
-		ext = name.substring(name.indexOf("."), name.length());
-		return ext;
-	}
-
+	/*
+	 * Intialize display
+	 */
 	private void init() {
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
@@ -689,6 +720,9 @@ public class TalkBoxGui extends JFrame {
 
 	}
 
+	/*
+	 * Open Configuration App
+	 */
 	private void createConfigure() {
 		setSetting();
 		sound.stopSound();
