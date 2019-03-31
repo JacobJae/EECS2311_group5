@@ -356,7 +356,8 @@ public class ConfigurationGUI extends JFrame {
 						selectedBtnIndex = getSelectedIndex();
 						makeSound((JToggleButton) e.getComponent());
 					}
-					activateBtns();
+					if (hasSound[currentBtnSet][selectedBtnIndex])
+						activateBtns();
 				}
 			});
 		}
@@ -673,7 +674,7 @@ public class ConfigurationGUI extends JFrame {
 	 */
 	private void delete() {
 		sound.stopSound();
-		audioFileNames[currentBtnSet][selectedBtnIndex] = "Press to Configure!";
+		audioFileNames[currentBtnSet][selectedBtnIndex] = "Press to Configure!.";
 		hasSound[currentBtnSet][selectedBtnIndex] = false;
 		imageButtons[currentBtnSet][selectedBtnIndex] = emptyImg;
 		deslectBtns();
