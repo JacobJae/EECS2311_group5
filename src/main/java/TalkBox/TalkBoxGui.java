@@ -102,13 +102,13 @@ public class TalkBoxGui extends JFrame {
 		setVariables();
 		loadDefaults();
 		// getSetting();
-		getDefaults();
+		setDefaults();
 		setSettingsList();
 		setButtons(currentBtnSet);
 		setActions();
 	}
 
-	private void getDefaults() {
+	private void setDefaults() {
 
 		imageButtons = new ImageIcon[audioSets][6];
 		
@@ -138,7 +138,7 @@ public class TalkBoxGui extends JFrame {
 		int j = 0;
 		for (int i = 0; i < allFiles.size(); i++) {
 			String file = allFiles.get(i).toString();
-			System.out.println(file);
+			//System.out.println(file);
 			if (isWav(file)) {
 				sFile[j] = allFiles.get(i);
 				j++;
@@ -234,7 +234,7 @@ public class TalkBoxGui extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				currentSettings = tbcLoader.getSelectedItem().toString().toLowerCase();
+				currentSettings = tbcLoader.getSelectedItem().toString();
 				getSetting();
 
 			}
@@ -371,7 +371,6 @@ public class TalkBoxGui extends JFrame {
 		setContentPane(contentPane);
 
 		btnStop = new JButton("STOP");
-		btnStop.setEnabled(false);
 		btnStop.setFont(new Font("Tahoma", Font.BOLD, 32));
 
 		lblTitle = new JLabel("Title");
@@ -430,29 +429,29 @@ public class TalkBoxGui extends JFrame {
 		btnPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		btnPanel.setBackground(Color.WHITE);
 
-		Button0 = new JButton("Button 1");
+		Button0 = new JButton("");
 		Button0.setAlignmentX(Component.CENTER_ALIGNMENT);
 		Button0.setFont(new Font("Calibri", Button0.getFont().getStyle(), Button0.getFont().getSize() + 4));
 		Button0.setBackground(new Color(0, 102, 204));
 
-		Button1 = new JButton("Button 2");
+		Button1 = new JButton("");
 		Button1.setAlignmentX(Component.CENTER_ALIGNMENT);
 		Button1.setFont(new Font("Calibri", Button0.getFont().getStyle(), Button0.getFont().getSize()));
 		Button1.setBackground(new Color(0, 102, 204));
 
-		Button2 = new JButton("Button 3");
+		Button2 = new JButton("");
 		Button2.setFont(new Font("Calibri", Button0.getFont().getStyle(), Button0.getFont().getSize()));
 		Button2.setBackground(new Color(0, 102, 204));
 
-		Button3 = new JButton("Button 4");
+		Button3 = new JButton("");
 		Button3.setFont(new Font("Calibri", Button0.getFont().getStyle(), Button0.getFont().getSize()));
 		Button3.setBackground(new Color(0, 102, 204));
 
-		Button4 = new JButton("Button 5");
+		Button4 = new JButton("");
 		Button4.setFont(new Font("Calibri", Button0.getFont().getStyle(), Button0.getFont().getSize()));
 		Button4.setBackground(new Color(0, 102, 204));
 
-		Button5 = new JButton("Button 6");
+		Button5 = new JButton("");
 		Button5.setFont(new Font("Calibri", Button0.getFont().getStyle(), Button0.getFont().getSize()));
 		Button5.setBackground(new Color(0, 102, 204));
 
@@ -664,7 +663,7 @@ public class TalkBoxGui extends JFrame {
 			objectInputStream.close();
 			fileInputStream.close();
 
-			System.out.println(this.toString());
+			//System.out.println(this.toString());
 			// setButtons(0);
 
 		} catch (IOException | ClassNotFoundException e) {
