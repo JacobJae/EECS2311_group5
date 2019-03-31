@@ -34,10 +34,11 @@ public class SaveAsDialogue extends JDialog {
 	 */
 	public SaveAsDialogue(ConfigurationGUI configurationGUI) {
 
-		setBounds(100, 100, 450, 165);
+		setSize(450, 165);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setLayout(new FlowLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setLocationRelativeTo(null);
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		{
 			JLabel lblNameTheFile = new JLabel("Name the file:");

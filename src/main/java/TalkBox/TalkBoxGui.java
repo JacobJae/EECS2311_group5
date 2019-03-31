@@ -24,7 +24,6 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -39,10 +38,14 @@ public class TalkBoxGui extends JFrame {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 8569879131969549758L;
+	/**
+	 * 
+	 */
 	private TalkBox talkbox;
 	private String[][] audioFileNames;
 	private Sound sound;
-	private int currentBtnSet = 0, width, height, audioSets, totAudioBtns;
+	private int currentBtnSet = 0, audioSets, totAudioBtns;
 	private JPanel contentPane;
 	private JButton Button0, Button1, Button2, Button3, Button4, Button5;
 	private JTextPane TextPane0, TextPane1, TextPane2, TextPane3, TextPane4, TextPane5;
@@ -111,9 +114,9 @@ public class TalkBoxGui extends JFrame {
 	 * Load default layout with all the files selected
 	 */
 	private void loadDefaults() {
-		
+
 		talkbox = new TalkBox();
-		
+
 		String path = "TalkBoxData/";
 		allFiles = Arrays.asList(new File(path).listFiles());
 		sFile = new File[allFiles.size() * 2];
@@ -121,7 +124,7 @@ public class TalkBoxGui extends JFrame {
 		int j = 0;
 		for (int i = 0; i < allFiles.size(); i++) {
 			String file = allFiles.get(i).toString();
-			//System.out.println(file);
+			// System.out.println(file);
 			if (isWav(file)) {
 				sFile[j] = allFiles.get(i);
 				j++;
@@ -170,8 +173,6 @@ public class TalkBoxGui extends JFrame {
 			}
 		}
 
-
-
 	}
 
 	/*
@@ -180,7 +181,7 @@ public class TalkBoxGui extends JFrame {
 	private void setDefaults() {
 
 		imageButtons = new ImageIcon[audioSets][6];
-		
+
 		for (int i = 0; i < hasSound.length; i++) {
 			for (int k = 0; k < 6; k++) {
 				if (hasSound[i][k]) {
@@ -257,7 +258,8 @@ public class TalkBoxGui extends JFrame {
 
 		for (int i = 0; i < 6; i++) {
 			currentBtn[i].setIcon(resizeImg(imageButtons[currentSet][i].toString(), currentBtn[i]));
-			currentText[i].setText(getName(audioFileNames[currentBtnSet][i]));
+			currentBtn[i].setToolTipText(findName(getName(audioFileNames[currentBtnSet][i])));
+			currentText[i].setText(findName(getName(audioFileNames[currentBtnSet][i])));
 		}
 		lblTitle.setText(setNames[currentBtnSet]);
 
@@ -304,16 +306,15 @@ public class TalkBoxGui extends JFrame {
 	 * Play sound on button press
 	 */
 	private void makeSound(JButton button) {
-		String text = button.getText();
+
+		String text = button.getToolTipText();
 		int currentSelected = -1;
 		boolean found = false;
 		for (int i = 0; i < 6; i++) {
-			if (text.equals(currentBtn[i].getText())) {
+			if (text.equals(currentBtn[i].getToolTipText())) {
 				currentSelected = i;
 				if (hasSound[currentBtnSet][currentSelected]) {
 					sound.playSound(audioFileNames[currentBtnSet][currentSelected]);
-					if (sound.isPlaying())
-						btnStop.setEnabled(true);
 					found = true;
 				}
 			}
@@ -355,7 +356,7 @@ public class TalkBoxGui extends JFrame {
 
 		return false;
 	}
-	
+
 	/*
 	 * Check if the file is .tbc file
 	 */
@@ -384,14 +385,46 @@ public class TalkBoxGui extends JFrame {
 	 * Resize the Images to fit buttons
 	 */
 	private ImageIcon resizeImg(String path, JButton button) {
-		
+
 		ImageIcon icon = new ImageIcon(path);
 		Image scaleImage = icon.getImage().getScaledInstance(145, 120, Image.SCALE_SMOOTH);
 		ImageIcon ic = new ImageIcon(scaleImage);
-		
+
 		return ic;
 	}
 
+	/*
+	 * Gives the name of the Sound File
+	 */
+	private String findName(String name) {
+		String[] words = name.split("_");
+		String str = "";
+		for (String w : words) 
+			str += toDisplayCase(w) + " ";
+		return str;
+	}
+
+	/*
+	 * Capitalize First Letter
+	 */
+	private static String toDisplayCase(String s) {
+
+	    final String ACTIONABLE_DELIMITERS = " '-/"; // these cause the character following
+	                                                 // to be capitalized
+
+	    StringBuilder sb = new StringBuilder();
+	    boolean capNext = true;
+
+	    for (char c : s.toCharArray()) {
+	        c = (capNext)
+	                ? Character.toUpperCase(c)
+	                : Character.toLowerCase(c);
+	        sb.append(c);
+	        capNext = (ACTIONABLE_DELIMITERS.indexOf((int) c) >= 0); // explicit cast not needed
+	    }
+	    return sb.toString();
+	}
+	
 	/*
 	 * Intialize display
 	 */
@@ -450,7 +483,7 @@ public class TalkBoxGui extends JFrame {
 		lblLoad.setFont(new Font("Tahoma", Font.BOLD, 20));
 		loadPanel.add(lblLoad);
 
-		tbcLoader = new JComboBox();
+		tbcLoader = new JComboBox<String>();
 		loadPanel.add(tbcLoader);
 
 		btnPrevSet = new JButton("<");
@@ -487,46 +520,46 @@ public class TalkBoxGui extends JFrame {
 		Button5.setBackground(new Color(0, 102, 204));
 
 		TextPane0 = new JTextPane();
-		TextPane0.setFont(new Font("Calibri", TextPane0.getFont().getStyle(), TextPane0.getFont().getSize() + 2));
+		TextPane0.setFont(new Font("Monospaced", Font.BOLD, 18));
 		TextPane0.setDisabledTextColor(Color.BLACK);
 		TextPane0.setEnabled(false);
 		TextPane0.setEditable(false);
-		TextPane0.setBackground(Color.PINK);
+		TextPane0.setBackground(Color.WHITE);
 
 		TextPane1 = new JTextPane();
-		TextPane1.setFont(new Font("Calibri", TextPane0.getFont().getStyle(), TextPane0.getFont().getSize() + 2));
-		TextPane1.setDisabledTextColor(Color.BLACK);
 		TextPane1.setEnabled(false);
+		TextPane1.setFont(new Font("Monospaced", Font.BOLD, 18));
+		TextPane1.setDisabledTextColor(Color.BLACK);
 		TextPane1.setEditable(false);
-		TextPane1.setBackground(Color.PINK);
+		TextPane1.setBackground(Color.WHITE);
 
 		TextPane2 = new JTextPane();
-		TextPane2.setFont(new Font("Calibri", TextPane0.getFont().getStyle(), TextPane0.getFont().getSize() + 2));
-		TextPane2.setDisabledTextColor(Color.BLACK);
 		TextPane2.setEnabled(false);
+		TextPane2.setFont(new Font("Monospaced", Font.BOLD, 18));
+		TextPane2.setDisabledTextColor(Color.BLACK);
 		TextPane2.setEditable(false);
-		TextPane2.setBackground(Color.PINK);
+		TextPane2.setBackground(Color.WHITE);
 
 		TextPane3 = new JTextPane();
-		TextPane3.setFont(new Font("Calibri", TextPane0.getFont().getStyle(), TextPane0.getFont().getSize() + 2));
-		TextPane3.setDisabledTextColor(Color.BLACK);
 		TextPane3.setEnabled(false);
+		TextPane3.setFont(new Font("Monospaced", Font.BOLD, 18));
+		TextPane3.setDisabledTextColor(Color.BLACK);
 		TextPane3.setEditable(false);
-		TextPane3.setBackground(Color.PINK);
+		TextPane3.setBackground(Color.WHITE);
 
 		TextPane4 = new JTextPane();
-		TextPane4.setFont(new Font("Calibri", TextPane0.getFont().getStyle(), TextPane0.getFont().getSize() + 2));
-		TextPane4.setDisabledTextColor(Color.BLACK);
 		TextPane4.setEnabled(false);
+		TextPane4.setFont(new Font("Monospaced", Font.BOLD, 18));
+		TextPane4.setDisabledTextColor(Color.BLACK);
 		TextPane4.setEditable(false);
-		TextPane4.setBackground(Color.PINK);
+		TextPane4.setBackground(Color.WHITE);
 
 		TextPane5 = new JTextPane();
-		TextPane5.setFont(new Font("Calibri", TextPane0.getFont().getStyle(), TextPane0.getFont().getSize() + 2));
-		TextPane5.setDisabledTextColor(Color.BLACK);
 		TextPane5.setEnabled(false);
+		TextPane5.setFont(new Font("Monospaced", Font.BOLD, 18));
+		TextPane5.setDisabledTextColor(Color.BLACK);
 		TextPane5.setEditable(false);
-		TextPane5.setBackground(Color.PINK);
+		TextPane5.setBackground(Color.WHITE);
 
 		JButton button = new JButton(">");
 		button.addActionListener(new ActionListener() {
@@ -536,57 +569,47 @@ public class TalkBoxGui extends JFrame {
 		});
 		button.setFont(new Font("Tahoma", Font.BOLD, 24));
 		GroupLayout gl_btnPanel = new GroupLayout(btnPanel);
-		gl_btnPanel.setHorizontalGroup(
-			gl_btnPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_btnPanel.createSequentialGroup()
-					.addGap(2)
-					.addGroup(gl_btnPanel.createParallelGroup(Alignment.LEADING)
+		gl_btnPanel.setHorizontalGroup(gl_btnPanel.createParallelGroup(Alignment.LEADING).addGroup(gl_btnPanel
+				.createSequentialGroup().addGap(2)
+				.addGroup(gl_btnPanel.createParallelGroup(Alignment.LEADING).addGroup(gl_btnPanel
+						.createSequentialGroup().addGap(2)
+						.addComponent(Button0, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(Button1, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE).addGap(8)
+						.addComponent(Button2, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE).addGap(8)
+						.addComponent(Button3, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE).addGap(8)
+						.addComponent(Button4, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE).addGap(8)
+						.addComponent(Button5, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_btnPanel.createSequentialGroup()
-							.addGap(2)
-							.addComponent(Button0, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(Button1, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
-							.addGap(8)
-							.addComponent(Button2, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
-							.addGap(8)
-							.addComponent(Button3, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
-							.addGap(8)
-							.addComponent(Button4, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
-							.addGap(8)
-							.addComponent(Button5, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_btnPanel.createSequentialGroup()
-							.addComponent(TextPane0, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
-							.addGap(8)
-							.addComponent(TextPane1, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
-							.addGap(8)
-							.addComponent(TextPane2, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
-							.addGap(8)
-							.addComponent(TextPane3, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
-							.addGap(8)
-							.addComponent(TextPane4, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
-							.addGap(8)
-							.addComponent(TextPane5, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE))))
-		);
-		gl_btnPanel.setVerticalGroup(
-			gl_btnPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_btnPanel.createSequentialGroup()
-					.addGroup(gl_btnPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(TextPane0, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
+								.addGap(8)
+								.addComponent(TextPane1, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
+								.addGap(8)
+								.addComponent(TextPane2, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
+								.addGap(8)
+								.addComponent(TextPane3, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
+								.addGap(8)
+								.addComponent(TextPane4, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
+								.addGap(8).addComponent(TextPane5, GroupLayout.PREFERRED_SIZE, 134,
+										GroupLayout.PREFERRED_SIZE)))));
+		gl_btnPanel.setVerticalGroup(gl_btnPanel.createParallelGroup(Alignment.LEADING).addGroup(gl_btnPanel
+				.createSequentialGroup()
+				.addGroup(gl_btnPanel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_btnPanel.createParallelGroup(Alignment.BASELINE)
-							.addComponent(Button1, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
-							.addComponent(Button0, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE))
+								.addComponent(Button1, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
+								.addComponent(Button0, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE))
 						.addComponent(Button2, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
 						.addComponent(Button3, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
 						.addComponent(Button4, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
 						.addComponent(Button5, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE))
-					.addGap(8)
-					.addGroup(gl_btnPanel.createParallelGroup(Alignment.LEADING)
+				.addGap(8)
+				.addGroup(gl_btnPanel.createParallelGroup(Alignment.LEADING)
 						.addComponent(TextPane0, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
 						.addComponent(TextPane1, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
 						.addComponent(TextPane2, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
 						.addComponent(TextPane3, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
 						.addComponent(TextPane4, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
-						.addComponent(TextPane5, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)))
-		);
+						.addComponent(TextPane5, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE))));
 		gl_btnPanel.setHonorsVisibility(false);
 		btnPanel.setLayout(gl_btnPanel);
 		GroupLayout gl_mainPanel = new GroupLayout(mainPanel);
@@ -646,7 +669,6 @@ public class TalkBoxGui extends JFrame {
 		});
 		contentPane.setLayout(gl_contentPane);
 
-		int gap = height / 30, btnWidth = (width - 8 * gap) / 6;
 
 	}
 
@@ -694,7 +716,7 @@ public class TalkBoxGui extends JFrame {
 			objectInputStream.close();
 			fileInputStream.close();
 
-			//System.out.println(this.toString());
+			// System.out.println(this.toString());
 			// setButtons(0);
 
 		} catch (IOException | ClassNotFoundException e) {
@@ -724,8 +746,7 @@ public class TalkBoxGui extends JFrame {
 	 * Open Configuration App
 	 */
 	private void createConfigure() {
-		setSetting();
 		sound.stopSound();
-		ConfigurationGUI gui = new ConfigurationGUI(this, currentSettings);
+		new ConfigurationGUI(this, currentSettings);
 	}
 }

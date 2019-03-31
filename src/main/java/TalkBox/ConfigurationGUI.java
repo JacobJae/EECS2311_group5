@@ -5,20 +5,21 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Timer;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.swing.ButtonGroup;
@@ -34,28 +35,18 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.ListModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.Component;
-import java.awt.Dimension;
-import javax.swing.AbstractListModel;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.FlowLayout;
-
 public class ConfigurationGUI extends JFrame {
-	private JLabel display;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8521259104660128253L;
 	private JPanel contentPane;
 	private Sound sound;
 	private TalkBox talkbox = new TalkBox();
@@ -99,7 +90,6 @@ public class ConfigurationGUI extends JFrame {
 			emptyImg = new ImageIcon("TalkBoxData/Empty_Btn.png");
 	private List<String> imgFiles = new ArrayList<>();
 	private JLabel disp;
-	private Timer t;
 
 	/**
 	 * Launch the application.
@@ -127,6 +117,7 @@ public class ConfigurationGUI extends JFrame {
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
+				sound.stopSound();
 				e.getWindow().dispose();
 			}
 		});
@@ -284,8 +275,9 @@ public class ConfigurationGUI extends JFrame {
 	private void setButtons() {
 
 		for (int i = 0; i < 6; i++) {
-			currentAudioBtns[i].setIcon(resizeImg(imageButtons[currentBtnSet][i].toString(), currentAudioBtns[i]));
-			currentAudioText[i].setText(getName(audioFileNames[currentBtnSet][i]));
+			currentAudioBtns[i].setIcon(resizeImg(imageButtons[currentBtnSet][i].toString()));
+			currentAudioText[i].setText(findName(getName(audioFileNames[currentBtnSet][i])));
+			currentAudioBtns[i].setToolTipText(getName(audioFileNames[currentBtnSet][i]));
 		}
 
 		List<String> finalNames = new ArrayList<String>();
@@ -294,7 +286,7 @@ public class ConfigurationGUI extends JFrame {
 
 		for (int i = 0; i < 6; i++) {
 			if (hasSound[currentBtnSet][i]) {
-				finalNames.remove(currentAudioText[i].getText());
+				finalNames.remove(currentAudioBtns[i].getToolTipText());
 			}
 		}
 
@@ -353,12 +345,17 @@ public class ConfigurationGUI extends JFrame {
 	private void addActions() {
 
 		for (int i = 0; i < 6; i++) {
-			currentAudioBtns[i].addActionListener(new ActionListener() {
-
+			currentAudioBtns[i].addMouseListener(new MouseAdapter() {
 				@Override
-				public void actionPerformed(ActionEvent e) {
-
-					selectedBtnIndex = getSelectedIndex();
+				public void mouseClicked(MouseEvent e) {
+					int tempIndex = getSelectedIndex();
+					if (tempIndex == selectedBtnIndex) {
+						sound.stopSound();
+						deslectBtns();
+					} else {
+						selectedBtnIndex = getSelectedIndex();
+						makeSound((JToggleButton) e.getComponent());
+					}
 					activateBtns();
 				}
 			});
@@ -455,15 +452,44 @@ public class ConfigurationGUI extends JFrame {
 	}
 
 	/*
+	 * Play sound on button press
+	 */
+	private void makeSound(JToggleButton button) {
+
+		String text = button.getToolTipText();
+		int currentSelected = -1;
+		boolean found = false;
+		for (int i = 0; i < 6; i++) {
+			if (text.equals(currentAudioBtns[i].getToolTipText())) {
+				currentSelected = i;
+				if (hasSound[currentBtnSet][currentSelected]) {
+					sound.playSound(audioFileNames[currentBtnSet][currentSelected]);
+					found = true;
+				}
+			}
+		}
+
+		if (!found) {
+			sound.stopSound();
+		}
+	}
+
+	/*
 	 * Open ImageChooser Dialogue
 	 */
 	protected void createImagechooser() {
 
 		JFileChooser j = new JFileChooser(path);
-		j.showOpenDialog(null);
 		j.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Images", "jpg", "png", "gif", "bmp");
 		j.setFileFilter(filter);
+		j.showOpenDialog(null);
+
+		if (j.getSelectedFile() != null) {
+			File file = j.getSelectedFile();
+			imageButtons[currentBtnSet][selectedBtnIndex] = new ImageIcon("TalkBoxData/" + file.getName());
+			currentAudioBtns[selectedBtnIndex].setIcon(resizeImg("TalkBoxData/" + file.getName()));
+		}
 
 	}
 
@@ -570,7 +596,7 @@ public class ConfigurationGUI extends JFrame {
 	/*
 	 * Resize the Image to fit the button
 	 */
-	private ImageIcon resizeImg(String path, JToggleButton currentAudioBtns2) {
+	private ImageIcon resizeImg(String path) {
 		ImageIcon icon = new ImageIcon(path);
 		Image scaleImage = icon.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
 		ImageIcon ic = new ImageIcon(scaleImage);
@@ -609,6 +635,8 @@ public class ConfigurationGUI extends JFrame {
 
 		}
 
+		disp.setText("Press a button to Configure!");
+
 	}
 
 	/*
@@ -635,6 +663,7 @@ public class ConfigurationGUI extends JFrame {
 		audioFileNames[currentBtnSet][selectedBtnIndex] = temp;
 		hasSound[currentBtnSet][selectedBtnIndex] = true;
 		imageButtons[currentBtnSet][selectedBtnIndex] = defaultImg;
+
 		deslectBtns();
 		setButtons();
 	}
@@ -643,7 +672,8 @@ public class ConfigurationGUI extends JFrame {
 	 * Perform DELETE Action
 	 */
 	private void delete() {
-		audioFileNames[currentBtnSet][selectedBtnIndex] = "Press to Configure!.";
+		sound.stopSound();
+		audioFileNames[currentBtnSet][selectedBtnIndex] = "Press to Configure!";
 		hasSound[currentBtnSet][selectedBtnIndex] = false;
 		imageButtons[currentBtnSet][selectedBtnIndex] = emptyImg;
 		deslectBtns();
@@ -693,6 +723,36 @@ public class ConfigurationGUI extends JFrame {
 		}
 		return -1;
 
+	}
+
+	/*
+	 * Gives the name of the Sound File
+	 */
+	private String findName(String name) {
+		String[] words = name.split("_");
+		String str = "";
+		for (String w : words)
+			str += toDisplayCase(w) + " ";
+		return str;
+	}
+
+	/*
+	 * Capitalize First Letter
+	 */
+	private static String toDisplayCase(String s) {
+
+		final String ACTIONABLE_DELIMITERS = " '-/"; // these cause the character following
+														// to be capitalized
+
+		StringBuilder sb = new StringBuilder();
+		boolean capNext = true;
+
+		for (char c : s.toCharArray()) {
+			c = (capNext) ? Character.toUpperCase(c) : Character.toLowerCase(c);
+			sb.append(c);
+			capNext = (ACTIONABLE_DELIMITERS.indexOf((int) c) >= 0); // explicit cast not needed
+		}
+		return sb.toString();
 	}
 
 	/*
@@ -899,6 +959,10 @@ public class ConfigurationGUI extends JFrame {
 		currentBtnGrp.add(btnSound2);
 
 		txtBtn2 = new JTextArea();
+		txtBtn2.setWrapStyleWord(true);
+		txtBtn2.setLineWrap(true);
+		txtBtn2.setEnabled(false);
+		txtBtn2.setEditable(false);
 		txtBtn2.setFont(new Font("Monospaced", Font.BOLD, 18));
 
 		cntBtn2 = new JPanel();
@@ -936,6 +1000,10 @@ public class ConfigurationGUI extends JFrame {
 		currentBtnGrp.add(btnSound3);
 
 		txtBtn3 = new JTextArea();
+		txtBtn3.setWrapStyleWord(true);
+		txtBtn3.setLineWrap(true);
+		txtBtn3.setEnabled(false);
+		txtBtn3.setEditable(false);
 		txtBtn3.setFont(new Font("Monospaced", Font.BOLD, 18));
 
 		cntBtn3 = new JPanel();
@@ -973,6 +1041,10 @@ public class ConfigurationGUI extends JFrame {
 		currentBtnGrp.add(btnSound4);
 
 		txtBtn4 = new JTextArea();
+		txtBtn4.setWrapStyleWord(true);
+		txtBtn4.setLineWrap(true);
+		txtBtn4.setEnabled(false);
+		txtBtn4.setEditable(false);
 		txtBtn4.setFont(new Font("Monospaced", Font.BOLD, 18));
 
 		cntBtn4 = new JPanel();
@@ -1010,6 +1082,10 @@ public class ConfigurationGUI extends JFrame {
 		currentBtnGrp.add(btnSound5);
 
 		txtBtn5 = new JTextArea();
+		txtBtn5.setWrapStyleWord(true);
+		txtBtn5.setLineWrap(true);
+		txtBtn5.setEnabled(false);
+		txtBtn5.setEditable(false);
 		txtBtn5.setFont(new Font("Monospaced", Font.BOLD, 18));
 
 		cntBtn5 = new JPanel();
@@ -1051,6 +1127,10 @@ public class ConfigurationGUI extends JFrame {
 		currentBtnGrp.add(btnSound6);
 
 		txtBtn6 = new JTextArea();
+		txtBtn6.setWrapStyleWord(true);
+		txtBtn6.setLineWrap(true);
+		txtBtn6.setEnabled(false);
+		txtBtn6.setEditable(false);
 		txtBtn6.setFont(new Font("Monospaced", Font.BOLD, 18));
 
 		cntBtn6 = new JPanel();
@@ -1121,6 +1201,10 @@ public class ConfigurationGUI extends JFrame {
 		currentBtnGrp.add(btnSound1);
 
 		txtBtn1 = new JTextArea();
+		txtBtn1.setWrapStyleWord(true);
+		txtBtn1.setLineWrap(true);
+		txtBtn1.setEnabled(false);
+		txtBtn1.setEditable(false);
 		txtBtn1.setFont(new Font("Monospaced", Font.BOLD, 18));
 
 		cntBtn1 = new JPanel();
@@ -1159,6 +1243,7 @@ public class ConfigurationGUI extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				talkboxgui.setVisible(true);
+				sound.stopSound();
 				dispose();
 			}
 		});
@@ -1198,7 +1283,7 @@ public class ConfigurationGUI extends JFrame {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/*
 	 * Save Settings with a given Name
 	 */
