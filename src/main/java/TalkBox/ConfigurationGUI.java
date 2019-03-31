@@ -2,7 +2,7 @@ package main.java.TalkBox;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Toolkit;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -24,8 +24,10 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -37,6 +39,7 @@ import javax.swing.JToggleButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -50,73 +53,32 @@ import java.awt.FlowLayout;
 
 public class ConfigurationGUI extends JFrame {
 	private JLabel display;
-	private JToggleButton[][] audioFileButtons;
 	private JPanel contentPane;
-	private Font font;
-	private ButtonGroup btngroup;
 	private Sound sound;
 	private TalkBox talkbox = new TalkBox();
-	private int currentBtnSet = 0, width, height;
+	private int currentBtnSet = 0;
 	private int selectedBtnIndex = -1, selectedListIndex = -1;
 	private TalkBoxGui talkboxgui;
 	private final ButtonGroup currentBtnGrp = new ButtonGroup();
 	private JList<String> listAudioList;
-	private JToggleButton btnSound1;
-	private JToggleButton btnSound2;
-	private JToggleButton btnSound3;
-	private JToggleButton btnSound4;
-	private JToggleButton btnSound5;
-	private JToggleButton btnSound6;
-	private JTextArea txtBtn1;
-	private JTextArea txtBtn2;
-	private JTextArea txtBtn3;
-	private JTextArea txtBtn4;
-	private JTextArea txtBtn5;
-	private JTextArea txtBtn6;
-	private JButton btn1I;
-	private JButton btn1D;
-	private JButton btn1S;
-	private JButton btn2I;
-	private JButton btn2D;
-	private JButton btn2S;
-	private JButton btn3I;
-	private JButton btn3D;
-	private JButton btn3S;
-	private JButton btn4I;
-	private JButton btn4D;
-	private JButton btn4S;
-	private JButton btn5I;
-	private JButton btn5D;
-	private JButton btn5S;
-	private JButton btn6I;
-	private JButton btn6D;
-	private JButton btn6S;
-	private JButton btnPreviousSet;
-	private JButton btnNextSet;
-	private JButton btnAddNewSet;
-	private JButton btnDeleteSet;
+	private JToggleButton btnSound1, btnSound2, btnSound3, btnSound4, btnSound5, btnSound6;
+	private JTextArea txtBtn1, txtBtn2, txtBtn3, txtBtn4, txtBtn5, txtBtn6;
+	private JButton btn1I, btn1D, btn1S;
+	private JButton btn2I, btn2D, btn2S;
+	private JButton btn3I, btn3D, btn3S;
+	private JButton btn4I, btn4D, btn4S;
+	private JButton btn5I, btn5D, btn5S;
+	private JButton btn6I, btn6D, btn6S;
+	private JButton btnPreviousSet, btnNextSet, btnAddNewSet, btnDeleteSet;
 	private JComboBox<String> setSelector;
-	private JButton btnRecord_1;
-	private JButton btnSave;
-	private JButton btnSaveAs;
-	private JButton btnExit;
+	private JButton btnRecord_1, btnSave, btnSaveAs, btnExit;
 	private JToggleButton[] currentAudioBtns = new JToggleButton[6];
 	private JTextArea[] currentAudioText = new JTextArea[6];
 	private JPanel[] btnCtrlPanel = new JPanel[6];
 	private JPanel[] btnPanel = new JPanel[6];
 	private JButton[] deleteBtns = new JButton[6], imageBtns = new JButton[6], swapBtns = new JButton[6];
-	private JPanel btn1Panel;
-	private JPanel btn2Panel;
-	private JPanel btn3Panel;
-	private JPanel btn4Panel;
-	private JPanel btn5Panel;
-	private JPanel btn6Panel;
-	private JPanel cntBtn1;
-	private JPanel cntBtn2;
-	private JPanel cntBtn3;
-	private JPanel cntBtn4;
-	private JPanel cntBtn5;
-	private JPanel cntBtn6;
+	private JPanel btn1Panel, btn2Panel, btn3Panel, btn4Panel, btn5Panel, btn6Panel;
+	private JPanel cntBtn1, cntBtn2, cntBtn3, cntBtn4, cntBtn5, cntBtn6;
 	private int totAudioBtns;
 	private int audioSets;
 	private String[][] audioFileNames;
@@ -129,6 +91,8 @@ public class ConfigurationGUI extends JFrame {
 	private JTextField lblTitle;
 	private JComboBox<String> tbcLoader;
 	private List<String> tbcFiles = new ArrayList<String>();
+	private ImageIcon[][] imageButtons;
+	private List<String> imgFiles = new ArrayList<>();
 
 	/**
 	 * Launch the application.
@@ -152,25 +116,27 @@ public class ConfigurationGUI extends JFrame {
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setSize(950, 800);
 		setLocationRelativeTo(null);
+		setResizable(false);
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				e.getWindow().dispose();
 				talkboxgui.setVisible(true);
-				talkboxgui.reset(currentSettings);
 			}
 		});
 
 		init();
 		this.currentSettings = currentSettings;
 		setVariables();
+		// loadDefaults();
+		getSetting();
 		setDefaults();
-		loadDefaults();
 		addActions();
+		setButtons(currentBtnSet);
 	}
 
 	/*
-	 * Adds every button to seperate Arrays for further use
+	 * Adds every button to separate Arrays for further use
 	 */
 	private void setVariables() {
 
@@ -245,6 +211,8 @@ public class ConfigurationGUI extends JFrame {
 			}
 			if (isTbc(file))
 				tbcFiles.add(file);
+			if (isImg(file))
+				imgFiles.add(file);
 		}
 
 		names = new ArrayList<String>();
@@ -286,8 +254,6 @@ public class ConfigurationGUI extends JFrame {
 		setSetList();
 		setSettingsList();
 
-		setButtons(currentBtnSet);
-
 	}
 
 	/*
@@ -296,7 +262,7 @@ public class ConfigurationGUI extends JFrame {
 	private void setButtons(int currentSet) {
 
 		for (int i = 0; i < 6; i++) {
-			currentAudioBtns[i].setText(getName(audioFileNames[currentBtnSet][i]));
+			currentAudioBtns[i].setIcon(resizeImg(imageButtons[currentSet][i].toString(), currentAudioBtns[i]));
 			currentAudioBtns[i].setText(getName(audioFileNames[currentBtnSet][i]));
 		}
 
@@ -318,10 +284,38 @@ public class ConfigurationGUI extends JFrame {
 
 	}
 
-	//configExitPanel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[] { btnConfig, btnExit }));
-	/*
-	 * Add onClick Actions for every element
-	 */
+	private void setDefaults() {
+
+		path = "TalkBoxData/";
+		allFiles = Arrays.asList(new File(path).listFiles());
+		sFile = new File[allFiles.size() * 2];
+		int j = 0;
+		for (int i = 0; i < allFiles.size(); i++) {
+			String file = allFiles.get(i).toString();
+			if (isWav(file)) {
+				sFile[j] = allFiles.get(i);
+				j++;
+			}
+			if (isTbc(file))
+				tbcFiles.add(file);
+			if (isImg(file))
+				imgFiles.add(file);
+		}
+		names = new ArrayList<String>();
+		for (int i = 0; i < j; i++) {
+			names.add(getName(sFile[i].toString()));
+		}
+
+		/*
+		 * imageButtons = new ImageIcon[audioSets][6];
+		 * 
+		 * for (int i = 0; i < hasSound.length; i++) { for (int k = 0; k < 6; k++) { if
+		 * (hasSound[i][k]) { imageButtons[i][k] = new
+		 * ImageIcon("TalkBoxData/smiley_face.jpg"); } else { imageButtons[i][k] = new
+		 * ImageIcon("TalkBoxData/Empty_Btn.png"); } } }
+		 */
+	}
+
 	private void addActions() {
 
 		for (int i = 0; i < 6; i++) {
@@ -384,17 +378,6 @@ public class ConfigurationGUI extends JFrame {
 			}
 		});
 
-		btnSaveAs.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				// NEED TO CREATE A WINDOW MODULE WHERE YOU CAN NAME AND SAVE THE FILE JUST LIKE
-				// LOADING ONE
-
-			}
-		});
-
 		btnRecord_1.addActionListener(new ActionListener() {
 
 			@Override
@@ -412,19 +395,29 @@ public class ConfigurationGUI extends JFrame {
 
 			}
 		});
-		
-		for(int i=0;i<6;i++)
-		{
+
+		for (int i = 0; i < 6; i++) {
 			imageBtns[i].addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					
-					// Add the windows chooser here
-					
+
+					createImagechooser();
+
 				}
 			});
 		}
+
+	}
+
+	protected void createImagechooser() {
+
+		JFileChooser j = new JFileChooser(path);
+		j.showOpenDialog(null);
+		j.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Images", "JPG", "PNG", "GIF", "BMP");
+		j.setFileFilter(filter);
+		j.setFileFilter(filter);
 
 	}
 
@@ -435,7 +428,7 @@ public class ConfigurationGUI extends JFrame {
 		for (int i = 0; i < audioSets; i++) {
 			setNames[i] = "Audio Set " + (i + 1);
 		}
-		
+
 		DefaultComboBoxModel<String> aModel = new DefaultComboBoxModel<>();
 		for (int i = 0; i < setNames.length; i++) {
 			aModel.addElement(setNames[i]);
@@ -457,9 +450,8 @@ public class ConfigurationGUI extends JFrame {
 		tbcLoader.setSelectedItem(currentSettings);
 
 	}
-	
-	public void setCurrentSettings(String name)
-	{
+
+	public void setCurrentSettings(String name) {
 		this.currentSettings = name;
 	}
 
@@ -503,6 +495,24 @@ public class ConfigurationGUI extends JFrame {
 			return true;
 
 		return false;
+	}
+
+	private boolean isImg(String name) {
+		String ext = "";
+		ext = name.substring(name.indexOf("."), name.length());
+		if (ext.equals(".jpg") || ext.equals(".png") || ext.equals(".bmp"))
+			return true;
+
+		return false;
+	}
+
+	private ImageIcon resizeImg(String path, JToggleButton currentAudioBtns2) {
+
+		ImageIcon icon = new ImageIcon(path);
+		Image scaleImage = icon.getImage().getScaledInstance(145, 120, Image.SCALE_SMOOTH);
+		ImageIcon ic = new ImageIcon(scaleImage);
+
+		return ic;
 	}
 
 	private void setModel(List<String> finalNames) {
@@ -596,10 +606,6 @@ public class ConfigurationGUI extends JFrame {
 
 	private void print(Object o) {
 		System.out.println(o.toString());
-	}
-
-	private void setDefaults() {
-		currentBtnSet = 0;
 	}
 
 	private void init() {
@@ -1062,224 +1068,6 @@ public class ConfigurationGUI extends JFrame {
 				.addComponent(btnExit, GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE));
 		saveExitPanel.setLayout(gl_saveExitPanel);
 		contentPane.setLayout(gl_contentPane);
-		/*
-		 * recording = false; int gap = height / 30, btnWidth = (width - 8 * gap) / 6;
-		 * 
-		 * List<String> audioList = getAudioList(); listAreaAudio = new
-		 * JList<String>(audioList.toArray(new String[audioList.size()]));
-		 * listAreaAudio.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		 * listAreaAudio.setFont(new Font("Serif", Font.PLAIN, 14));
-		 * listAreaAudio.setLayoutOrientation(JList.VERTICAL);
-		 * 
-		 * scrollerAudio = new JScrollPane(listAreaAudio);
-		 * scrollerAudio.setVerticalScrollBarPolicy(ScrollPaneConstants.
-		 * VERTICAL_SCROLLBAR_ALWAYS); scrollerAudio.setBounds(gap + 0 * btnWidth + 0 *
-		 * gap, height / 3, btnWidth, height / 3); contentPane.add(scrollerAudio);
-		 * 
-		 * List<Integer> btnList = new ArrayList<>(); for (int i = 0; i <
-		 * talkbox.getNumberOfAudioButtons(); i++) { btnList.add(i + 1); } listAreaBtn =
-		 * new JList<Integer>(btnList.toArray(new Integer[btnList.size()]));
-		 * listAreaBtn.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		 * listAreaBtn.setFont(new Font("Serif", Font.PLAIN, 14));
-		 * listAreaBtn.setLayoutOrientation(JList.VERTICAL);
-		 * 
-		 * scrollerButtons = new JScrollPane(listAreaBtn);
-		 * scrollerButtons.setVerticalScrollBarPolicy(ScrollPaneConstants.
-		 * VERTICAL_SCROLLBAR_ALWAYS); scrollerButtons.setBounds(gap + 1 * btnWidth + 1
-		 * * gap, height / 3, btnWidth, height / 6); contentPane.add(scrollerButtons);
-		 * //-------------------------------------EDIT----------------------------------
-		 * ------------------------------------------- btnIncBtnSet = new
-		 * JButton("Inc Btn Set"); btnIncBtnSet.setFont(new Font("Serif", Font.PLAIN,
-		 * width / 50)); btnIncBtnSet.setBounds(gap + 0 * btnWidth + 0 * gap, height /
-		 * 64 * 17, btnWidth, height / 16); btnIncBtnSet.addActionListener(new
-		 * ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) { int currentSet =
-		 * talkbox.getNumberOfAudioSets(); talkbox.incAudioSets(); audioFileButtons =
-		 * new
-		 * JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons
-		 * ()]; init(); putButtons(currentBtnSet);
-		 * setDisplay("Number of Button set has been increased from " + currentSet +
-		 * " to " + (currentSet + 1)); } }); contentPane.add(btnIncBtnSet);
-		 * 
-		 * btnDecBtnSet = new JButton("Dec Btn Set"); btnDecBtnSet.setFont(new
-		 * Font("Serif", Font.PLAIN, width / 50)); btnDecBtnSet.setBounds(gap + 1 *
-		 * btnWidth + 1 * gap, height / 64 * 17, btnWidth, height / 16);
-		 * btnDecBtnSet.addActionListener(new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) { int currentSet =
-		 * talkbox.getNumberOfAudioSets(); if (currentSet < 2) {
-		 * setDisplay("Number of Audio sets can not be lower than 1"); } else {
-		 * talkbox.decAudioSets(); audioFileButtons = new
-		 * JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons
-		 * ()]; if (currentSet - 1 == currentBtnSet) { currentBtnSet = 0; putButtons(0);
-		 * selectedBtnIndex = 0; } else { putButtons(currentBtnSet); selectedBtnIndex =
-		 * 0; } init(); putButtons(currentBtnSet); setDisplay(
-		 * "Number of Button set has been decreased from " + currentSet + " to " +
-		 * (currentSet - 1)); contentPane.repaint(); } } });
-		 * contentPane.add(btnDecBtnSet);
-		 * 
-		 * btnIncBtnNum = new JButton("Inc Btn Num"); btnIncBtnNum.setFont(new
-		 * Font("Serif", Font.PLAIN, width / 50)); btnIncBtnNum.setBounds(gap + 2 *
-		 * btnWidth + 2 * gap, height / 64 * 17, btnWidth, height / 16);
-		 * btnIncBtnNum.addActionListener(new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) { int currentBtn =
-		 * talkbox.getNumberOfAudioButtons(); for (int i = 0; i <
-		 * talkbox.getNumberOfAudioButtons(); i++) { JToggleButton btn =
-		 * audioFileButtons[currentBtnSet][i]; if (btn != null)
-		 * getContentPane().remove(btn); } talkbox.incAudioButtons(); audioFileButtons =
-		 * new
-		 * JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons
-		 * ()]; init(); putButtons(currentBtnSet); if (currentBtn < 8) {
-		 * setDisplay("Number of Audio Buttons has been increased from " + currentBtn +
-		 * " to " + (currentBtn + 1)); } else {
-		 * setDisplay("Number of Audio Buttons can not exceed 8"); }
-		 * contentPane.repaint(); selectedBtnIndex = 0;
-		 * 
-		 * } }); contentPane.add(btnIncBtnNum);
-		 * 
-		 * btnDecBtnNum = new JButton("Dec Btn Num"); btnDecBtnNum.setFont(new
-		 * Font("Serif", Font.PLAIN, width / 50)); btnDecBtnNum.setBounds(gap + 3 *
-		 * btnWidth + 3 * gap, height / 64 * 17, btnWidth, height / 16);
-		 * btnDecBtnNum.addActionListener(new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) { int currentBtn =
-		 * talkbox.getNumberOfAudioButtons(); if (currentBtn < 2) {
-		 * setDisplay("Number of Audio buttons can not be lower than 1"); } else { for
-		 * (int i = 0; i < talkbox.getNumberOfAudioButtons(); i++) { JToggleButton btn =
-		 * audioFileButtons[currentBtnSet][i]; if (btn != null)
-		 * getContentPane().remove(btn); } talkbox.decAudioButtons(); audioFileButtons =
-		 * new
-		 * JToggleButton[talkbox.getNumberOfAudioSets()][talkbox.getNumberOfAudioButtons
-		 * ()]; init(); putButtons(currentBtnSet); setDisplay(
-		 * "Number of Audio Buttons has been decreased from " + currentBtn + " to " +
-		 * (currentBtn - 1)); contentPane.repaint(); selectedBtnIndex = 0; } } });
-		 * contentPane.add(btnDecBtnNum);
-		 * //---------------------------------------------------------------------------
-		 * -------------------------------------------- btnSwap = new JButton("Swap");
-		 * btnSwap.setFont(font); btnSwap.setBounds(gap + 2 * btnWidth + 2 * gap, height
-		 * / 3, btnWidth, height / 6); contentPane.add(btnSwap);
-		 * btnSwap.addActionListener(new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) { for (int i = 0; i <
-		 * talkbox.getNumberOfAudioButtons(); i++) { JToggleButton btn =
-		 * audioFileButtons[currentBtnSet][i]; if (btn != null)
-		 * getContentPane().remove(btn); } contentPane.repaint(); currentBtnSet =
-		 * (currentBtnSet + 1) % talkbox.getNumberOfAudioSets();
-		 * putButtons(currentBtnSet);
-		 * setDisplay(String.format("Change to button set %d", currentBtnSet + 1));
-		 * selectedBtnIndex = 0; } });
-		 * 
-		 * btnAdd = new JButton("Add"); btnAdd.setFont(font); btnAdd.setBounds(gap + 3 *
-		 * btnWidth + 3 * gap, height / 3, btnWidth, height / 6);
-		 * contentPane.add(btnAdd);
-		 * 
-		 * btnAdd.addActionListener(new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) { if
-		 * (listAreaAudio.getSelectedValue() == null) {
-		 * setDisplay("Select Audio from list"); } else if
-		 * (listAreaBtn.getSelectedValue() == null) {
-		 * setDisplay("Select button position from list"); } else { String str =
-		 * listAreaAudio.getSelectedValue(); int num = listAreaBtn.getSelectedValue();
-		 * talkbox.addAudio(currentBtnSet, num, str);
-		 * 
-		 * init(); putButtons(currentBtnSet); setDisplay("Audio File \"" + str +
-		 * "\" has been added to " + num); contentPane.repaint(); } } });
-		 * 
-		 * btnRemove = new JButton("Remove"); btnRemove.setFont(font);
-		 * btnRemove.setBounds(gap + 4 * btnWidth + 4 * gap, height / 3, btnWidth,
-		 * height / 6); contentPane.add(btnRemove);
-		 * 
-		 * btnRemove.addActionListener(new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) { if (selectedBtnIndex
-		 * == 0) { setDisplay("Choose Button First"); } else { String str =
-		 * talkbox.getAudioFileNames()[currentBtnSet][selectedBtnIndex - 1];
-		 * talkbox.removeAudio(currentBtnSet, selectedBtnIndex);
-		 * 
-		 * init(); putButtons(currentBtnSet); setDisplay("Audio File \"" + str +
-		 * "\" was removed from set" + (currentBtnSet + 1)); contentPane.repaint(); } }
-		 * });
-		 * 
-		 * btnRecord = new JButton("Record"); btnRecord.setFont(font);
-		 * btnRecord.setBounds(gap + 5 * btnWidth + 5 * gap, height / 3, btnWidth,
-		 * height / 6); contentPane.add(btnRecord);
-		 * 
-		 * btnRecord.addActionListener(new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) { if (recording) {
-		 * sound.stopRecording(); init(); putButtons(currentBtnSet);
-		 * setDisplay("Record completed!"); contentPane.repaint(); } else { String name
-		 * = textField.getText(); if (name.length() < 1) {
-		 * setDisplay("Enter file name"); } else if (getAudioList().contains(name +
-		 * ".wav")) { setDisplay("Audio file name " + name +
-		 * ".wav already exist, try another name"); } else { recording = true;
-		 * sound.startRecording(textField.getText()); setDisplay("Recording......"); } }
-		 * } });
-		 * 
-		 * textField = new JTextField(); textField.setFont(new Font("Serif", Font.PLAIN,
-		 * 14)); textField.setBounds(gap + 1 * btnWidth + 1 * gap, height / 16 * 10,
-		 * btnWidth, height / 18); contentPane.add(textField);
-		 * 
-		 * JLabel nameDisplay = new JLabel("Audio file name");
-		 * nameDisplay.setHorizontalAlignment(SwingConstants.CENTER);
-		 * nameDisplay.setFont(new Font("Serif", Font.PLAIN, 14));
-		 * nameDisplay.setBounds(gap + 1 * btnWidth + 1 * gap, height / 16 * 9,
-		 * btnWidth, height / 18); contentPane.add(nameDisplay);
-		 * 
-		 * display = new JLabel("Start Configuration! (Current button set: 1)");
-		 * display.setHorizontalAlignment(SwingConstants.CENTER); display.setFont(new
-		 * Font("Serif", Font.PLAIN, width / 50)); display.setBounds(gap + 2 * btnWidth
-		 * + 2 * gap, height / 5 * 3, btnWidth * 4 + gap * 3, height / 10);
-		 * contentPane.add(display);
-		 * 
-		 * btnSave = new JButton("Save Setting"); btnSave.setFont(font);
-		 * btnSave.setBounds(width / 30, height / 4 * 3, width / 30 * 21, height / 8);
-		 * contentPane.add(btnSave);
-		 * 
-		 * btnSave.addActionListener(new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) {
-		 * setDisplay("New setting has been saved"); talkbox.finalize(); SetSetting(); }
-		 * });
-		 * 
-		 * btnReturn = new JButton("Return"); btnReturn.setFont(font);
-		 * btnReturn.setBounds(width / 30 * 23, height / 4 * 3, width / 30 * 5, height /
-		 * 8); contentPane.add(btnReturn);
-		 * 
-		 * btnReturn.addActionListener(new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) {
-		 * talkboxgui.setVisible(true); talkboxgui.reset(talkbox); dispose(); } });
-		 */
-	}
-
-	/*
-	 * create button in button set setNumber
-	 */
-	private void putButtons(int setNumber) {
-		String AudioFileNames[][] = talkbox.getAudioFileNames();
-		for (int i = 0; i < talkbox.getNumberOfAudioButtons(); i++) {
-			String fileName = AudioFileNames[setNumber][i];
-			if (fileName != null) {
-				int index = i + 1, gap = height / 30, btnWidth = (width - (talkbox.getNumberOfAudioButtons() + 2) * gap)
-						/ talkbox.getNumberOfAudioButtons();
-				JToggleButton btn = new JToggleButton(
-						fileName.substring(fileName.indexOf("/") + 1, fileName.indexOf(".")));
-				btn.setFont(font);
-				btn.setBounds(gap + i * btnWidth + i * gap, height / 30, btnWidth, height / 5);
-				btn.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						selectedBtnIndex = index;
-					}
-				});
-				btngroup.add(btn);
-				audioFileButtons[setNumber][i] = btn;
-				contentPane.add(btn);
-			}
-		}
 	}
 
 	public void setSetting() {
@@ -1288,7 +1076,8 @@ public class ConfigurationGUI extends JFrame {
 			talkbox.setHasAudio(hasSound);
 			talkbox.setNumberOfAudioSets(audioSets);
 			talkbox.setNumberOfAudioButtons(6);
-			talkbox.setsFile(sFile);
+			talkbox.setSetNames(setNames);
+			talkbox.setImages(imageButtons);
 
 			String filePath = "TalkBoxData/" + currentSettings + ".tbc";
 			FileOutputStream fileOutputStream = new FileOutputStream(filePath);
@@ -1308,7 +1097,8 @@ public class ConfigurationGUI extends JFrame {
 			talkbox.setHasAudio(hasSound);
 			talkbox.setNumberOfAudioSets(audioSets);
 			talkbox.setNumberOfAudioButtons(6);
-			talkbox.setsFile(sFile);
+			talkbox.setSetNames(setNames);
+			talkbox.setImages(imageButtons);
 
 			String filePath = "TalkBoxData/" + name + ".tbc";
 			FileOutputStream fileOutputStream = new FileOutputStream(filePath);
@@ -1342,7 +1132,8 @@ public class ConfigurationGUI extends JFrame {
 				totAudioBtns = talkbox.getNumberOfAudioButtons();
 				audioSets = talkbox.getNumberOfAudioSets();
 				hasSound = talkbox.getHasAudio();
-				sFile = talkbox.getsFile();
+				setNames = talkbox.getSetNames();
+				imageButtons = talkbox.getImages();
 
 				objectInputStream.close();
 			} else {
@@ -1351,9 +1142,11 @@ public class ConfigurationGUI extends JFrame {
 				talkbox = (TalkBox) objectInputStream.readObject();
 
 				audioFileNames = talkbox.getAudioFileNames();
-				totAudioBtns = 6;
+				totAudioBtns = talkbox.getNumberOfAudioButtons();
 				audioSets = talkbox.getNumberOfAudioSets();
 				hasSound = talkbox.getHasAudio();
+				setNames = talkbox.getSetNames();
+				imageButtons = talkbox.getImages();
 				objectInputStream.close();
 			}
 			sound = new Sound();

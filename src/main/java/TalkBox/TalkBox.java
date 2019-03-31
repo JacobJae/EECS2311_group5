@@ -31,6 +31,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
+
 /**
  * The {@code TalkBox} class contains user setting of TalkBox.
  * Serialized object will be saved on "TalkBoxData" as '.tbc' extension
@@ -62,9 +64,24 @@ public class TalkBox implements TalkBoxConfiguration {
 	private String[] setNames;
 	private File[] sFile;
 	private List<String> settingsList;
+	private ImageIcon[][] images;
 	
 	
 	
+	/**
+	 * @return the images
+	 */
+	public ImageIcon[][] getImages() {
+		return images;
+	}
+
+	/**
+	 * @param images the images to set
+	 */
+	public void setImages(ImageIcon[][] images) {
+		this.images = images;
+	}
+
 	/**
 	 * @return the settingsList
 	 */
