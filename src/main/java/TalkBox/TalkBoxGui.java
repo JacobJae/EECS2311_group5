@@ -8,8 +8,6 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -102,24 +100,11 @@ public class TalkBoxGui extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setResizable(false);
-		
-		addFocusListener(new FocusListener() {
-			
-			@Override
-			public void focusLost(FocusEvent e) {
-				dispose();				
-			}
-			
-			@Override
-			public void focusGained(FocusEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
 
 		init();
 		setVariables();
-		loadDefaults();
+		// loadDefaults();
+		getSetting();
 		setDefaults();
 		setSettingsList();
 		setButtons(currentBtnSet);
@@ -133,24 +118,7 @@ public class TalkBoxGui extends JFrame {
 
 		talkbox = new TalkBox();
 
-		String path = "TalkBoxData/";
-		allFiles = Arrays.asList(new File(path).listFiles());
-		sFile = new File[allFiles.size() * 2];
-
-		int j = 0;
-		for (int i = 0; i < allFiles.size(); i++) {
-			String file = allFiles.get(i).toString();
-			// System.out.println(file);
-			if (isWav(file)) {
-				sFile[j] = allFiles.get(i);
-				j++;
-			}
-			if (isTbc(file)) {
-				tbcFiles.add(file);
-			}
-			if (isImg(file))
-				imgFiles.add(file);
-		}
+		int j = getAllFiles();
 
 		try {
 			sound = new Sound();
@@ -188,6 +156,29 @@ public class TalkBoxGui extends JFrame {
 				j++;
 			}
 		}
+
+	}
+
+	private int getAllFiles() {
+		String path = "TalkBoxData/";
+		allFiles = Arrays.asList(new File(path).listFiles());
+		sFile = new File[allFiles.size() * 2];
+
+		int j = 0;
+		for (int i = 0; i < allFiles.size(); i++) {
+			String file = allFiles.get(i).toString();
+			if (isWav(file)) {
+				sFile[j] = allFiles.get(i);
+				j++;
+			}
+			if (isTbc(file)) {
+				tbcFiles.add(file);
+			}
+			if (isImg(file))
+				imgFiles.add(file);
+		}
+
+		return j;
 
 	}
 
@@ -415,7 +406,7 @@ public class TalkBoxGui extends JFrame {
 	private String findName(String name) {
 		String[] words = name.split("_");
 		String str = "";
-		for (String w : words) 
+		for (String w : words)
 			str += toDisplayCase(w) + " ";
 		return str;
 	}
@@ -425,22 +416,20 @@ public class TalkBoxGui extends JFrame {
 	 */
 	private static String toDisplayCase(String s) {
 
-	    final String ACTIONABLE_DELIMITERS = " '-/"; // these cause the character following
-	                                                 // to be capitalized
+		final String ACTIONABLE_DELIMITERS = " '-/"; // these cause the character following
+														// to be capitalized
 
-	    StringBuilder sb = new StringBuilder();
-	    boolean capNext = true;
+		StringBuilder sb = new StringBuilder();
+		boolean capNext = true;
 
-	    for (char c : s.toCharArray()) {
-	        c = (capNext)
-	                ? Character.toUpperCase(c)
-	                : Character.toLowerCase(c);
-	        sb.append(c);
-	        capNext = (ACTIONABLE_DELIMITERS.indexOf((int) c) >= 0); // explicit cast not needed
-	    }
-	    return sb.toString();
+		for (char c : s.toCharArray()) {
+			c = (capNext) ? Character.toUpperCase(c) : Character.toLowerCase(c);
+			sb.append(c);
+			capNext = (ACTIONABLE_DELIMITERS.indexOf((int) c) >= 0); // explicit cast not needed
+		}
+		return sb.toString();
 	}
-	
+
 	/*
 	 * Intialize display
 	 */
@@ -536,6 +525,7 @@ public class TalkBoxGui extends JFrame {
 		Button5.setBackground(new Color(0, 102, 204));
 
 		TextPane0 = new JTextPane();
+		TextPane0.setContentType("plain/text\r\n");
 		TextPane0.setFont(new Font("Monospaced", Font.BOLD, 18));
 		TextPane0.setDisabledTextColor(Color.BLACK);
 		TextPane0.setEnabled(false);
@@ -543,6 +533,7 @@ public class TalkBoxGui extends JFrame {
 		TextPane0.setBackground(Color.WHITE);
 
 		TextPane1 = new JTextPane();
+		TextPane1.setContentType("plain/text\r\n");
 		TextPane1.setEnabled(false);
 		TextPane1.setFont(new Font("Monospaced", Font.BOLD, 18));
 		TextPane1.setDisabledTextColor(Color.BLACK);
@@ -550,6 +541,7 @@ public class TalkBoxGui extends JFrame {
 		TextPane1.setBackground(Color.WHITE);
 
 		TextPane2 = new JTextPane();
+		TextPane2.setContentType("plain/text\r\n");
 		TextPane2.setEnabled(false);
 		TextPane2.setFont(new Font("Monospaced", Font.BOLD, 18));
 		TextPane2.setDisabledTextColor(Color.BLACK);
@@ -557,6 +549,7 @@ public class TalkBoxGui extends JFrame {
 		TextPane2.setBackground(Color.WHITE);
 
 		TextPane3 = new JTextPane();
+		TextPane3.setContentType("plain/text\r\n");
 		TextPane3.setEnabled(false);
 		TextPane3.setFont(new Font("Monospaced", Font.BOLD, 18));
 		TextPane3.setDisabledTextColor(Color.BLACK);
@@ -564,6 +557,7 @@ public class TalkBoxGui extends JFrame {
 		TextPane3.setBackground(Color.WHITE);
 
 		TextPane4 = new JTextPane();
+		TextPane4.setContentType("plain/text\r\n");
 		TextPane4.setEnabled(false);
 		TextPane4.setFont(new Font("Monospaced", Font.BOLD, 18));
 		TextPane4.setDisabledTextColor(Color.BLACK);
@@ -571,6 +565,7 @@ public class TalkBoxGui extends JFrame {
 		TextPane4.setBackground(Color.WHITE);
 
 		TextPane5 = new JTextPane();
+		TextPane5.setContentType("plain/text\r\n");
 		TextPane5.setEnabled(false);
 		TextPane5.setFont(new Font("Monospaced", Font.BOLD, 18));
 		TextPane5.setDisabledTextColor(Color.BLACK);
@@ -685,7 +680,6 @@ public class TalkBoxGui extends JFrame {
 		});
 		contentPane.setLayout(gl_contentPane);
 
-
 	}
 
 	/*
@@ -732,6 +726,7 @@ public class TalkBoxGui extends JFrame {
 			objectInputStream.close();
 			fileInputStream.close();
 
+			getAllFiles();
 			// System.out.println(this.toString());
 			// setButtons(0);
 
@@ -763,6 +758,7 @@ public class TalkBoxGui extends JFrame {
 	 */
 	private void createConfigure() {
 		sound.stopSound();
+		setSetting();
 		new ConfigurationGUI(this, currentSettings);
 	}
 }

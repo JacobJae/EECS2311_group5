@@ -42,6 +42,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+
 public class ConfigurationGUI extends JFrame {
 	/**
 	 * 
@@ -120,19 +121,6 @@ public class ConfigurationGUI extends JFrame {
 			public void windowClosing(WindowEvent e) {
 				sound.stopSound();
 				e.getWindow().dispose();
-			}
-		});
-		addFocusListener(new FocusListener() {
-
-			@Override
-			public void focusLost(FocusEvent e) {
-				dispose();
-			}
-
-			@Override
-			public void focusGained(FocusEvent e) {
-				// TODO Auto-generated method stub
-
 			}
 		});
 
