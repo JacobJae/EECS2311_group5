@@ -80,7 +80,7 @@ public class ConfigurationGUI extends JFrame {
 	private List<File> allFiles;
 	private File[] sFile;
 	private ArrayList<String> names;
-	private String currentSettings, path;
+	private String currentSettings, path, defaultText = "Press to Configure!.";
 	private String[] setNames;
 	private JTextField lblTitle;
 	private JComboBox<String> tbcLoader;
@@ -90,6 +90,7 @@ public class ConfigurationGUI extends JFrame {
 			emptyImg = new ImageIcon("TalkBoxData/Empty_Btn.png");
 	private List<String> imgFiles = new ArrayList<>();
 	private JLabel disp;
+	private DefaultComboBoxModel aModel;
 
 	/**
 	 * Launch the application.
@@ -111,7 +112,7 @@ public class ConfigurationGUI extends JFrame {
 		setVisible(true);
 		setTitle("Configuration");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setSize(950, 800);
+		setSize(960, 800);
 		setLocationRelativeTo(null);
 		setResizable(false);
 
@@ -119,6 +120,19 @@ public class ConfigurationGUI extends JFrame {
 			public void windowClosing(WindowEvent e) {
 				sound.stopSound();
 				e.getWindow().dispose();
+			}
+		});
+		addFocusListener(new FocusListener() {
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				dispose();
+			}
+
+			@Override
+			public void focusGained(FocusEvent e) {
+				// TODO Auto-generated method stub
+
 			}
 		});
 
@@ -354,10 +368,14 @@ public class ConfigurationGUI extends JFrame {
 						deslectBtns();
 					} else {
 						selectedBtnIndex = getSelectedIndex();
-						makeSound((JToggleButton) e.getComponent());
+						if (hasSound[currentBtnSet][selectedBtnIndex]) {
+							activateBtns();
+							makeSound((JToggleButton) e.getComponent());
+						} else
+
+							disp.setText("Select a file from the audio list to Swap!");
 					}
-					if (hasSound[currentBtnSet][selectedBtnIndex])
-						activateBtns();
+
 				}
 			});
 		}
@@ -450,6 +468,74 @@ public class ConfigurationGUI extends JFrame {
 			}
 		});
 
+		btnDeleteSet.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (audioSets == 1) {
+					disp.setText("You cannot have less then 1  audio Sets!");
+				} else {
+					audioSets--;
+					String[][] temp = new String[audioSets][6];
+					ImageIcon[][] tempI = new ImageIcon[audioSets][6];
+					boolean[][] tempA = new boolean[audioSets][6];
+
+					for (int i = 0; i < audioSets; i++) {
+						for (int j = 0; j < 6; j++) {
+							temp[i][j] = audioFileNames[i][j];
+							tempI[i][j] = imageButtons[i][j];
+							tempA[i][j] = hasSound[i][j];
+						}
+					}
+
+					audioFileNames = temp;
+					imageButtons = tempI;
+					hasSound = tempA;
+
+					currentBtnSet = 0;
+					aModel.removeElementAt(audioSets);
+					setSelector.setModel(aModel);
+					changeSet();
+				}
+			}
+		});
+
+		btnAddNewSet.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				audioSets++;
+				String[][] temp = new String[audioSets][6];
+				ImageIcon[][] tempI = new ImageIcon[audioSets][6];
+				boolean[][] tempA = new boolean[audioSets][6];
+
+				for (int i = 0; i < audioSets - 1; i++) {
+					for (int j = 0; j < 6; j++) {
+						temp[i][j] = audioFileNames[i][j];
+						tempI[i][j] = imageButtons[i][j];
+						tempA[i][j] = hasSound[i][j];
+					}
+				}
+
+				for (int i = 0; i < 6; i++) {
+					temp[audioSets - 1][i] = defaultText;
+					tempI[audioSets - 1][i] = emptyImg;
+					tempA[audioSets - 1][i] = false;
+				}
+
+				audioFileNames = temp;
+				imageButtons = tempI;
+				hasSound = tempA;
+
+				currentBtnSet = 0;
+				aModel.addElement("Audio Set " + audioSets);
+				setSelector.setModel(aModel);
+				changeSet();
+
+			}
+		});
+
 	}
 
 	/*
@@ -498,16 +584,17 @@ public class ConfigurationGUI extends JFrame {
 	 * Sets the Set List
 	 */
 	private void setSetList() {
+
 		for (int i = 0; i < audioSets; i++) {
 			setNames[i] = "Audio Set " + (i + 1);
 		}
 
-		DefaultComboBoxModel<String> aModel = new DefaultComboBoxModel<>();
+		aModel = new DefaultComboBoxModel<>();
 		for (int i = 0; i < setNames.length; i++) {
 			aModel.addElement(setNames[i]);
 		}
 		setSelector.setModel(aModel);
-		setSelector.setSelectedIndex(currentBtnSet);
+		setSelector.setSelectedIndex(0);
 		lblTitle.setText((String) setSelector.getSelectedItem());
 	}
 
@@ -674,7 +761,7 @@ public class ConfigurationGUI extends JFrame {
 	 */
 	private void delete() {
 		sound.stopSound();
-		audioFileNames[currentBtnSet][selectedBtnIndex] = "Press to Configure!.";
+		audioFileNames[currentBtnSet][selectedBtnIndex] = defaultText;
 		hasSound[currentBtnSet][selectedBtnIndex] = false;
 		imageButtons[currentBtnSet][selectedBtnIndex] = emptyImg;
 		deslectBtns();
