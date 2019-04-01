@@ -92,7 +92,8 @@ public class ConfigurationGUI extends JFrame {
 			emptyImg = new ImageIcon("TalkBoxData/Empty_Btn.png"),
 			swap_btn = new ImageIcon("TalkBoxData/swap_btn_1.png"),
 			delete_btn = new ImageIcon("TalkBoxData/delete_btn.png"),
-			image_btn = new ImageIcon("TalkBoxData/image_btn.png");
+			image_btn = new ImageIcon("TalkBoxData/image_btn.png"),
+			record_btn = new ImageIcon("TalkBoxData/record_btn.png");
 	private List<String> imgFiles = new ArrayList<>();
 	private JLabel disp;
 	private DefaultComboBoxModel aModel;
@@ -916,7 +917,8 @@ public class ConfigurationGUI extends JFrame {
 
 		btnSave = new JButton("Save");
 
-		btnRecord_1 = new JButton("Record");
+		btnRecord_1 = new JButton("");
+		btnRecord_1.setIcon(resizeImg(record_btn.toString(), 150, 150));
 
 		JPanel loadPanel = new JPanel();
 		loadPanel.getLayout();

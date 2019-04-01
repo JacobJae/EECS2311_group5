@@ -103,8 +103,8 @@ public class TalkBoxGui extends JFrame {
 
 		init();
 		setVariables();
-		// loadDefaults();
-		getSetting();
+		loadDefaults();
+		//getSetting();
 		setDefaults();
 		setSettingsList();
 		setButtons(currentBtnSet);
@@ -167,6 +167,7 @@ public class TalkBoxGui extends JFrame {
 		int j = 0;
 		for (int i = 0; i < allFiles.size(); i++) {
 			String file = allFiles.get(i).toString();
+			System.out.println(file);
 			if (isWav(file)) {
 				sFile[j] = allFiles.get(i);
 				j++;

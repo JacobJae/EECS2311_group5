@@ -3,6 +3,7 @@ package main.java.TalkBox;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -13,6 +14,7 @@ import java.awt.event.WindowEvent;
 import javax.sound.sampled.LineUnavailableException;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,7 +24,6 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
-
 
 public class RecordGUI extends JFrame {
 
@@ -34,6 +35,9 @@ public class RecordGUI extends JFrame {
 	private JButton btnCancel;
 	private JLabel lblRecord;
 	private ConfigurationGUI confGui;
+	private ImageIcon recordBtn = new ImageIcon("TalkBoxData/record_btn.png"),
+			playBtn = new ImageIcon("TalkBoxData/play_btn.png"), stop_btn = new ImageIcon("TalkBoxData/stop_btn.png");
+	private JLabel disp;
 
 	/*
 	 * Launch the application. public static void main(String[] args) {
@@ -46,32 +50,32 @@ public class RecordGUI extends JFrame {
 	 * Create the frame.
 	 */
 	public RecordGUI(ConfigurationGUI confGui) {
-		setUndecorated(true);
 		setVisible(true);
 
 		this.confGui = confGui;
-		
-		setSize(new Dimension(600, 398));
+
+		setSize(new Dimension(600, 600));
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				e.getWindow().dispose();
+				recording = false;
+				sound.stopRecording();
 				confGui.setEnabled(true);
 				confGui.setVisible(true);
 				dispose();
 			}
 		});
-		
+
 		try {
 			sound = new Sound();
 		} catch (LineUnavailableException e) {
 			e.printStackTrace();
 		}
-		
+
 		init();
+		lblRecord.setIcon(resizeImg(playBtn.toString(), 50, 50));
 		addAction();
 
 	}
@@ -92,34 +96,55 @@ public class RecordGUI extends JFrame {
 
 		lblRecord.addMouseListener(new MouseAdapter() {
 
-			/* (non-Javadoc)
+			/*
+			 * (non-Javadoc)
+			 * 
 			 * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent)
 			 */
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
-				if(recording)
-					stopRecording();
-				else
-					startRecording();
+
+				if (nameText.getText().isEmpty())
+					disp.setText("Please enter a name first!");
+				else {
+					if (recording) {
+						stopRecording();
+						disp.setText("Recording has stopped!");
+					} else {
+						disp.setText("Recording has started!");
+						startRecording();
+					}
+				}
 			}
-			
+
 		});
-		
+
 	}
 
 	protected void startRecording() {
 		sound.startRecording(nameText.getText());
 		recording = true;
-		lblRecord.setText("Pause");
-		
+		lblRecord.setIcon(resizeImg(stop_btn.toString(), 50, 50));
+
 	}
 
 	protected void stopRecording() {
 		sound.stopRecording();
 		recording = false;
-		lblRecord.setText("Record");
-		
+		lblRecord.setIcon(resizeImg(playBtn.toString(), 50, 50));
+
+	}
+
+	/*
+	 * Resize the Image to fit the button
+	 */
+	private ImageIcon resizeImg(String path, int width, int height) {
+		ImageIcon icon = new ImageIcon(path);
+		Image scaleImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		ImageIcon ic = new ImageIcon(scaleImage);
+
+		return ic;
 	}
 
 	private void init() {
@@ -132,34 +157,34 @@ public class RecordGUI extends JFrame {
 		lblRecordWindow.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblRecordWindow.setHorizontalAlignment(SwingConstants.CENTER);
 
-		lblRecord = new JLabel("Record");
+		lblRecord = new JLabel("");
 		lblRecord.setHorizontalAlignment(SwingConstants.CENTER);
 
 		JPanel saveCancelPanel = new JPanel();
 		saveCancelPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+
+		disp = new JLabel("");
+		disp.setFont(new Font("Monospaced", Font.BOLD, 13));
+		disp.setHorizontalTextPosition(SwingConstants.CENTER);
+		disp.setHorizontalAlignment(SwingConstants.CENTER);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addComponent(lblRecordWindow, GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(saveCancelPanel, GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE)
-					.addContainerGap())
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblRecord, GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE)
-					.addContainerGap())
-		);
-		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(lblRecordWindow)
-					.addGap(18)
-					.addComponent(saveCancelPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
-					.addComponent(lblRecord, GroupLayout.PREFERRED_SIZE, 224, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap())
-		);
+		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addComponent(lblRecordWindow, GroupLayout.DEFAULT_SIZE, 584, Short.MAX_VALUE)
+				.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
+						.addComponent(saveCancelPanel, GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
+						.addContainerGap())
+				.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
+						.addComponent(lblRecord, GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE).addContainerGap())
+				.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
+						.addComponent(disp, GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE).addContainerGap()));
+		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup().addComponent(lblRecordWindow).addGap(18)
+						.addComponent(saveCancelPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+								GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.UNRELATED)
+						.addComponent(disp, GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE).addGap(18)
+						.addComponent(lblRecord, GroupLayout.PREFERRED_SIZE, 379, GroupLayout.PREFERRED_SIZE)
+						.addContainerGap()));
 
 		JLabel lblSave = new JLabel("Name:");
 		lblSave.setFont(new Font("Tahoma", Font.PLAIN, 16));
