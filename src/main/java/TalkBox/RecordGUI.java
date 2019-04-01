@@ -46,11 +46,12 @@ public class RecordGUI extends JFrame {
 	 * Create the frame.
 	 */
 	public RecordGUI(ConfigurationGUI confGui) {
+		setUndecorated(true);
 		setVisible(true);
 
 		this.confGui = confGui;
 		
-		setSize(new Dimension(600, 600));
+		setSize(new Dimension(600, 398));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
@@ -123,7 +124,7 @@ public class RecordGUI extends JFrame {
 
 	private void init() {
 		contentPane = new JPanel();
-		contentPane.setBackground(Color.LIGHT_GRAY);
+		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 
@@ -137,21 +138,30 @@ public class RecordGUI extends JFrame {
 		JPanel saveCancelPanel = new JPanel();
 		saveCancelPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addComponent(lblRecordWindow, GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
-				.addGroup(gl_contentPane.createSequentialGroup().addGap(10)
-						.addComponent(lblRecord, GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE).addGap(10))
-				.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
-						.addComponent(saveCancelPanel, GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
-						.addContainerGap()));
-		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup().addComponent(lblRecordWindow).addGap(18)
-						.addComponent(lblRecord, GroupLayout.PREFERRED_SIZE, 270, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addComponent(saveCancelPanel, GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
-						.addContainerGap()));
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addComponent(lblRecordWindow, GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(saveCancelPanel, GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE)
+					.addContainerGap())
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblRecord, GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE)
+					.addContainerGap())
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addComponent(lblRecordWindow)
+					.addGap(18)
+					.addComponent(saveCancelPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+					.addComponent(lblRecord, GroupLayout.PREFERRED_SIZE, 224, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap())
+		);
 
-		JLabel lblSave = new JLabel("Save:");
+		JLabel lblSave = new JLabel("Name:");
 		lblSave.setFont(new Font("Tahoma", Font.PLAIN, 16));
 
 		nameText = new JTextField();

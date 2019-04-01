@@ -132,7 +132,7 @@ public class Sound {
 						line.start(); // start capturing
 						AudioInputStream ais = new AudioInputStream(line);
 						// start recording
-						AudioSystem.write(ais, FILE_TYPE, new File("../TalkBoxData/" + fileName + ".wav"));
+						AudioSystem.write(ais, FILE_TYPE, new File("TalkBoxData/" + fileName + ".wav"));
 					} catch (LineUnavailableException ex) {
 						ex.printStackTrace();
 					} catch (IOException ioe) {

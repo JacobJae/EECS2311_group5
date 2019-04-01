@@ -41,7 +41,8 @@ import javax.swing.JToggleButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
+import java.awt.Component;
+import java.awt.Dimension;
 
 public class ConfigurationGUI extends JFrame {
 	/**
@@ -88,7 +89,10 @@ public class ConfigurationGUI extends JFrame {
 	private List<String> tbcFiles = new ArrayList<String>();
 	private ImageIcon[][] imageButtons;
 	private ImageIcon defaultImg = new ImageIcon("TalkBoxData/smiley_face.jpg"),
-			emptyImg = new ImageIcon("TalkBoxData/Empty_Btn.png");
+			emptyImg = new ImageIcon("TalkBoxData/Empty_Btn.png"),
+			swap_btn = new ImageIcon("TalkBoxData/swap_btn_1.png"),
+			delete_btn = new ImageIcon("TalkBoxData/delete_btn.png"),
+			image_btn = new ImageIcon("TalkBoxData/image_btn.png");
 	private List<String> imgFiles = new ArrayList<>();
 	private JLabel disp;
 	private DefaultComboBoxModel aModel;
@@ -198,6 +202,13 @@ public class ConfigurationGUI extends JFrame {
 		btnCtrlPanel[4] = cntBtn5;
 		btnCtrlPanel[5] = cntBtn6;
 
+		for(int i=0;i<6;i++)
+		{
+			swapBtns[i].setIcon(resizeImg(swap_btn.toString(), 27, 13));
+			deleteBtns[i].setIcon(resizeImg(delete_btn.toString(), 27, 13));
+			imageBtns[i].setIcon(resizeImg(image_btn.toString(),27, 13));
+		}
+		
 	}
 
 	/*
@@ -277,7 +288,7 @@ public class ConfigurationGUI extends JFrame {
 	private void setButtons() {
 
 		for (int i = 0; i < 6; i++) {
-			currentAudioBtns[i].setIcon(resizeImg(imageButtons[currentBtnSet][i].toString()));
+			currentAudioBtns[i].setIcon(resizeImg(imageButtons[currentBtnSet][i].toString(), 150, 120));
 			currentAudioText[i].setText(findName(getName(audioFileNames[currentBtnSet][i])));
 			currentAudioBtns[i].setToolTipText(getName(audioFileNames[currentBtnSet][i]));
 		}
@@ -563,7 +574,7 @@ public class ConfigurationGUI extends JFrame {
 		if (j.getSelectedFile() != null) {
 			File file = j.getSelectedFile();
 			imageButtons[currentBtnSet][selectedBtnIndex] = new ImageIcon("TalkBoxData/" + file.getName());
-			currentAudioBtns[selectedBtnIndex].setIcon(resizeImg("TalkBoxData/" + file.getName()));
+			currentAudioBtns[selectedBtnIndex].setIcon(resizeImg("TalkBoxData/" + file.getName(), 150, 120));
 		}
 
 	}
@@ -672,9 +683,9 @@ public class ConfigurationGUI extends JFrame {
 	/*
 	 * Resize the Image to fit the button
 	 */
-	private ImageIcon resizeImg(String path) {
+	private ImageIcon resizeImg(String path, int width, int height) {
 		ImageIcon icon = new ImageIcon(path);
-		Image scaleImage = icon.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
+		Image scaleImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		ImageIcon ic = new ImageIcon(scaleImage);
 
 		return ic;
@@ -1056,15 +1067,27 @@ public class ConfigurationGUI extends JFrame {
 						.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(cntBtn2, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE)));
 
-		btn2I = new JButton("I");
+		btn2I = new JButton("");
+		btn2I.setPreferredSize(new Dimension(37, 23));
+		btn2I.setSize(new Dimension(37, 23));
+		btn2I.setMaximumSize(new Dimension(37, 23));
+		btn2I.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btn2I.setEnabled(false);
 		cntBtn2.add(btn2I);
 
-		btn2D = new JButton("D");
+		btn2D = new JButton("");
+		btn2D.setPreferredSize(new Dimension(37, 23));
+		btn2D.setSize(new Dimension(37, 23));
+		btn2D.setMaximumSize(new Dimension(37, 23));
+		btn2D.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btn2D.setEnabled(false);
 		cntBtn2.add(btn2D);
 
-		btn2S = new JButton("S");
+		btn2S = new JButton("");
+		btn2S.setPreferredSize(new Dimension(37, 23));
+		btn2S.setSize(new Dimension(37, 23));
+		btn2S.setMaximumSize(new Dimension(37, 23));
+		btn2S.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btn2S.setEnabled(false);
 		cntBtn2.add(btn2S);
 		btn2Panel.setLayout(gl_btn2Panel);
@@ -1097,15 +1120,27 @@ public class ConfigurationGUI extends JFrame {
 						.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(cntBtn3, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE)));
 
-		btn3I = new JButton("I");
+		btn3I = new JButton("");
+		btn3I.setPreferredSize(new Dimension(37, 23));
+		btn3I.setSize(new Dimension(37, 23));
+		btn3I.setMaximumSize(new Dimension(37, 23));
+		btn3I.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btn3I.setEnabled(false);
 		cntBtn3.add(btn3I);
 
-		btn3D = new JButton("D");
+		btn3D = new JButton("");
+		btn3D.setPreferredSize(new Dimension(37, 23));
+		btn3D.setSize(new Dimension(37, 23));
+		btn3D.setMaximumSize(new Dimension(37, 23));
+		btn3D.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btn3D.setEnabled(false);
 		cntBtn3.add(btn3D);
 
-		btn3S = new JButton("S");
+		btn3S = new JButton("");
+		btn3S.setPreferredSize(new Dimension(37, 23));
+		btn3S.setSize(new Dimension(37, 23));
+		btn3S.setMaximumSize(new Dimension(37, 23));
+		btn3S.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btn3S.setEnabled(false);
 		cntBtn3.add(btn3S);
 		btn3Panel.setLayout(gl_btn3Panel);
@@ -1138,15 +1173,27 @@ public class ConfigurationGUI extends JFrame {
 						.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(cntBtn4, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE)));
 
-		btn4I = new JButton("I");
+		btn4I = new JButton("");
+		btn4I.setPreferredSize(new Dimension(37, 23));
+		btn4I.setSize(new Dimension(37, 23));
+		btn4I.setMaximumSize(new Dimension(37, 23));
+		btn4I.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btn4I.setEnabled(false);
 		cntBtn4.add(btn4I);
 
-		btn4D = new JButton("D");
+		btn4D = new JButton("");
+		btn4D.setPreferredSize(new Dimension(37, 23));
+		btn4D.setSize(new Dimension(37, 23));
+		btn4D.setMaximumSize(new Dimension(37, 23));
+		btn4D.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btn4D.setEnabled(false);
 		cntBtn4.add(btn4D);
 
-		btn4S = new JButton("S");
+		btn4S = new JButton("");
+		btn4S.setPreferredSize(new Dimension(37, 23));
+		btn4S.setSize(new Dimension(37, 23));
+		btn4S.setMaximumSize(new Dimension(37, 23));
+		btn4S.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btn4S.setEnabled(false);
 		cntBtn4.add(btn4S);
 		btn4Panel.setLayout(gl_btn4Panel);
@@ -1179,15 +1226,27 @@ public class ConfigurationGUI extends JFrame {
 						.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(cntBtn5, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE)));
 
-		btn5I = new JButton("I");
+		btn5I = new JButton("");
+		btn5I.setPreferredSize(new Dimension(37, 23));
+		btn5I.setSize(new Dimension(37, 23));
+		btn5I.setMaximumSize(new Dimension(37, 23));
+		btn5I.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btn5I.setEnabled(false);
 		cntBtn5.add(btn5I);
 
-		btn5D = new JButton("D");
+		btn5D = new JButton("");
+		btn5D.setPreferredSize(new Dimension(37, 23));
+		btn5D.setSize(new Dimension(37, 23));
+		btn5D.setMaximumSize(new Dimension(37, 23));
+		btn5D.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btn5D.setEnabled(false);
 		cntBtn5.add(btn5D);
 
-		btn5S = new JButton("S");
+		btn5S = new JButton("");
+		btn5S.setPreferredSize(new Dimension(37, 23));
+		btn5S.setSize(new Dimension(37, 23));
+		btn5S.setMaximumSize(new Dimension(37, 23));
+		btn5S.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btn5S.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -1224,15 +1283,27 @@ public class ConfigurationGUI extends JFrame {
 						.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(cntBtn6, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE)));
 
-		btn6I = new JButton("I");
+		btn6I = new JButton("");
+		btn6I.setPreferredSize(new Dimension(37, 23));
+		btn6I.setSize(new Dimension(37, 23));
+		btn6I.setMaximumSize(new Dimension(37, 23));
+		btn6I.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btn6I.setEnabled(false);
 		cntBtn6.add(btn6I);
 
-		btn6D = new JButton("D");
+		btn6D = new JButton("");
+		btn6D.setPreferredSize(new Dimension(37, 23));
+		btn6D.setSize(new Dimension(37, 23));
+		btn6D.setMaximumSize(new Dimension(37, 23));
+		btn6D.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btn6D.setEnabled(false);
 		cntBtn6.add(btn6D);
 
-		btn6S = new JButton("S");
+		btn6S = new JButton("");
+		btn6S.setPreferredSize(new Dimension(37, 23));
+		btn6S.setSize(new Dimension(37, 23));
+		btn6S.setMaximumSize(new Dimension(37, 23));
+		btn6S.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btn6S.setEnabled(false);
 		cntBtn6.add(btn6S);
 		btn6Panel.setLayout(gl_btn6Panel);
@@ -1298,15 +1369,27 @@ public class ConfigurationGUI extends JFrame {
 						.addPreferredGap(ComponentPlacement.RELATED)
 						.addComponent(cntBtn1, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE)));
 
-		btn1I = new JButton("I");
+		btn1I = new JButton("");
+		btn1I.setPreferredSize(new Dimension(37, 23));
+		btn1I.setSize(new Dimension(37, 23));
+		btn1I.setMaximumSize(new Dimension(37, 23));
+		btn1I.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btn1I.setEnabled(false);
 		cntBtn1.add(btn1I);
 
-		btn1D = new JButton("D");
+		btn1D = new JButton("");
+		btn1D.setPreferredSize(new Dimension(37, 23));
+		btn1D.setSize(new Dimension(37, 23));
+		btn1D.setMaximumSize(new Dimension(37, 23));
+		btn1D.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btn1D.setEnabled(false);
 		cntBtn1.add(btn1D);
 
-		btn1S = new JButton("S");
+		btn1S = new JButton("");
+		btn1S.setPreferredSize(new Dimension(37, 23));
+		btn1S.setSize(new Dimension(37, 23));
+		btn1S.setMaximumSize(new Dimension(37, 23));
+		btn1S.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btn1S.setEnabled(false);
 		cntBtn1.add(btn1S);
 		btn1Panel.setLayout(gl_btn1Panel);
