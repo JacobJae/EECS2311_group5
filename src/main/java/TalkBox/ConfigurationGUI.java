@@ -81,7 +81,7 @@ public class ConfigurationGUI extends JFrame {
 	private List<File> allFiles;
 	private File[] sFile;
 	private ArrayList<String> names;
-	private String currentSettings, path, defaultText = "Press to Configure!.";
+	private String currentSettings, path = "TalkBoxData/", defaultText = "Press to Configure!.";
 	private String[] setNames;
 	private JTextField lblTitle;
 	private JComboBox<String> tbcLoader;
