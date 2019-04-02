@@ -70,6 +70,7 @@ public class TalkBoxGui extends JFrame {
 	private File[] sFile;
 	private List<File> allFiles;
 	private List<String> imgFiles = new ArrayList<>();
+	private List<TalkBox> tbList = new ArrayList<>();
 
 	/**
 	 * Launch the application.
@@ -104,7 +105,7 @@ public class TalkBoxGui extends JFrame {
 		init();
 		setVariables();
 		loadDefaults();
-		//getSetting();
+		// getSetting();
 		setDefaults();
 		setSettingsList();
 		setButtons(currentBtnSet);
@@ -167,7 +168,7 @@ public class TalkBoxGui extends JFrame {
 		int j = 0;
 		for (int i = 0; i < allFiles.size(); i++) {
 			String file = allFiles.get(i).toString();
-			System.out.println(file);
+			//System.out.println(file);
 			if (isWav(file)) {
 				sFile[j] = allFiles.get(i);
 				j++;
@@ -178,6 +179,8 @@ public class TalkBoxGui extends JFrame {
 			if (isImg(file))
 				imgFiles.add(file);
 		}
+
+		getAllSettings();
 
 		return j;
 
@@ -251,8 +254,21 @@ public class TalkBoxGui extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				currentSettings = tbcLoader.getSelectedItem().toString();
-				getSetting();
+
+				sound.stopSound();
+
+				currentSettings = (String) tbcLoader.getSelectedItem();
+				int index = tbcLoader.getSelectedIndex();
+
+				audioFileNames = tbList.get(index).getAudioFileNames();
+				totAudioBtns = tbList.get(index).getNumberOfAudioButtons();
+				audioSets = tbList.get(index).getNumberOfAudioSets();
+				hasSound = tbList.get(index).getHasAudio();
+				setNames = tbList.get(index).getSetNames();
+				imageButtons = tbList.get(index).getImages();
+
+				currentBtnSet = 0;
+				changeSet();
 
 			}
 		});
@@ -297,9 +313,7 @@ public class TalkBoxGui extends JFrame {
 	/*
 	 * Change Current Set
 	 */
-	private void changeSet(int t) {
-
-		currentBtnSet += t;
+	private void changeSet() {
 
 		if (currentBtnSet < 0)
 			currentBtnSet = audioSets - 1;
@@ -576,7 +590,8 @@ public class TalkBoxGui extends JFrame {
 		JButton button = new JButton(">");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				changeSet(1);
+				currentBtnSet++;
+				changeSet();
 			}
 		});
 		button.setFont(new Font("Tahoma", Font.BOLD, 24));
@@ -645,7 +660,8 @@ public class TalkBoxGui extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				changeSet(-1);
+				currentBtnSet--;
+				changeSet();
 			}
 		});
 
@@ -735,6 +751,24 @@ public class TalkBoxGui extends JFrame {
 			e.printStackTrace();
 		} catch (LineUnavailableException e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void getAllSettings() {
+		for (String s : tbcFiles) {
+			//System.out.println(s);
+			try {
+				FileInputStream fileInputStream = new FileInputStream(new File(s));
+				ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+				talkbox = (TalkBox) objectInputStream.readObject();
+
+				tbList.add(talkbox);
+
+				objectInputStream.close();
+
+			} catch (IOException | ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

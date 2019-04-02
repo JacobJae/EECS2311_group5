@@ -9,10 +9,12 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -97,6 +99,7 @@ public class ConfigurationGUI extends JFrame {
 	private List<String> imgFiles = new ArrayList<>();
 	private JLabel disp;
 	private DefaultComboBoxModel aModel;
+	private List<TalkBox> tbList = new ArrayList<TalkBox>();
 
 	/**
 	 * Launch the application.
@@ -136,8 +139,6 @@ public class ConfigurationGUI extends JFrame {
 		if (currentSettings.equals("default")) {
 			loadDefaults();
 			btnSave.setEnabled(false);
-		} else {
-			getSetting();
 		}
 		setDefaults();
 		setSetList();
@@ -203,13 +204,12 @@ public class ConfigurationGUI extends JFrame {
 		btnCtrlPanel[4] = cntBtn5;
 		btnCtrlPanel[5] = cntBtn6;
 
-		for(int i=0;i<6;i++)
-		{
+		for (int i = 0; i < 6; i++) {
 			swapBtns[i].setIcon(resizeImg(swap_btn.toString(), 27, 13));
 			deleteBtns[i].setIcon(resizeImg(delete_btn.toString(), 27, 13));
-			imageBtns[i].setIcon(resizeImg(image_btn.toString(),27, 13));
+			imageBtns[i].setIcon(resizeImg(image_btn.toString(), 27, 13));
 		}
-		
+
 	}
 
 	/*
@@ -217,26 +217,7 @@ public class ConfigurationGUI extends JFrame {
 	 */
 	private void loadDefaults() {
 
-		path = "TalkBoxData/";
-		allFiles = Arrays.asList(new File(path).listFiles());
-		sFile = new File[allFiles.size() * 2];
-		int j = 0;
-		for (int i = 0; i < allFiles.size(); i++) {
-			String file = allFiles.get(i).toString();
-			if (isWav(file)) {
-				sFile[j] = allFiles.get(i);
-				j++;
-			}
-			if (isTbc(file))
-				tbcFiles.add(file);
-			if (isImg(file))
-				imgFiles.add(file);
-		}
-
-		names = new ArrayList<String>();
-		for (int i = 0; i < j; i++) {
-			names.add(getName(sFile[i].toString()));
-		}
+		int j = getAllFiles();
 
 		try {
 			sound = new Sound();
@@ -283,6 +264,35 @@ public class ConfigurationGUI extends JFrame {
 
 	}
 
+	private int getAllFiles() {
+
+		path = "TalkBoxData/";
+		allFiles = Arrays.asList(new File(path).listFiles());
+		sFile = new File[allFiles.size() * 2];
+		int j = 0;
+		for (int i = 0; i < allFiles.size(); i++) {
+			String file = allFiles.get(i).toString();
+			if (isWav(file)) {
+				sFile[j] = allFiles.get(i);
+				j++;
+			}
+			if (isTbc(file))
+				tbcFiles.add(file);
+			if (isImg(file))
+				imgFiles.add(file);
+		}
+
+		getAllSettings();
+
+		names = new ArrayList<String>();
+		for (int i = 0; i < j; i++) {
+			names.add(getName(sFile[i].toString()));
+		}
+
+		return j;
+
+	}
+
 	/*
 	 * Set values to buttons
 	 */
@@ -318,26 +328,6 @@ public class ConfigurationGUI extends JFrame {
 	 * Set default values to certain variables
 	 */
 	private void setDefaults() {
-
-		path = "TalkBoxData/";
-		allFiles = Arrays.asList(new File(path).listFiles());
-		sFile = new File[allFiles.size() * 2];
-		int j = 0;
-		for (int i = 0; i < allFiles.size(); i++) {
-			String file = allFiles.get(i).toString();
-			if (isWav(file)) {
-				sFile[j] = allFiles.get(i);
-				j++;
-			}
-			if (isTbc(file))
-				tbcFiles.add(file);
-			if (isImg(file))
-				imgFiles.add(file);
-		}
-		names = new ArrayList<String>();
-		for (int i = 0; i < j; i++) {
-			names.add(getName(sFile[i].toString()));
-		}
 
 		imageButtons = new ImageIcon[audioSets][6];
 
@@ -531,6 +521,35 @@ public class ConfigurationGUI extends JFrame {
 				currentBtnSet = 0;
 				aModel.addElement("Audio Set " + audioSets);
 				setSelector.setModel(aModel);
+				changeSet();
+
+			}
+		});
+
+		tbcLoader.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				sound.stopSound();
+
+				currentSettings = (String) tbcLoader.getSelectedItem();
+
+				if (currentSettings.equals("default"))
+					btnSave.setEnabled(false);
+				else
+					btnSave.setEnabled(true);
+
+				int index = tbcLoader.getSelectedIndex();
+
+				audioFileNames = tbList.get(index).getAudioFileNames();
+				totAudioBtns = tbList.get(index).getNumberOfAudioButtons();
+				audioSets = tbList.get(index).getNumberOfAudioSets();
+				hasSound = tbList.get(index).getHasAudio();
+				setNames = tbList.get(index).getSetNames();
+				imageButtons = tbList.get(index).getImages();
+
+				currentBtnSet = 0;
 				changeSet();
 
 			}
@@ -1472,10 +1491,29 @@ public class ConfigurationGUI extends JFrame {
 		}
 	}
 
+	private void getAllSettings() {
+		for (String s : tbcFiles) {
+			// System.out.println(s);
+			try {
+				FileInputStream fileInputStream = new FileInputStream(new File(s));
+				ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+				talkbox = (TalkBox) objectInputStream.readObject();
+
+				tbList.add(talkbox);
+
+				objectInputStream.close();
+
+			} catch (IOException | ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	/*
 	 * Get .tbc settings and initiate sound, buttongroup, talkbox object
 	 */
 	private void getSetting() {
+
 		try {
 			String path = "TalkBoxData/" + currentSettings + ".tbc";
 
@@ -1490,12 +1528,17 @@ public class ConfigurationGUI extends JFrame {
 			setNames = talkbox.getSetNames();
 			imageButtons = talkbox.getImages();
 
+			currentBtnSet = 0;
 			objectInputStream.close();
 			sound = new Sound();
-
-		} catch (IOException | ClassNotFoundException | LineUnavailableException e) {
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+
 	}
 
 }
