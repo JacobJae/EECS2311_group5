@@ -81,10 +81,9 @@ public class ConfigurationGUI extends JFrame {
 	private List<File> allFiles;
 	private File[] sFile;
 	private ArrayList<String> names;
-	private String currentSettings, path, defaultText = "Press to Configure!.";
+	private String currentSettings, path = "TalkBoxData/", defaultText = "Press to Configure!.";
 	private String[] setNames;
 	private JTextField lblTitle;
-	private JComboBox<String> tbcLoader;
 	private List<String> tbcFiles = new ArrayList<String>();
 	private ImageIcon[][] imageButtons;
 	private ImageIcon defaultImg = new ImageIcon("TalkBoxData/smiley_face.jpg"),
@@ -98,6 +97,7 @@ public class ConfigurationGUI extends JFrame {
 	private DefaultComboBoxModel<String> aModel = new DefaultComboBoxModel<>();
 	private List<TalkBox> tbList = new ArrayList<TalkBox>();
 	private Timer t;
+	private JButton btnLoad;
 
 	/**
 	 * Launch the application.
@@ -141,11 +141,10 @@ public class ConfigurationGUI extends JFrame {
 		setSettingsList();
 		addActions();
 		setButtons();
-		if (!currentSettings.equals("default")) {
-			tbcLoader.setSelectedItem(currentSettings);
-			changeSetting();
-
-		}
+		//if (!currentSettings.equals("default")) {
+		//	tbcLoader.setSelectedItem(currentSettings);
+		//	changeSetting();
+		//}
 	}
 
 	/*
@@ -221,7 +220,6 @@ public class ConfigurationGUI extends JFrame {
 		int j = getAllFiles();
 
 		try {
-			talkbox = new TalkBox();
 			sound = new Sound();
 		} catch (LineUnavailableException e) {
 			e.printStackTrace();
@@ -273,7 +271,7 @@ public class ConfigurationGUI extends JFrame {
 				imgFiles.add(file);
 		}
 
-		getAllSettings();
+		//getAllSettings();
 
 		names = new ArrayList<String>();
 		for (int i = 0; i < j; i++) {
@@ -481,28 +479,39 @@ public class ConfigurationGUI extends JFrame {
 			}
 		});
 
-		tbcLoader.addActionListener(new ActionListener() {
+		btnLoad.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				sound.stopSound();
-				String temp = (String) tbcLoader.getSelectedItem();
+				createLoad();
 
-				if (!temp.equals(currentSettings)) {
-					currentSettings = (String) tbcLoader.getSelectedItem();
-					changeSetting();
-				}
 			}
 		});
 
+	}
+
+	private void createLoad() {
+
+		JFileChooser j = new JFileChooser(path);
+		j.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Settings", "tbc");
+		j.setFileFilter(filter);
+		j.showOpenDialog(this);
+
+		File file = j.getSelectedFile();
+		if (file != null) {
+			String name = file.getName();
+			currentSettings = getName(name);
+			getSetting(name);
+		}
 	}
 
 	/*
 	 * Increase the number of buttons sets
 	 */
 	private void increaseButtonSet() {
-		
+
 		audioSets++;
 		String[][] temp = new String[audioSets][6];
 		ImageIcon[][] tempI = new ImageIcon[audioSets][6];
@@ -523,7 +532,7 @@ public class ConfigurationGUI extends JFrame {
 			tempI[audioSets - 1][i] = emptyImg;
 			tempA[audioSets - 1][i] = false;
 		}
-		
+
 		tempS[audioSets - 1] = "Audio Set " + audioSets;
 
 		audioFileNames = temp;
@@ -595,14 +604,14 @@ public class ConfigurationGUI extends JFrame {
 	}
 
 	private void changeSetting() {
-		int index = tbcLoader.getSelectedIndex();
+		// int index = tbcLoader.getSelectedIndex();
 
 		if (currentSettings.equals("default"))
 			btnSave.setEnabled(false);
 		else
 			btnSave.setEnabled(true);
 
-		getSetting(index);
+		// getSetting(index);
 	}
 
 	private void resetSetList() {
@@ -654,8 +663,6 @@ public class ConfigurationGUI extends JFrame {
 		for (int i = 0; i < tbcFiles.size(); i++) {
 			model.addElement(getName(tbcFiles.get(i)));
 		}
-		tbcLoader.setModel(model);
-		tbcLoader.setSelectedItem(currentSettings);
 
 	}
 
@@ -1000,13 +1007,9 @@ public class ConfigurationGUI extends JFrame {
 						.addComponent(loadPanel, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE)
 						.addContainerGap()));
 
-		JLabel lblLoad = new JLabel("Load:");
-		lblLoad.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		loadPanel.add(lblLoad);
-
-		tbcLoader = new JComboBox<String>();
-		tbcLoader.setFont(new Font("Dialog", Font.BOLD, 12));
-		loadPanel.add(tbcLoader);
+		btnLoad = new JButton("LOAD");
+		btnLoad.setFont(new Font("Dialog", Font.BOLD, 18));
+		loadPanel.add(btnLoad);
 		saveLoadPanel.setLayout(gl_saveLoadPanel);
 
 		JLabel lblSetControls = new JLabel("Set Controls");
@@ -1561,18 +1564,36 @@ public class ConfigurationGUI extends JFrame {
 	/*
 	 * Get .tbc settings and initiate sound, buttongroup, talkbox object
 	 */
-	private void getSetting(int index) {
+	private void getSetting(String name) {
 
-		audioFileNames = tbList.get(index).getAudioFileNames();
-		totAudioBtns = tbList.get(index).getNumberOfAudioButtons();
-		audioSets = tbList.get(index).getNumberOfAudioSets();
-		hasSound = tbList.get(index).getHasAudio();
-		setNames = tbList.get(index).getSetNames();
-		imageButtons = tbList.get(index).getImages();
+		try {
+			System.out.println(name);
+			String path = "TalkBoxData/" + name;
+			FileInputStream fileInputStream = new FileInputStream(new File(path));
+			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+			talkbox = (TalkBox) objectInputStream.readObject();
 
-		currentBtnSet = 0;
-		resetSetList();
-		changeSet();
+			audioFileNames = talkbox.getAudioFileNames();
+			totAudioBtns = talkbox.getNumberOfAudioButtons();
+			audioSets = talkbox.getNumberOfAudioSets();
+			hasSound = talkbox.getHasAudio();
+			setNames = talkbox.getSetNames();
+			imageButtons = talkbox.getImages();
+
+			sound = new Sound();
+			currentBtnSet = 0;
+			resetSetList();
+			changeSet();
+			// objectInputStream.close();
+			// fileInputStream.close();
+
+			// getAllFiles();
+
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		}
 
 	}
 
