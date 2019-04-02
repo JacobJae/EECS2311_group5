@@ -33,6 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
+import javax.swing.UIManager;
 
 public class TalkBoxGui extends JFrame {
 	/**
@@ -71,6 +72,7 @@ public class TalkBoxGui extends JFrame {
 	private List<File> allFiles;
 	private List<String> imgFiles = new ArrayList<>();
 	private List<TalkBox> tbList = new ArrayList<>();
+	private JComboBox<String> setSelector;
 
 	/**
 	 * Launch the application.
@@ -103,12 +105,13 @@ public class TalkBoxGui extends JFrame {
 		setResizable(false);
 
 		init();
+
 		setVariables();
 		loadDefaults();
-		// getSetting();
 		setDefaults();
 		setSettingsList();
-		setButtons(currentBtnSet);
+		setSetList();
+		setButtons();
 		setActions();
 	}
 
@@ -160,6 +163,9 @@ public class TalkBoxGui extends JFrame {
 
 	}
 
+	/*
+	 * Get a list of all files and seperate them in sound, settings and image files
+	 */
 	private int getAllFiles() {
 		String path = "TalkBoxData/";
 		allFiles = Arrays.asList(new File(path).listFiles());
@@ -168,7 +174,6 @@ public class TalkBoxGui extends JFrame {
 		int j = 0;
 		for (int i = 0; i < allFiles.size(); i++) {
 			String file = allFiles.get(i).toString();
-			//System.out.println(file);
 			if (isWav(file)) {
 				sFile[j] = allFiles.get(i);
 				j++;
@@ -260,16 +265,16 @@ public class TalkBoxGui extends JFrame {
 				currentSettings = (String) tbcLoader.getSelectedItem();
 				int index = tbcLoader.getSelectedIndex();
 
-				audioFileNames = tbList.get(index).getAudioFileNames();
-				totAudioBtns = tbList.get(index).getNumberOfAudioButtons();
-				audioSets = tbList.get(index).getNumberOfAudioSets();
-				hasSound = tbList.get(index).getHasAudio();
-				setNames = tbList.get(index).getSetNames();
-				imageButtons = tbList.get(index).getImages();
+				getSetting(index);
+			}
+		});
 
-				currentBtnSet = 0;
+		setSelector.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				currentBtnSet = setSelector.getSelectedIndex();
 				changeSet();
-
 			}
 		});
 
@@ -278,10 +283,10 @@ public class TalkBoxGui extends JFrame {
 	/*
 	 * Set Buttons
 	 */
-	private void setButtons(int currentSet) {
+	private void setButtons() {
 
 		for (int i = 0; i < 6; i++) {
-			currentBtn[i].setIcon(resizeImg(imageButtons[currentSet][i].toString(), currentBtn[i]));
+			currentBtn[i].setIcon(resizeImg(imageButtons[currentBtnSet][i].toString(), currentBtn[i]));
 			currentBtn[i].setToolTipText(findName(getName(audioFileNames[currentBtnSet][i])));
 			currentText[i].setText(findName(getName(audioFileNames[currentBtnSet][i])));
 		}
@@ -304,6 +309,18 @@ public class TalkBoxGui extends JFrame {
 	}
 
 	/*
+	 * Sets the set list
+	 */
+	private void setSetList() {
+		DefaultComboBoxModel<String> aModel = new DefaultComboBoxModel<>();
+		for (int i = 0; i < audioSets; i++) {
+			aModel.addElement(setNames[i]);
+		}
+		setSelector.setModel(aModel);
+		lblTitle.setText((String) setSelector.getSelectedItem());
+	}
+
+	/*
 	 * Set CurrentSettings
 	 */
 	public void setCurrentSettings(String name) {
@@ -320,7 +337,9 @@ public class TalkBoxGui extends JFrame {
 		else if (currentBtnSet >= audioSets)
 			currentBtnSet = 0;
 
-		setButtons(currentBtnSet);
+		setSelector.setSelectedIndex(currentBtnSet);
+		lblTitle.setText((String) setSelector.getSelectedItem());
+		setButtons();
 
 	}
 
@@ -346,16 +365,6 @@ public class TalkBoxGui extends JFrame {
 			sound.stopSound();
 			createConfigure();
 		}
-	}
-
-	/*
-	 * Reset the display
-	 */
-	public void reset(String name) {
-		setCurrentSettings(name);
-		setSettingsList();
-		getSetting();
-		init();
 	}
 
 	/*
@@ -455,10 +464,10 @@ public class TalkBoxGui extends JFrame {
 		setContentPane(contentPane);
 
 		btnStop = new JButton("STOP");
-		btnStop.setFont(new Font("Tahoma", Font.BOLD, 32));
+		btnStop.setFont(new Font("Dialog", Font.BOLD, 24));
 
 		lblTitle = new JLabel("Title");
-		lblTitle.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblTitle.setFont(new Font("Dialog", Font.BOLD, 24));
 
 		configExitPanel = new JPanel();
 		configExitPanel.setBackground(Color.WHITE);
@@ -468,42 +477,68 @@ public class TalkBoxGui extends JFrame {
 
 		loadPanel = new JPanel();
 		loadPanel.setBackground(Color.WHITE);
+
+		JPanel panel = new JPanel();
+		panel.setBackground(Color.WHITE);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
-				.createSequentialGroup()
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup().addGap(64)
-								.addComponent(lblTitle, GroupLayout.PREFERRED_SIZE, 304, GroupLayout.PREFERRED_SIZE)
-								.addGap(351)
-								.addComponent(loadPanel, GroupLayout.PREFERRED_SIZE, 277, GroupLayout.PREFERRED_SIZE))
-						.addGroup(Alignment.TRAILING,
-								gl_contentPane.createSequentialGroup().addContainerGap().addComponent(configExitPanel,
-										GroupLayout.DEFAULT_SIZE, 996, Short.MAX_VALUE))
-						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup().addContainerGap()
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-										.addComponent(btnStop, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 978,
-												Short.MAX_VALUE)
-										.addComponent(mainPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-												GroupLayout.PREFERRED_SIZE))
-								.addGap(10)))
-				.addContainerGap()));
-		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblTitle, GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
-								.addComponent(loadPanel, GroupLayout.PREFERRED_SIZE, 41, GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(mainPanel, GroupLayout.PREFERRED_SIZE, 242, GroupLayout.PREFERRED_SIZE)
-						.addGap(143).addComponent(btnStop, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE)
-						.addGap(171).addComponent(configExitPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE)
-						.addContainerGap()));
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(btnStop, GroupLayout.DEFAULT_SIZE, 984, Short.MAX_VALUE)
+							.addGap(20))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(panel, GroupLayout.PREFERRED_SIZE, 976, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap(28, Short.MAX_VALUE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(lblTitle, GroupLayout.PREFERRED_SIZE, 304, GroupLayout.PREFERRED_SIZE)
+									.addGap(351)
+									.addComponent(loadPanel, GroupLayout.PREFERRED_SIZE, 277, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(mainPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addGap(10)))
+							.addContainerGap())
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(configExitPanel, GroupLayout.DEFAULT_SIZE, 994, Short.MAX_VALUE)
+							.addContainerGap())))
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblTitle, GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
+						.addComponent(loadPanel, GroupLayout.PREFERRED_SIZE, 41, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(mainPanel, GroupLayout.PREFERRED_SIZE, 242, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(btnStop, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(235)
+					.addComponent(configExitPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap())
+		);
+
+		JLabel lblSet = new JLabel("Set:");
+		lblSet.setFont(new Font("Dialog", Font.BOLD, 18));
+		lblSet.setBackground(Color.WHITE);
+		panel.add(lblSet);
+
+		setSelector = new JComboBox<String>();
+		setSelector.setFont(new Font("Dialog", Font.BOLD, 18));
+		panel.add(setSelector);
 
 		lblLoad = new JLabel("Load:");
 		lblLoad.setFont(new Font("Tahoma", Font.BOLD, 20));
 		loadPanel.add(lblLoad);
 
 		tbcLoader = new JComboBox<String>();
+		tbcLoader.setFont(new Font("Dialog", Font.BOLD, 14));
 		loadPanel.add(tbcLoader);
 
 		btnPrevSet = new JButton("<");
@@ -541,7 +576,7 @@ public class TalkBoxGui extends JFrame {
 
 		TextPane0 = new JTextPane();
 		TextPane0.setContentType("plain/text\r\n");
-		TextPane0.setFont(new Font("Monospaced", Font.BOLD, 18));
+		TextPane0.setFont(new Font("Dialog", Font.BOLD, 18));
 		TextPane0.setDisabledTextColor(Color.BLACK);
 		TextPane0.setEnabled(false);
 		TextPane0.setEditable(false);
@@ -550,7 +585,7 @@ public class TalkBoxGui extends JFrame {
 		TextPane1 = new JTextPane();
 		TextPane1.setContentType("plain/text\r\n");
 		TextPane1.setEnabled(false);
-		TextPane1.setFont(new Font("Monospaced", Font.BOLD, 18));
+		TextPane1.setFont(new Font("Dialog", Font.BOLD, 18));
 		TextPane1.setDisabledTextColor(Color.BLACK);
 		TextPane1.setEditable(false);
 		TextPane1.setBackground(Color.WHITE);
@@ -558,7 +593,7 @@ public class TalkBoxGui extends JFrame {
 		TextPane2 = new JTextPane();
 		TextPane2.setContentType("plain/text\r\n");
 		TextPane2.setEnabled(false);
-		TextPane2.setFont(new Font("Monospaced", Font.BOLD, 18));
+		TextPane2.setFont(new Font("Dialog", Font.BOLD, 18));
 		TextPane2.setDisabledTextColor(Color.BLACK);
 		TextPane2.setEditable(false);
 		TextPane2.setBackground(Color.WHITE);
@@ -566,7 +601,7 @@ public class TalkBoxGui extends JFrame {
 		TextPane3 = new JTextPane();
 		TextPane3.setContentType("plain/text\r\n");
 		TextPane3.setEnabled(false);
-		TextPane3.setFont(new Font("Monospaced", Font.BOLD, 18));
+		TextPane3.setFont(new Font("Dialog", Font.BOLD, 18));
 		TextPane3.setDisabledTextColor(Color.BLACK);
 		TextPane3.setEditable(false);
 		TextPane3.setBackground(Color.WHITE);
@@ -574,7 +609,7 @@ public class TalkBoxGui extends JFrame {
 		TextPane4 = new JTextPane();
 		TextPane4.setContentType("plain/text\r\n");
 		TextPane4.setEnabled(false);
-		TextPane4.setFont(new Font("Monospaced", Font.BOLD, 18));
+		TextPane4.setFont(new Font("Dialog", Font.BOLD, 18));
 		TextPane4.setDisabledTextColor(Color.BLACK);
 		TextPane4.setEditable(false);
 		TextPane4.setBackground(Color.WHITE);
@@ -582,7 +617,7 @@ public class TalkBoxGui extends JFrame {
 		TextPane5 = new JTextPane();
 		TextPane5.setContentType("plain/text\r\n");
 		TextPane5.setEnabled(false);
-		TextPane5.setFont(new Font("Monospaced", Font.BOLD, 18));
+		TextPane5.setFont(new Font("Dialog", Font.BOLD, 18));
 		TextPane5.setDisabledTextColor(Color.BLACK);
 		TextPane5.setEditable(false);
 		TextPane5.setBackground(Color.WHITE);
@@ -666,18 +701,29 @@ public class TalkBoxGui extends JFrame {
 		});
 
 		btnConfig = new JButton("Configure");
-		btnConfig.setFont(new Font("Tahoma", Font.BOLD, 24));
+		btnConfig.setFont(new Font("Dialog", Font.BOLD, 24));
 
 		btnExit = new JButton("Exit");
-		btnExit.setFont(new Font("Tahoma", Font.BOLD, 24));
+		btnExit.setFont(new Font("Dialog", Font.BOLD, 24));
 		GroupLayout gl_configExitPanel = new GroupLayout(configExitPanel);
-		gl_configExitPanel.setAutoCreateContainerGaps(true);
 		gl_configExitPanel.setHorizontalGroup(
-				gl_configExitPanel.createParallelGroup(Alignment.LEADING).addGroup(gl_configExitPanel
-						.createSequentialGroup().addGap(381).addComponent(btnConfig).addGap(5).addComponent(btnExit)));
-		gl_configExitPanel.setVerticalGroup(gl_configExitPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_configExitPanel.createSequentialGroup().addGap(5).addGroup(gl_configExitPanel
-						.createParallelGroup(Alignment.LEADING).addComponent(btnConfig).addComponent(btnExit))));
+			gl_configExitPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_configExitPanel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(btnConfig, GroupLayout.PREFERRED_SIZE, 887, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(btnExit)
+					.addContainerGap())
+		);
+		gl_configExitPanel.setVerticalGroup(
+			gl_configExitPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_configExitPanel.createSequentialGroup()
+					.addGap(5)
+					.addGroup(gl_configExitPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnExit)
+						.addComponent(btnConfig)))
+		);
+		gl_configExitPanel.setAutoCreateContainerGaps(true);
 		configExitPanel.setLayout(gl_configExitPanel);
 		btnExit.addActionListener(new ActionListener() {
 
@@ -702,19 +748,19 @@ public class TalkBoxGui extends JFrame {
 	/*
 	 * Set .tbc settings based on configuration
 	 */
-	private void setSetting() {
+	private void setSetting(int index) {
 		try {
-			talkbox.setAudioFileNames(audioFileNames);
-			talkbox.setHasAudio(hasSound);
-			talkbox.setNumberOfAudioSets(audioSets);
-			talkbox.setNumberOfAudioButtons(6);
-			talkbox.setSetNames(setNames);
-			talkbox.setImages(imageButtons);
+			tbList.get(index).setAudioFileNames(audioFileNames);
+			tbList.get(index).setHasAudio(hasSound);
+			tbList.get(index).setNumberOfAudioSets(audioSets);
+			tbList.get(index).setNumberOfAudioButtons(6);
+			tbList.get(index).setSetNames(setNames);
+			tbList.get(index).setImages(imageButtons);
 
 			String filePath = "TalkBoxData/" + currentSettings + ".tbc";
 			FileOutputStream fileOutputStream = new FileOutputStream(filePath);
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-			objectOutputStream.writeObject(talkbox);
+			objectOutputStream.writeObject(tbList.get(index));
 			objectOutputStream.flush();
 			objectOutputStream.close();
 		} catch (IOException e) {
@@ -725,38 +771,41 @@ public class TalkBoxGui extends JFrame {
 	/*
 	 * Get .tbc settings and initiate sound, buttongroup, talkbox object
 	 */
-	private void getSetting() {
-		try {
-			String path = "TalkBoxData/" + currentSettings + ".tbc";
-			FileInputStream fileInputStream = new FileInputStream(new File(path));
-			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-			talkbox = (TalkBox) objectInputStream.readObject();
+	private void getSetting(int index) {
 
-			audioFileNames = talkbox.getAudioFileNames();
-			totAudioBtns = talkbox.getNumberOfAudioButtons();
-			audioSets = talkbox.getNumberOfAudioSets();
-			hasSound = talkbox.getHasAudio();
-			setNames = talkbox.getSetNames();
-			imageButtons = talkbox.getImages();
+		audioFileNames = tbList.get(index).getAudioFileNames();
+		totAudioBtns = tbList.get(index).getNumberOfAudioButtons();
+		audioSets = tbList.get(index).getNumberOfAudioSets();
+		hasSound = tbList.get(index).getHasAudio();
+		setNames = tbList.get(index).getSetNames();
+		imageButtons = tbList.get(index).getImages();
 
-			sound = new Sound();
-			objectInputStream.close();
-			fileInputStream.close();
+		currentBtnSet = 0;
+		setSetList();
+		changeSet();
 
-			getAllFiles();
-			// System.out.println(this.toString());
-			// setButtons(0);
-
-		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (LineUnavailableException e) {
-			e.printStackTrace();
-		}
+		/*
+		 * try { String path = "TalkBoxData/" + currentSettings + ".tbc";
+		 * FileInputStream fileInputStream = new FileInputStream(new File(path));
+		 * ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+		 * talkbox = (TalkBox) objectInputStream.readObject();
+		 * 
+		 * audioFileNames = talkbox.getAudioFileNames(); totAudioBtns =
+		 * talkbox.getNumberOfAudioButtons(); audioSets =
+		 * talkbox.getNumberOfAudioSets(); hasSound = talkbox.getHasAudio(); setNames =
+		 * talkbox.getSetNames(); imageButtons = talkbox.getImages();
+		 * 
+		 * sound = new Sound(); objectInputStream.close(); fileInputStream.close();
+		 * 
+		 * getAllFiles();
+		 * 
+		 * } catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+		 * catch (LineUnavailableException e) { e.printStackTrace(); }
+		 */
 	}
 
 	private void getAllSettings() {
 		for (String s : tbcFiles) {
-			//System.out.println(s);
 			try {
 				FileInputStream fileInputStream = new FileInputStream(new File(s));
 				ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
@@ -793,7 +842,7 @@ public class TalkBoxGui extends JFrame {
 	 */
 	private void createConfigure() {
 		sound.stopSound();
-		setSetting();
+		setSetting(tbcLoader.getSelectedIndex());
 		new ConfigurationGUI(this, currentSettings);
 	}
 }
