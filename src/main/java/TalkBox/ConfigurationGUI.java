@@ -141,10 +141,6 @@ public class ConfigurationGUI extends JFrame {
 		setSettingsList();
 		addActions();
 		setButtons();
-		//if (!currentSettings.equals("default")) {
-		//	tbcLoader.setSelectedItem(currentSettings);
-		//	changeSetting();
-		//}
 	}
 
 	/*
@@ -271,8 +267,6 @@ public class ConfigurationGUI extends JFrame {
 				imgFiles.add(file);
 		}
 
-		//getAllSettings();
-
 		names = new ArrayList<String>();
 		for (int i = 0; i < j; i++) {
 			names.add(getName(sFile[i].toString()));
@@ -347,6 +341,7 @@ public class ConfigurationGUI extends JFrame {
 						deslectBtns();
 					} else {
 						selectedBtnIndex = getSelectedIndex();
+						listAudioList.setEnabled(true);
 						if (hasSound[currentBtnSet][selectedBtnIndex]) {
 							activateBtns();
 							makeSound((JToggleButton) e.getComponent());
@@ -783,7 +778,6 @@ public class ConfigurationGUI extends JFrame {
 			imageBtns[i].setEnabled(false);
 			deleteBtns[i].setEnabled(false);
 			btnCtrlPanel[i].setEnabled(false);
-
 		}
 
 		disp.setText("Press a button to Configure!");
