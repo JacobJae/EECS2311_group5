@@ -98,7 +98,7 @@ public class ConfigurationGUI extends JFrame {
 			record_btn = new ImageIcon("TalkBoxData/record_btn.png");
 	private List<String> imgFiles = new ArrayList<>();
 	private JLabel disp;
-	private DefaultComboBoxModel aModel;
+	private DefaultComboBoxModel<String> aModel = new DefaultComboBoxModel<>();
 	private List<TalkBox> tbList = new ArrayList<TalkBox>();
 
 	/**
@@ -248,18 +248,7 @@ public class ConfigurationGUI extends JFrame {
 				}
 				j++;
 			}
-		}
-
-		imageButtons = new ImageIcon[audioSets][6];
-
-		for (int i = 0; i < hasSound.length; i++) {
-			for (int k = 0; k < 6; k++) {
-				if (hasSound[i][k]) {
-					imageButtons[i][k] = new ImageIcon("TalkBoxData/smiley_face.jpg");
-				} else {
-					imageButtons[i][k] = new ImageIcon("TalkBoxData/Empty_Btn.png");
-				}
-			}
+			setNames[i] = "Audio Sets " + (i + 1);
 		}
 
 	}
@@ -469,6 +458,7 @@ public class ConfigurationGUI extends JFrame {
 					String[][] temp = new String[audioSets][6];
 					ImageIcon[][] tempI = new ImageIcon[audioSets][6];
 					boolean[][] tempA = new boolean[audioSets][6];
+					String[] tempS = new String[audioSets];
 
 					for (int i = 0; i < audioSets; i++) {
 						for (int j = 0; j < 6; j++) {
@@ -476,11 +466,13 @@ public class ConfigurationGUI extends JFrame {
 							tempI[i][j] = imageButtons[i][j];
 							tempA[i][j] = hasSound[i][j];
 						}
+						tempS[i] = setNames[i];
 					}
 
 					audioFileNames = temp;
 					imageButtons = tempI;
 					hasSound = tempA;
+					setNames = tempS;
 
 					currentBtnSet = 0;
 					aModel.removeElementAt(audioSets);
@@ -499,6 +491,7 @@ public class ConfigurationGUI extends JFrame {
 				String[][] temp = new String[audioSets][6];
 				ImageIcon[][] tempI = new ImageIcon[audioSets][6];
 				boolean[][] tempA = new boolean[audioSets][6];
+				String[] tempS = new String[audioSets];
 
 				for (int i = 0; i < audioSets - 1; i++) {
 					for (int j = 0; j < 6; j++) {
@@ -506,6 +499,7 @@ public class ConfigurationGUI extends JFrame {
 						tempI[i][j] = imageButtons[i][j];
 						tempA[i][j] = hasSound[i][j];
 					}
+					tempS[i] = setNames[i];
 				}
 
 				for (int i = 0; i < 6; i++) {
@@ -513,13 +507,15 @@ public class ConfigurationGUI extends JFrame {
 					tempI[audioSets - 1][i] = emptyImg;
 					tempA[audioSets - 1][i] = false;
 				}
+				tempS[audioSets - 1] = "Audio Sets " + audioSets;
 
 				audioFileNames = temp;
 				imageButtons = tempI;
 				hasSound = tempA;
+				setNames = tempS;
 
 				currentBtnSet = 0;
-				aModel.addElement("Audio Set " + audioSets);
+				aModel.addElement("Audio Sets " + audioSets);
 				setSelector.setModel(aModel);
 				changeSet();
 
@@ -532,26 +528,29 @@ public class ConfigurationGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 
 				sound.stopSound();
+				String temp = (String) tbcLoader.getSelectedItem();
 
-				currentSettings = (String) tbcLoader.getSelectedItem();
+				if (!temp.equals(currentSettings)) {
+					currentSettings = (String) tbcLoader.getSelectedItem();
 
-				if (currentSettings.equals("default"))
-					btnSave.setEnabled(false);
-				else
-					btnSave.setEnabled(true);
+					if (currentSettings.equals("default"))
+						btnSave.setEnabled(false);
+					else
+						btnSave.setEnabled(true);
 
-				int index = tbcLoader.getSelectedIndex();
+					int index = tbcLoader.getSelectedIndex();
 
-				audioFileNames = tbList.get(index).getAudioFileNames();
-				totAudioBtns = tbList.get(index).getNumberOfAudioButtons();
-				audioSets = tbList.get(index).getNumberOfAudioSets();
-				hasSound = tbList.get(index).getHasAudio();
-				setNames = tbList.get(index).getSetNames();
-				imageButtons = tbList.get(index).getImages();
+					audioFileNames = tbList.get(index).getAudioFileNames();
+					totAudioBtns = tbList.get(index).getNumberOfAudioButtons();
+					audioSets = tbList.get(index).getNumberOfAudioSets();
+					hasSound = tbList.get(index).getHasAudio();
+					setNames = tbList.get(index).getSetNames();
+					imageButtons = tbList.get(index).getImages();
 
-				currentBtnSet = 0;
-				changeSet();
-
+					currentBtnSet = 0;
+					setSetList();
+					changeSet();
+				}
 			}
 		});
 
@@ -604,16 +603,16 @@ public class ConfigurationGUI extends JFrame {
 	 */
 	private void setSetList() {
 
-		for (int i = 0; i < audioSets; i++) {
-			setNames[i] = "Audio Set " + (i + 1);
+		for (int i = 0; i < aModel.getSize(); i++) {
+			System.out.println(aModel.getElementAt(i)+" Removed!");
+			aModel.removeElementAt(i);
 		}
 
-		aModel = new DefaultComboBoxModel<>();
-		for (int i = 0; i < setNames.length; i++) {
+		for (int i = 0; i < audioSets; i++) {
 			aModel.addElement(setNames[i]);
+			System.out.println(aModel.getElementAt(i));
 		}
 		setSelector.setModel(aModel);
-		setSelector.setSelectedIndex(0);
 		lblTitle.setText((String) setSelector.getSelectedItem());
 	}
 
