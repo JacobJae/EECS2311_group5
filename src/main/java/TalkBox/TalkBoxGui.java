@@ -121,7 +121,6 @@ public class TalkBoxGui extends JFrame {
 	 */
 	private void loadDefaults() {
 
-		talkbox = new TalkBox();
 
 		int j = getAllFiles();
 
@@ -751,7 +750,9 @@ public class TalkBoxGui extends JFrame {
 			 * tbList.get(index).setSetNames(setNames);
 			 * tbList.get(index).setImages(imageButtons);
 			 */
-
+			
+			talkbox = new TalkBox();
+			
 			String filePath = "TalkBoxData/" + currentSettings + ".tbc";
 			FileOutputStream fileOutputStream = new FileOutputStream(new File(filePath));
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -778,6 +779,7 @@ public class TalkBoxGui extends JFrame {
 		 */
 
 		try {
+			System.out.println(name);
 			String path = "TalkBoxData/" + name;
 			FileInputStream fileInputStream = new FileInputStream(new File(path));
 			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
