@@ -130,14 +130,7 @@ public class TalkBox implements TalkBoxConfiguration {
 	public void setHasAudio(boolean[][] hasAudio) {
 		this.hasAudio = hasAudio;
 	}
-
-	public void setAbsolutePath(Path absolutePath) {
-		this.absolutePath = absolutePath;
-	}
 	
-	public Path getAbsolutePath() {
-		return this.absolutePath;
-	}
 	
 	/**
      * Increase Number of audio sets.
@@ -200,7 +193,7 @@ public class TalkBox implements TalkBoxConfiguration {
      */
 	public void addAudio(int currentBtnSet, int btnPosition, String audioName) {
 		String names[][] = getAudioFileNames();
-		names[currentBtnSet][btnPosition - 1] = "TalkBoxData/" + audioName;
+		names[currentBtnSet][btnPosition] = "TalkBoxData\\" + audioName;
 		setAudioFileNames(names);
 	}
 	
@@ -212,7 +205,7 @@ public class TalkBox implements TalkBoxConfiguration {
      */
 	public void removeAudio(int currentBtnSet, int selectedBtnIndex) {
 		String names[][] = getAudioFileNames();
-		names[currentBtnSet][selectedBtnIndex - 1] = null;
+		names[currentBtnSet][selectedBtnIndex] = null;
 		setAudioFileNames(names);
 	}
 	

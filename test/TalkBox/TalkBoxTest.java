@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.nio.file.Paths;
 
+import javax.swing.ImageIcon;
+
 import org.junit.jupiter.api.*;
 
 import main.java.TalkBox.TalkBox;
@@ -129,6 +131,20 @@ class TalkBoxTest {
 		String[][] names_2 = {  };
 		assertNotEquals(names_2, box.getAudioFileNames());
 		
+	}
+	
+	@org.junit.jupiter.api.Test
+	void getImages_test() {
+		TalkBox box = new TalkBox();
+		
+	}
+	
+	@org.junit.jupiter.api.Test
+	void setImages_test() {
+		TalkBox box = new TalkBox();
+		ImageIcon[][] images = { { new ImageIcon("TalkBoxData/Images/dollar.jpg"), new ImageIcon("TalkBoxData/Images/engineering.jpg") } };
+		box.setImages(images);
+		assertEquals(box.getImages(), images);
 	}
 }
 
