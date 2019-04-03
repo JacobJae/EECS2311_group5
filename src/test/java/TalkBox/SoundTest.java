@@ -14,7 +14,7 @@ class SoundTest {
 	void test() {
 //		fail("Not yet implemented");
 	}
-	
+
 	private Sound sound;
 
 	@BeforeEach
@@ -35,7 +35,7 @@ class SoundTest {
 			Integer.parseInt("1d");
 		});
 	}
-	
+
 	@org.junit.jupiter.api.Test
 	void testTrue() {
 		assertTrue(true);

@@ -33,22 +33,21 @@ import java.util.List;
 import javax.swing.ImageIcon;
 
 /**
- * The {@code TalkBox} class contains user setting of TalkBox.
- * Serialized object will be saved on "TalkBoxData" as '.tbc' extension
- * Object contains
+ * The {@code TalkBox} class contains user setting of TalkBox. Serialized object
+ * will be saved on "TalkBoxData" as '.tbc' extension Object contains
  * <ul>
- * 	<li>{@code int} numberOfAudioButtons</li>
- * 	<li>{@code int} numberOfAudioSets</li>
- * 	<li>{@code String[][]} audioFileNames</li>
+ * <li>{@code int} numberOfAudioButtons</li>
+ * <li>{@code int} numberOfAudioSets</li>
+ * <li>{@code String[][]} audioFileNames</li>
  * </ul>
  *
- * @author  Sangheon Jae
- * @author  Karmit Patel
- * @author  Peter Saleeb
+ * @author Sangheon Jae
+ * @author Karmit Patel
+ * @author Peter Saleeb
  */
 
 public class TalkBox implements TalkBoxConfiguration {
-	
+
 	/**
 	 * 
 	 */
@@ -63,9 +62,7 @@ public class TalkBox implements TalkBoxConfiguration {
 	private File[] sFile;
 	private List<String> settingsList;
 	private ImageIcon[][] images;
-	
-	
-	
+
 	/**
 	 * @return the images
 	 */
@@ -129,11 +126,10 @@ public class TalkBox implements TalkBoxConfiguration {
 	public void setHasAudio(boolean[][] hasAudio) {
 		this.hasAudio = hasAudio;
 	}
-	
-	
+
 	/**
-     * Increase Number of audio sets.
-     */
+	 * Increase Number of audio sets.
+	 */
 	public void incAudioSets() {
 		setNumberOfAudioSets(getNumberOfAudioSets() + 1);
 		if (getAudioFileNames().length < getNumberOfAudioSets()) {
@@ -147,18 +143,18 @@ public class TalkBox implements TalkBoxConfiguration {
 			setAudioFileNames(newNames);
 		}
 	}
-	
+
 	/**
-     * Decrease Number of audio sets.
-     */
+	 * Decrease Number of audio sets.
+	 */
 	public void decAudioSets() {
 		if (getNumberOfAudioSets() > 1)
 			setNumberOfAudioSets(getNumberOfAudioSets() - 1);
 	}
-	
+
 	/**
-     * Increase Number of audio sets.
-     */
+	 * Increase Number of audio sets.
+	 */
 	public void incAudioButtons() {
 		if (getNumberOfAudioButtons() < 8) {
 			setNumberOfAudioButtons(getNumberOfAudioButtons() + 1);
@@ -174,43 +170,43 @@ public class TalkBox implements TalkBoxConfiguration {
 			}
 		}
 	}
-	
+
 	/**
-     * Decrease Number of audio sets.
-     */
+	 * Decrease Number of audio sets.
+	 */
 	public void decAudioButtons() {
 		if (getNumberOfAudioButtons() > 1)
 			setNumberOfAudioButtons(getNumberOfAudioButtons() - 1);
 	}
-	
+
 	/**
-     * Add audio file
-     * 
-     * @param int currentBtnSet positive integer
-     * @param int btnPosition positive integer
-     * @param String audioName Audio File Name
-     */
+	 * Add audio file
+	 * 
+	 * @param        int currentBtnSet positive integer
+	 * @param        int btnPosition positive integer
+	 * @param String audioName Audio File Name
+	 */
 	public void addAudio(int currentBtnSet, int btnPosition, String audioName) {
 		String names[][] = getAudioFileNames();
 		names[currentBtnSet][btnPosition] = "TalkBoxData\\" + audioName;
 		setAudioFileNames(names);
 	}
-	
+
 	/**
-     * Remove audio file
-     * 
-     * @param int currentBtnSet positive integer
-     * @param int selectedBtnIndex positive integer
-     */
+	 * Remove audio file
+	 * 
+	 * @param int currentBtnSet positive integer
+	 * @param int selectedBtnIndex positive integer
+	 */
 	public void removeAudio(int currentBtnSet, int selectedBtnIndex) {
 		String names[][] = getAudioFileNames();
 		names[currentBtnSet][selectedBtnIndex] = null;
 		setAudioFileNames(names);
 	}
-	
+
 	/**
-     * Finalize instance
-     */
+	 * Finalize instance
+	 */
 	public void finalize() {
 		String names[][] = getAudioFileNames();
 		String result[][] = new String[getNumberOfAudioSets()][getNumberOfAudioButtons()];
@@ -221,82 +217,88 @@ public class TalkBox implements TalkBoxConfiguration {
 		}
 		setAudioFileNames(result);
 	}
-	
+
 	/**
-     * Set the number of physical buttons that when pressed will play an audio file.
-     * 
-     * @param int numberOfAudioButtons positive integer
-     */
+	 * Set the number of physical buttons that when pressed will play an audio file.
+	 * 
+	 * @param int numberOfAudioButtons positive integer
+	 */
 	public void setNumberOfAudioButtons(int numberOfAudioButtons) {
 		this.numberOfAudioButtons = numberOfAudioButtons;
 	}
 
 	/**
-     * Set the number of sets of audio files that this configuration supports.
-     * 
-     * @param int numberOfAudioSets positive integer
-     */
+	 * Set the number of sets of audio files that this configuration supports.
+	 * 
+	 * @param int numberOfAudioSets positive integer
+	 */
 	public void setNumberOfAudioSets(int numberOfAudioSets) {
 		this.numberOfAudioSets = numberOfAudioSets;
 	}
 
 	/**
-     * Returns a 2-dimensional array of Strings that contains the names of all audio files.
-     * Each row of the array is an audio set.
-     * The dimensions of the array are given by {@link #getNumberOfAudioButtons() getNumberOfAudioButtons}
-     * and {@link #getNumberOfAudioSets() getNumberOfAudioSets}
-     * @param audioFileNames 2-dimensional array of Strings
-     */
+	 * Returns a 2-dimensional array of Strings that contains the names of all audio
+	 * files. Each row of the array is an audio set. The dimensions of the array are
+	 * given by {@link #getNumberOfAudioButtons() getNumberOfAudioButtons} and
+	 * {@link #getNumberOfAudioSets() getNumberOfAudioSets}
+	 * 
+	 * @param audioFileNames 2-dimensional array of Strings
+	 */
 	public void setAudioFileNames(String[][] audioFileNames) {
 		this.audioFileNames = audioFileNames;
 	}
 
 	/**
-     * Returns the number of physical buttons that when pressed will play an audio file.
-     * 
-     * @return int A positive integer
-     */
+	 * Returns the number of physical buttons that when pressed will play an audio
+	 * file.
+	 * 
+	 * @return int A positive integer
+	 */
 	@Override
 	public int getNumberOfAudioButtons() {
 		return numberOfAudioButtons;
 	}
 
 	/**
-     * Returns the number of sets of audio files that this configuration supports.
-     * 
-     * @return int A positive integer
-     */
+	 * Returns the number of sets of audio files that this configuration supports.
+	 * 
+	 * @return int A positive integer
+	 */
 	@Override
 	public int getNumberOfAudioSets() {
 		return numberOfAudioSets;
 	}
 
 	/**
-     * Returns the total number of buttons in this TalkBox. 
-     * 
-     * @return int A positive integer
-     */
+	 * Returns the total number of buttons in this TalkBox.
+	 * 
+	 * @return int A positive integer
+	 */
 	@Override
 	public int getTotalNumberOfButtons() {
 		return numberOfAudioButtons * numberOfAudioSets;
 	}
 
 	/**
-     * Returns a Path relative to this configuration object where all audio files can be found
-     * @return Path A Path object that identifies the directory that contains the audio files
-     */
+	 * Returns a Path relative to this configuration object where all audio files
+	 * can be found
+	 * 
+	 * @return Path A Path object that identifies the directory that contains the
+	 *         audio files
+	 */
 	@Override
 	public Path getRelativePathToAudioFiles() {
 		return Paths.get(System.getProperty("user.dir"));
 	}
 
 	/**
-     * Returns a 2-dimensional array of Strings that contains the names of all audio files.
-     * Each row of the array is an audio set.
-     * The dimensions of the array are given by {@link #getNumberOfAudioButtons() getNumberOfAudioButtons}
-     * and {@link #getNumberOfAudioSets() getNumberOfAudioSets}
-     * @return A 2-dimensional array of Strings
-     */
+	 * Returns a 2-dimensional array of Strings that contains the names of all audio
+	 * files. Each row of the array is an audio set. The dimensions of the array are
+	 * given by {@link #getNumberOfAudioButtons() getNumberOfAudioButtons} and
+	 * {@link #getNumberOfAudioSets() getNumberOfAudioSets}
+	 * 
+	 * @return A 2-dimensional array of Strings
+	 */
 	@Override
 	public String[][] getAudioFileNames() {
 		return audioFileNames;

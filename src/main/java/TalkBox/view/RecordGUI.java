@@ -38,7 +38,8 @@ public class RecordGUI extends JFrame {
 	private JLabel lblRecord;
 	private ConfigurationGUI confGui;
 	private ImageIcon recordBtn = new ImageIcon("TalkBoxData/Images/record_btn.png"),
-			playBtn = new ImageIcon("TalkBoxData/Images/play_btn.png"), stop_btn = new ImageIcon("TalkBoxData/Images/stop_btn.png");
+			playBtn = new ImageIcon("TalkBoxData/Images/play_btn.png"),
+			stop_btn = new ImageIcon("TalkBoxData/Images/stop_btn.png");
 	private JLabel disp;
 
 	/*

@@ -5,9 +5,9 @@ package main.java.TalkBox.model;
 */
 public class Check {
 	public Check() {
-		
+
 	}
-	
+
 	/*
 	 * Check if file is a .wav file
 	 */

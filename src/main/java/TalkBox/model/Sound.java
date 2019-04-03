@@ -82,7 +82,7 @@ public class Sound {
 			ee.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Stop sound file
 	 */
@@ -151,9 +151,8 @@ public class Sound {
 			line = null;
 		}
 	}
-	
-	public boolean isPlaying()
-	{
+
+	public boolean isPlaying() {
 		return clip.isRunning();
 	}
 }
