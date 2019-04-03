@@ -58,7 +58,6 @@ public class TalkBox implements TalkBoxConfiguration {
 	private int numberOfAudioButtons;
 	private int numberOfAudioSets;
 	private String[][] audioFileNames;
-	private Path absolutePath;
 	private boolean[][] hasAudio;
 	private String[] setNames;
 	private File[] sFile;

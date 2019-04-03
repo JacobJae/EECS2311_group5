@@ -1,19 +1,14 @@
 package test.java.TalkBox;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import java.io.File;
-import java.net.URI;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.ImageIcon;
-
 import org.junit.jupiter.api.*;
-
-import javafx.scene.shape.Path;
 import main.java.TalkBox.model.TalkBox;
+
 
 class TalkBoxTest {
 
@@ -140,13 +135,6 @@ class TalkBoxTest {
 		
 	}
 	
-	@org.junit.jupiter.api.Test
-	void getAbsolutePath_test() {
-		TalkBox box = new TalkBox();
-		File file = new File(".");
-		String path = file.getAbsolutePath();
-		assertEquals("C:\\Users\\peter\\git\\EECS2311_group5\\.", path);
-	}
 	
 	@org.junit.jupiter.api.Test
 	void setAndGetImages_test() {
