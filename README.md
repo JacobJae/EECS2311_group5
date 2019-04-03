@@ -19,7 +19,9 @@ This software requires physical devices such as monitor(for user interface), aud
 
 ### UML diagrams
 
-You can also render sequence diagrams like this:
 ![UML sequence diagram](Diagrams/Authentication%20Sequence.png)
+
+
+
 [1]: https://github.com/JacobJae/EECS2311_group5/blob/master/TalkBoxV2/doc/User_Manual_v2.pdf
 [2]: https://github.com/JacobJae/EECS2311_group5/tree/master/TalkBoxV2/Documentation
