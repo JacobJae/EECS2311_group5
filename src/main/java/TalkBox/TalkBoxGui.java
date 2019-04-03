@@ -121,7 +121,6 @@ public class TalkBoxGui extends JFrame {
 	 */
 	private void loadDefaults() {
 
-
 		int j = getAllFiles();
 
 		try {
@@ -742,17 +741,15 @@ public class TalkBoxGui extends JFrame {
 	private void setSetting() {
 
 		try {
-			/*
-			 * tbList.get(index).setAudioFileNames(audioFileNames);
-			 * tbList.get(index).setHasAudio(hasSound);
-			 * tbList.get(index).setNumberOfAudioSets(audioSets);
-			 * tbList.get(index).setNumberOfAudioButtons(6);
-			 * tbList.get(index).setSetNames(setNames);
-			 * tbList.get(index).setImages(imageButtons);
-			 */
-			
 			talkbox = new TalkBox();
 			
+			talkbox.setAudioFileNames(audioFileNames);
+			talkbox.setHasAudio(hasSound);
+			talkbox.setNumberOfAudioSets(audioSets);
+			talkbox.setNumberOfAudioButtons(6);
+			talkbox.setSetNames(setNames);
+			talkbox.setImages(imageButtons);
+
 			String filePath = "TalkBoxData/" + currentSettings + ".tbc";
 			FileOutputStream fileOutputStream = new FileOutputStream(new File(filePath));
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);

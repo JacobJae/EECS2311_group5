@@ -498,6 +498,10 @@ public class ConfigurationGUI extends JFrame {
 		if (file != null) {
 			String name = file.getName();
 			currentSettings = getName(name);
+			if (!name.equals("default.tbc"))
+				btnSave.setEnabled(true);
+			else
+				btnSave.setEnabled(false);
 			getSetting(name);
 		}
 	}
