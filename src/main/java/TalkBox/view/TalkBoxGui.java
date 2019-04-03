@@ -59,7 +59,7 @@ public class TalkBoxGui extends JFrame {
 	private JButton Button0, Button1, Button2, Button3, Button4, Button5, btnPrevSet, btnStop, btnConfig, btnExit,
 			btnLoad;
 	private JButton[] currentBtn = new JButton[6];
-	private String currentSettings = "default", path = "TalkBoxData/", defaultText = "Press to Confiugure!";
+	private String currentSettings = "default", path = "TalkBoxData/", defaultText = "Press to Configure!";
 	private String[] setNames;
 	private String[][] audioFileNames;
 	private Sound sound;
@@ -76,19 +76,6 @@ public class TalkBoxGui extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-//	public static void main(String[] args) {
-//
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					TalkBoxGui frame = new TalkBoxGui();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
 
 	/**
 	 * Create default Simulator the frame.
@@ -148,7 +135,7 @@ public class TalkBoxGui extends JFrame {
 		for (int i = 0; i < audioSets; i++) {
 			for (int k = 0; k < 6; k++) {
 				if (sFile[j] == null) {
-					audioFileNames[i][k] = "Press to Confiugure!";
+					audioFileNames[i][k] = defaultText;
 					hasSound[i][k] = false;
 				} else {
 					audioFileNames[i][k] = sFile[j].toString();
@@ -285,7 +272,7 @@ public class TalkBoxGui extends JFrame {
 	private void setButtons() {
 
 		for (int i = 0; i < 6; i++) {
-			currentBtn[i].setIcon(resizeImg(imageButtons[currentBtnSet][i].toString(), currentBtn[i]));
+			currentBtn[i].setIcon(resizeImg(imageButtons[currentBtnSet][i].toString()));
 			currentBtn[i].setToolTipText(findName(getName(audioFileNames[currentBtnSet][i])));
 			currentText[i].setText(toDisplayCase((findName(getName(audioFileNames[currentBtnSet][i])))));
 		}
@@ -400,7 +387,7 @@ public class TalkBoxGui extends JFrame {
 	/*
 	 * Resize the Images to fit buttons
 	 */
-	private ImageIcon resizeImg(String path, JButton button) {
+	private ImageIcon resizeImg(String path) {
 
 		ImageIcon icon = new ImageIcon(path);
 		Image scaleImage = icon.getImage().getScaledInstance(145, 120, Image.SCALE_SMOOTH);

@@ -99,7 +99,6 @@ public class ConfigurationGUI extends JFrame {
 	private List<File> allFiles;
 	private List<String> tbcFiles = new ArrayList<String>();
 	private List<String> imgFiles = new ArrayList<>();
-	private List<TalkBox> tbList = new ArrayList<TalkBox>();
 	private int currentBtnSet = 0, counter = 0, selectedBtnIndex = -1, selectedListIndex = -1, audioSets, totAudioBtns;
 	private boolean[][] hasSound;
 	private JLabel lblSettingTitle;
@@ -307,7 +306,7 @@ public class ConfigurationGUI extends JFrame {
 		for (int i = 0; i < 6; i++) {
 			currentAudioBtns[i].setIcon(resizeImg(imageButtons[currentBtnSet][i].toString(), 150, 120));
 			currentAudioText[i].setText(toDisplayCase((findName(getName(audioFileNames[currentBtnSet][i])))));
-			currentAudioBtns[i].setToolTipText(getName(audioFileNames[currentBtnSet][i]));
+			currentAudioBtns[i].setToolTipText(findName(getName(audioFileNames[currentBtnSet][i])));
 		}
 
 		List<String> finalNames = new ArrayList<String>();
@@ -346,7 +345,6 @@ public class ConfigurationGUI extends JFrame {
 				}
 			}
 		}
-
 
 		String title = currentSettings + ".tbc";
 		lblSettingTitle.setText(title.toUpperCase());
@@ -510,6 +508,15 @@ public class ConfigurationGUI extends JFrame {
 			}
 		});
 
+		btnExit.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				talkboxgui.dispose();
+				sound.stopSound();
+				new TalkBoxGui().setVisible(true);
+				dispose();
+			}
+		});
 	}
 
 	/*
@@ -1475,15 +1482,6 @@ public class ConfigurationGUI extends JFrame {
 
 		btnExit = new JButton("BACK");
 		btnExit.setFont(new Font("Dialog", Font.BOLD, 18));
-		btnExit.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				talkboxgui.dispose();
-				sound.stopSound();
-				talkboxgui.setVisible(true);
-				dispose();
-			}
-		});
 		GroupLayout gl_saveExitPanel = new GroupLayout(saveExitPanel);
 		gl_saveExitPanel.setHorizontalGroup(gl_saveExitPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_saveExitPanel.createSequentialGroup()
@@ -1505,7 +1503,7 @@ public class ConfigurationGUI extends JFrame {
 	/*
 	 * Save Settings
 	 */
-	public void setSetting() {
+	private void setSetting() {
 		try {
 			talkbox.setAudioFileNames(audioFileNames);
 			talkbox.setHasAudio(hasSound);
