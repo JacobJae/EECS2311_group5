@@ -75,19 +75,19 @@ public class TalkBoxGui extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TalkBoxGui frame = new TalkBoxGui();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					TalkBoxGui frame = new TalkBoxGui();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create default Simulator the frame.
@@ -147,7 +147,7 @@ public class TalkBoxGui extends JFrame {
 		for (int i = 0; i < audioSets; i++) {
 			for (int k = 0; k < 6; k++) {
 				if (sFile[j] == null) {
-					audioFileNames[i][k] = "Press to Confiugure!.";
+					audioFileNames[i][k] = "Press to Confiugure!";
 					hasSound[i][k] = false;
 				} else {
 					audioFileNames[i][k] = sFile[j].toString();
@@ -317,7 +317,7 @@ public class TalkBoxGui extends JFrame {
 	private void createLoad() {
 		sound.stopSound();
 		
-		JFileChooser j = new JFileChooser(path);
+		JFileChooser j = new JFileChooser("TalkBoxData/Settings/");
 		j.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Settings", "tbc");
 		j.setFileFilter(filter);
@@ -520,28 +520,28 @@ public class TalkBoxGui extends JFrame {
 		Button0 = new JButton("");
 		Button0.setAlignmentX(Component.CENTER_ALIGNMENT);
 		Button0.setFont(new Font("Calibri", Button0.getFont().getStyle(), Button0.getFont().getSize() + 4));
-		Button0.setBackground(new Color(0, 102, 204));
+		Button0.setBackground(new Color(0, 0, 0));
 
 		Button1 = new JButton("");
 		Button1.setAlignmentX(Component.CENTER_ALIGNMENT);
 		Button1.setFont(new Font("Calibri", Button0.getFont().getStyle(), Button0.getFont().getSize()));
-		Button1.setBackground(new Color(0, 102, 204));
+		Button1.setBackground(new Color(0, 0, 0));
 
 		Button2 = new JButton("");
 		Button2.setFont(new Font("Calibri", Button0.getFont().getStyle(), Button0.getFont().getSize()));
-		Button2.setBackground(new Color(0, 102, 204));
+		Button2.setBackground(new Color(0, 0, 0));
 
 		Button3 = new JButton("");
 		Button3.setFont(new Font("Calibri", Button0.getFont().getStyle(), Button0.getFont().getSize()));
-		Button3.setBackground(new Color(0, 102, 204));
+		Button3.setBackground(new Color(0, 0, 0));
 
 		Button4 = new JButton("");
 		Button4.setFont(new Font("Calibri", Button0.getFont().getStyle(), Button0.getFont().getSize()));
-		Button4.setBackground(new Color(0, 102, 204));
+		Button4.setBackground(new Color(0, 0, 0));
 
 		Button5 = new JButton("");
 		Button5.setFont(new Font("Calibri", Button0.getFont().getStyle(), Button0.getFont().getSize()));
-		Button5.setBackground(new Color(0, 102, 204));
+		Button5.setBackground(new Color(0, 0, 0));
 
 		TextPane0 = new JTextPane();
 		TextPane0.setContentType("plain/text\r\n");

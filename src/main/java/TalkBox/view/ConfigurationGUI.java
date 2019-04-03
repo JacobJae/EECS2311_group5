@@ -632,7 +632,7 @@ public class ConfigurationGUI extends JFrame {
 	 */
 	protected void createImagechooser() {
 
-		JFileChooser j = new JFileChooser(path);
+		JFileChooser j = new JFileChooser("TalkBoxData/Images/");
 		j.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Images", "jpg", "png", "gif", "bmp");
 		j.setFileFilter(filter);
@@ -681,7 +681,7 @@ public class ConfigurationGUI extends JFrame {
 	 */
 	private void createSaveAs() {
 
-		JFileChooser j = new JFileChooser(path);
+		JFileChooser j = new JFileChooser("TalkBoxData/Settings/");
 		j.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Settings", "tbc");
 		j.setFileFilter(filter);
