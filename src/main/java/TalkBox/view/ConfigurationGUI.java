@@ -55,7 +55,7 @@ public class ConfigurationGUI extends JFrame {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8521259104660128253L;
+//	private static final long serialVersionUID = -8521259104660128253L;
 	private JPanel contentPane;
 	private Sound sound;
 	private TalkBox talkbox = new TalkBox();
@@ -253,33 +253,6 @@ public class ConfigurationGUI extends JFrame {
 
 	}
 
-//	private int getAllFiles() {
-//
-//		path = "TalkBoxData/";
-//		allFiles = Arrays.asList(new File(path).listFiles());
-//		sFile = new File[allFiles.size() * 2];
-//		int j = 0;
-//		for (int i = 0; i < allFiles.size(); i++) {
-//			String file = allFiles.get(i).toString();
-//			if (isWav(file)) {
-//				sFile[j] = allFiles.get(i);
-//				j++;
-//			}
-//			if (isTbc(file))
-//				tbcFiles.add(file);
-//			if (isImg(file))
-//				imgFiles.add(file);
-//		}
-//
-//		names = new ArrayList<String>();
-//		for (int i = 0; i < j; i++) {
-//			names.add(getName(sFile[i].toString()));
-//		}
-//
-//		return j;
-//
-//	}
-	
 	private int getAllFiles() {
 		path = "TalkBoxData/Sounds/";
 		allFiles = Arrays.asList(new File(path).listFiles());
@@ -297,7 +270,7 @@ public class ConfigurationGUI extends JFrame {
 		for (int i = 0; i < j; i++) {
 			names.add(getName(sFile[i].toString()));
 		}
-		
+
 		path = "TalkBoxData/Images/";
 		allFiles = Arrays.asList(new File(path).listFiles());
 		for (int i = 0; i < allFiles.size(); i++) {
@@ -305,7 +278,7 @@ public class ConfigurationGUI extends JFrame {
 			if (isImg(file))
 				imgFiles.add(file);
 		}
-		
+
 		path = "TalkBoxData/Settings/";
 		allFiles = Arrays.asList(new File(path).listFiles());
 		for (int i = 0; i < allFiles.size(); i++) {
@@ -313,7 +286,7 @@ public class ConfigurationGUI extends JFrame {
 			if (isTbc(file))
 				tbcFiles.add(file);
 		}
-		
+
 		return j;
 
 	}
@@ -528,6 +501,7 @@ public class ConfigurationGUI extends JFrame {
 	}
 
 	private void createLoad() {
+		sound.stopSound();
 
 		JFileChooser j = new JFileChooser(path);
 		j.setFileSelectionMode(JFileChooser.FILES_ONLY);

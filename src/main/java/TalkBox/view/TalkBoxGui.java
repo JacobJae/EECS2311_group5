@@ -45,7 +45,7 @@ public class TalkBoxGui extends JFrame {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8569879131969549758L;
+//	private static final long serialVersionUID = 8569879131969549758L;
 	/**
 	 * 
 	 */
@@ -102,7 +102,7 @@ public class TalkBoxGui extends JFrame {
 	public TalkBoxGui() {
 		setVisible(true);
 		setSize(new Dimension(1030, 768));
-		setAlwaysOnTop(true);
+//		setAlwaysOnTop(true);
 		setBackground(Color.WHITE);
 		setTitle("TalkBox Simulator V2.0");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -349,7 +349,8 @@ public class TalkBoxGui extends JFrame {
 	}
 
 	private void createLoad() {
-
+		sound.stopSound();
+		
 		JFileChooser j = new JFileChooser(path);
 		j.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Settings", "tbc");
@@ -360,6 +361,7 @@ public class TalkBoxGui extends JFrame {
 		if (file != null) {
 			String name = file.getName();
 			currentSettings = getName(name);
+			setTitle("TalkBox Simulator V2.0 [" + name + "]");
 			getSetting(name);
 		}
 
@@ -569,7 +571,7 @@ public class TalkBoxGui extends JFrame {
 		btnLoad.setFont(new Font("Dialog", Font.BOLD, 18));
 		loadPanel.add(btnLoad);
 
-		JLabel lblSet = new JLabel("Set:");
+		JLabel lblSet = new JLabel("Sellect Audio Set:");
 		lblSet.setFont(new Font("Dialog", Font.BOLD, 18));
 		lblSet.setBackground(Color.WHITE);
 		panel.add(lblSet);
