@@ -12,10 +12,7 @@ import main.java.TalkBox.model.TalkBox;
 
 class TalkBoxTest {
 
-	@org.junit.jupiter.api.Test
-	void test() {
-//		fail("Not yet implemented");
-	}
+
 
 	@BeforeEach
 	void setUp() throws Exception {

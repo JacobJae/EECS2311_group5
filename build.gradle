@@ -34,17 +34,10 @@ test {
 
 jar {
 	manifest {
-<<<<<<< HEAD
 		attributes 'Main-Class': 'main.java.TalkBox.controller.Main'
-=======
-		attributes 'Main-Class': 'main.java.TalkBox.Main'
->>>>>>> branch 'master' of https://github.com/JacobJae/EECS2311_group5.git
-	}
+}
+// Define the main class for the application
+mainClassName = 'TalkBox.controller.Main'
+
 }
 
-// Define the main class for the application
-<<<<<<< HEAD
-mainClassName = 'TalkBox.controller.Main'
-=======
-mainClassName = 'TalkBox.Main'
->>>>>>> branch 'master' of https://github.com/JacobJae/EECS2311_group5.git
