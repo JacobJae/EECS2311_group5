@@ -508,7 +508,7 @@ public class TalkBoxGui extends JFrame {
 		btnLoad.setFont(new Font("Dialog", Font.BOLD, 18));
 		loadPanel.add(btnLoad);
 
-		JLabel lblSet = new JLabel("Sellect Audio Set:");
+		JLabel lblSet = new JLabel("Select Audio Set:");
 		lblSet.setFont(new Font("Dialog", Font.BOLD, 18));
 		lblSet.setBackground(Color.WHITE);
 		panel.add(lblSet);
