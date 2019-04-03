@@ -346,7 +346,6 @@ public class ConfigurationGUI extends JFrame {
 							activateBtns();
 							makeSound((JToggleButton) e.getComponent());
 						} else
-
 							disp.setText("Select a file from the audio list to Swap!");
 					}
 
@@ -1565,7 +1564,6 @@ public class ConfigurationGUI extends JFrame {
 	private void getSetting(String name) {
 
 		try {
-			System.out.println(name);
 			String path = "TalkBoxData/" + name;
 			FileInputStream fileInputStream = new FileInputStream(new File(path));
 			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
@@ -1582,10 +1580,6 @@ public class ConfigurationGUI extends JFrame {
 			currentBtnSet = 0;
 			resetSetList();
 			changeSet();
-			// objectInputStream.close();
-			// fileInputStream.close();
-
-			// getAllFiles();
 
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
