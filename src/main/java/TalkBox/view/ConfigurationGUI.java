@@ -15,8 +15,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,6 +56,7 @@ import main.java.TalkBox.model.TalkBox;
 import java.awt.Component;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
+
 
 public class ConfigurationGUI extends JFrame {
 	/**
@@ -637,6 +644,27 @@ public class ConfigurationGUI extends JFrame {
 		j.showOpenDialog(null);
 
 		if (j.getSelectedFile() != null) {
+					
+			String selectedPath = j.getSelectedFile().getAbsolutePath();
+			File currentDirFile = new File(".");
+			String imagesDir = currentDirFile.getAbsolutePath();
+			imagesDir = imagesDir.substring(0, imagesDir.length() - 1);
+			imagesDir += "TalkBoxData\\Images\\";
+			String selectedDir = selectedPath.substring(0, selectedPath.length() - j.getSelectedFile().getName().length());
+
+			if ( !selectedDir.equals(imagesDir) ) {
+				Path src = Paths.get(j.getSelectedFile().getAbsolutePath());
+				String name = j.getSelectedFile().getName();
+		        Path dest = Paths.get(imagesDir+name);
+		        try {
+					Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		       
+			}
+			 
+			
 			File file = j.getSelectedFile();
 			imageButtons[currentBtnSet][selectedBtnIndex] = new ImageIcon("TalkBoxData/Images/" + file.getName());
 			currentAudioBtns[selectedBtnIndex].setIcon(resizeImg("TalkBoxData/Images/" + file.getName(), 150, 120));
