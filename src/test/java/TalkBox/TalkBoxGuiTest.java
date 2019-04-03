@@ -14,15 +14,15 @@ class TalkBoxGuiTest {
 //		fail("Not yet implemented");
 	}
 
-	@BeforeAll
-	static void setUpBeforeClass() throws Exception {
-	}
-
-	@BeforeEach
-	void setUp() throws Exception {
-		TalkBox box = new TalkBox();
-		TalkBoxGui gui = new TalkBoxGui();
-	}
+//	@BeforeAll
+//	static void setUpBeforeClass() throws Exception {
+//	}
+//
+//	@BeforeEach
+//	void setUp() throws Exception {
+//		TalkBox box = new TalkBox();
+//		TalkBoxGui gui = new TalkBoxGui();
+//	}
 	
 //	@org.junit.jupiter.api.Test
 //	void test7() {
