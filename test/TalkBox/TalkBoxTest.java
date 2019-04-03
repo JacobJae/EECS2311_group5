@@ -10,20 +10,24 @@ import main.java.TalkBox.TalkBox;
 
 class TalkBoxTest {
 
+	@org.junit.jupiter.api.Test
+	void test() {
+//		fail("Not yet implemented");
+	}
 
 	@BeforeEach
 	void setUp() throws Exception {
 
 	}
 
-	@Test
+	@org.junit.jupiter.api.Test
 	void getNumberOfAudioButtons_test() {
 		TalkBox box = new TalkBox();
 		box.setNumberOfAudioButtons(4);
 		assertEquals(4, box.getNumberOfAudioButtons());
 	}
 	
-	@Test
+	@org.junit.jupiter.api.Test
 	void NumberOfAudioButtons_increase_test() {
 		TalkBox box = new TalkBox();
 		String[][] names = { { "hello", "mark" }, { "micheal", "jones" } };
@@ -33,7 +37,7 @@ class TalkBoxTest {
 		assertEquals(5, box.getNumberOfAudioButtons());
 	}
 	
-	@Test
+	@org.junit.jupiter.api.Test
 	void NumberOfAudioButtons_decrease_test() {
 		TalkBox box = new TalkBox();
 		String[][] names = { { "hello", "mark" }, { "micheal", "jones" } };
@@ -43,14 +47,14 @@ class TalkBoxTest {
 		assertEquals(3, box.getNumberOfAudioButtons());
 	}
 
-	@Test
+	@org.junit.jupiter.api.Test
 	void setNumberOfAudioSets_test() {
 		TalkBox box = new TalkBox();
 		box.setNumberOfAudioSets(2);
 		assertEquals(2, box.getNumberOfAudioSets());
 	}
 	
-	@Test
+	@org.junit.jupiter.api.Test
 	void NumberOfAudioSets_increase_test() {
 		TalkBox box = new TalkBox();
 		String[][] names = { { "hello", "mark" }, { "micheal", "jones" } };
@@ -60,7 +64,7 @@ class TalkBoxTest {
 		assertEquals(3, box.getNumberOfAudioSets());
 	}
 	
-	@Test
+	@org.junit.jupiter.api.Test
 	void NumberOfAudioSets_decrease_test() {
 		TalkBox box = new TalkBox();
 		String[][] names = { { "hello", "mark" }, { "micheal", "jones" } };
@@ -70,7 +74,7 @@ class TalkBoxTest {
 		assertEquals(1, box.getNumberOfAudioSets());
 	}
 
-	@Test
+	@org.junit.jupiter.api.Test
 	void getTotalNumberOfButtons_test() {
 		TalkBox box = new TalkBox();
 		box.setNumberOfAudioSets(2);
@@ -79,7 +83,7 @@ class TalkBoxTest {
 		assertEquals(28, box.getTotalNumberOfButtons());
 	}
 
-	@Test
+	@org.junit.jupiter.api.Test
 	void setAudioFileNames_test() {
 		TalkBox box = new TalkBox();
 		String[][] names = { { "hello", "mark" }, { "micheal", "jones" } };
@@ -87,7 +91,7 @@ class TalkBoxTest {
 		assertEquals(names, box.getAudioFileNames());
 	}
 
-	@Test
+	@org.junit.jupiter.api.Test
 	void setAudioFileNames_test2() {
 		TalkBox box = new TalkBox();
 		String[][] names = { { "hello", "mark" }, { "micheal", "jones" } };
@@ -96,13 +100,13 @@ class TalkBoxTest {
 		assertNotEquals(names_2, box.getAudioFileNames());
 	}
 
-	@Test
+	@org.junit.jupiter.api.Test
 	void getRelativePathToAudioFiles_test() {
 		TalkBox box = new TalkBox();
 		assertEquals(Paths.get(System.getProperty("user.dir")), box.getRelativePathToAudioFiles());
 	}
 	
-	@Test
+	@org.junit.jupiter.api.Test
 	void RemoveAudio_test() {
 		TalkBox box = new TalkBox();
 		String[][] names = { { "hello", "mark" }, { "micheal", "jones" } };
@@ -112,7 +116,7 @@ class TalkBoxTest {
 		assertNotEquals(names_2, box.getAudioFileNames());
 		
 	}
-	@Test
+	@org.junit.jupiter.api.Test
 	void RemoveAudio_test2_All() {
 		TalkBox box = new TalkBox();
 		String[][] names = { { "hello", "mark" }, { "micheal", "jones" }, { "hello", "mark" }, { "micheal", "jones" } };
@@ -126,6 +130,5 @@ class TalkBoxTest {
 		assertNotEquals(names_2, box.getAudioFileNames());
 		
 	}
-	
-	
 }
+
