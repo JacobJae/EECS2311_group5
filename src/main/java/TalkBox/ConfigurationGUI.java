@@ -141,10 +141,6 @@ public class ConfigurationGUI extends JFrame {
 		setSettingsList();
 		addActions();
 		setButtons();
-		//if (!currentSettings.equals("default")) {
-		//	tbcLoader.setSelectedItem(currentSettings);
-		//	changeSetting();
-		//}
 	}
 
 	/*
@@ -270,9 +266,6 @@ public class ConfigurationGUI extends JFrame {
 			if (isImg(file))
 				imgFiles.add(file);
 		}
-
-		//getAllSettings();
-
 		names = new ArrayList<String>();
 		for (int i = 0; i < j; i++) {
 			names.add(getName(sFile[i].toString()));
@@ -347,11 +340,11 @@ public class ConfigurationGUI extends JFrame {
 						deslectBtns();
 					} else {
 						selectedBtnIndex = getSelectedIndex();
+						listAudioList.setEnabled(true);
 						if (hasSound[currentBtnSet][selectedBtnIndex]) {
 							activateBtns();
 							makeSound((JToggleButton) e.getComponent());
 						} else
-
 							disp.setText("Select a file from the audio list to Swap!");
 					}
 
@@ -783,7 +776,6 @@ public class ConfigurationGUI extends JFrame {
 			imageBtns[i].setEnabled(false);
 			deleteBtns[i].setEnabled(false);
 			btnCtrlPanel[i].setEnabled(false);
-
 		}
 
 		disp.setText("Press a button to Configure!");
@@ -1567,7 +1559,6 @@ public class ConfigurationGUI extends JFrame {
 	private void getSetting(String name) {
 
 		try {
-			System.out.println(name);
 			String path = "TalkBoxData/" + name;
 			FileInputStream fileInputStream = new FileInputStream(new File(path));
 			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
@@ -1584,10 +1575,6 @@ public class ConfigurationGUI extends JFrame {
 			currentBtnSet = 0;
 			resetSetList();
 			changeSet();
-			// objectInputStream.close();
-			// fileInputStream.close();
-
-			// getAllFiles();
 
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
