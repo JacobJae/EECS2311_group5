@@ -9,12 +9,10 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -45,6 +43,7 @@ import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import main.java.TalkBox.model.Check;
 import main.java.TalkBox.model.Sound;
 import main.java.TalkBox.model.TalkBox;
 
@@ -56,39 +55,38 @@ public class ConfigurationGUI extends JFrame {
 	 * 
 	 */
 //	private static final long serialVersionUID = -8521259104660128253L;
-	private JPanel contentPane;
-	private Sound sound;
 	private TalkBox talkbox = new TalkBox();
-	private int currentBtnSet = 0, counter = 0, selectedBtnIndex = -1, selectedListIndex = -1, audioSets, totAudioBtns;
 	private TalkBoxGui talkboxgui;
-	private final ButtonGroup currentBtnGrp = new ButtonGroup();
-	private JList<String> listAudioList;
 	private JToggleButton btnSound1, btnSound2, btnSound3, btnSound4, btnSound5, btnSound6;
+	private JToggleButton[] currentAudioBtns = new JToggleButton[6];
 	private JTextArea txtBtn1, txtBtn2, txtBtn3, txtBtn4, txtBtn5, txtBtn6;
+	private JTextArea[] currentAudioText = new JTextArea[6];
+	private JTextField lblTitle;
+	private JPanel contentPane;
+	private JPanel btn1Panel, btn2Panel, btn3Panel, btn4Panel, btn5Panel, btn6Panel;
+	private JPanel cntBtn1, cntBtn2, cntBtn3, cntBtn4, cntBtn5, cntBtn6;
+	private JPanel[] btnCtrlPanel = new JPanel[6], btnPanel = new JPanel[6];
+	private JButton btnLoad;
 	private JButton btn1I, btn1D, btn1S;
 	private JButton btn2I, btn2D, btn2S;
 	private JButton btn3I, btn3D, btn3S;
 	private JButton btn4I, btn4D, btn4S;
 	private JButton btn5I, btn5D, btn5S;
 	private JButton btn6I, btn6D, btn6S;
-	private JButton btnPreviousSet, btnNextSet, btnAddNewSet, btnDeleteSet;
-	private JComboBox<String> setSelector;
-	private JButton btnRecord_1, btnSave, btnSaveAs, btnExit;
-	private JToggleButton[] currentAudioBtns = new JToggleButton[6];
-	private JTextArea[] currentAudioText = new JTextArea[6];
-	private JPanel[] btnCtrlPanel = new JPanel[6], btnPanel = new JPanel[6];
+	private JButton btnPreviousSet, btnNextSet, btnAddNewSet, btnDeleteSet, btnRecord_1, btnSave, btnSaveAs, btnExit;
 	private JButton[] deleteBtns = new JButton[6], imageBtns = new JButton[6], swapBtns = new JButton[6];
-	private JPanel btn1Panel, btn2Panel, btn3Panel, btn4Panel, btn5Panel, btn6Panel;
-	private JPanel cntBtn1, cntBtn2, cntBtn3, cntBtn4, cntBtn5, cntBtn6;
-	private String[][] audioFileNames;
-	private boolean[][] hasSound;
-	private List<File> allFiles;
-	private File[] sFile;
+	private JList<String> listAudioList;
+	private JLabel disp;
+	private JComboBox<String> setSelector;
+	private Sound sound;
+	private Timer t;
+	private Check check = new Check();
+	private DefaultComboBoxModel<String> aModel = new DefaultComboBoxModel<>();
 	private ArrayList<String> names;
 	private String currentSettings, path = "TalkBoxData/", defaultText = "Press to Configure!.";
 	private String[] setNames;
-	private JTextField lblTitle;
-	private List<String> tbcFiles = new ArrayList<String>();
+	private String[][] audioFileNames;
+	private File[] sFile;
 	private ImageIcon[][] imageButtons;
 	private ImageIcon defaultImg = new ImageIcon("TalkBoxData/Images/smiley_face.jpg"),
 			emptyImg = new ImageIcon("TalkBoxData/Images/Empty_Btn.png"),
@@ -96,12 +94,13 @@ public class ConfigurationGUI extends JFrame {
 			delete_btn = new ImageIcon("TalkBoxData/Images/delete_btn.png"),
 			image_btn = new ImageIcon("TalkBoxData/Images/image_btn.png"),
 			record_btn = new ImageIcon("TalkBoxData/Images/record_btn.png");
+	private final ButtonGroup currentBtnGrp = new ButtonGroup();
+	private List<File> allFiles;
+	private List<String> tbcFiles = new ArrayList<String>();
 	private List<String> imgFiles = new ArrayList<>();
-	private JLabel disp;
-	private DefaultComboBoxModel<String> aModel = new DefaultComboBoxModel<>();
 	private List<TalkBox> tbList = new ArrayList<TalkBox>();
-	private Timer t;
-	private JButton btnLoad;
+	private int currentBtnSet = 0, counter = 0, selectedBtnIndex = -1, selectedListIndex = -1, audioSets, totAudioBtns;
+	private boolean[][] hasSound;
 
 	/**
 	 * Launch the application.
@@ -260,7 +259,7 @@ public class ConfigurationGUI extends JFrame {
 		int j = 0;
 		for (int i = 0; i < allFiles.size(); i++) {
 			String file = allFiles.get(i).toString();
-			if (isWav(file)) {
+			if (check.isWav(file)) {
 				sFile[j] = allFiles.get(i);
 				j++;
 			}
@@ -275,7 +274,7 @@ public class ConfigurationGUI extends JFrame {
 		allFiles = Arrays.asList(new File(path).listFiles());
 		for (int i = 0; i < allFiles.size(); i++) {
 			String file = allFiles.get(i).toString();
-			if (isImg(file))
+			if (check.isImg(file))
 				imgFiles.add(file);
 		}
 
@@ -283,7 +282,7 @@ public class ConfigurationGUI extends JFrame {
 		allFiles = Arrays.asList(new File(path).listFiles());
 		for (int i = 0; i < allFiles.size(); i++) {
 			String file = allFiles.get(i).toString();
-			if (isTbc(file))
+			if (check.isTbc(file))
 				tbcFiles.add(file);
 		}
 
@@ -618,17 +617,6 @@ public class ConfigurationGUI extends JFrame {
 		}
 	}
 
-	private void changeSetting() {
-		// int index = tbcLoader.getSelectedIndex();
-
-		if (currentSettings.equals("default"))
-			btnSave.setEnabled(false);
-		else
-			btnSave.setEnabled(true);
-
-		// getSetting(index);
-	}
-
 	private void resetSetList() {
 		DefaultComboBoxModel<String> dModel = new DefaultComboBoxModel<>();
 		for (int i = 0; i < audioSets; i++) {
@@ -724,42 +712,6 @@ public class ConfigurationGUI extends JFrame {
 	}
 
 	/*
-	 * Check if the file is a .wav file
-	 */
-	private Boolean isWav(String name) {
-		String ext = "";
-		ext = name.substring(name.indexOf("."), name.length());
-		if (ext.equals(".wav"))
-			return true;
-
-		return false;
-	}
-
-	/*
-	 * Check if the file is SettingsFile
-	 */
-	private Boolean isTbc(String name) {
-		String ext = "";
-		ext = name.substring(name.indexOf("."), name.length());
-		if (ext.equals(".tbc"))
-			return true;
-
-		return false;
-	}
-
-	/*
-	 * Check if the file is Image File
-	 */
-	private boolean isImg(String name) {
-		String ext = "";
-		ext = name.substring(name.indexOf("."), name.length());
-		if (ext.equals(".jpg") || ext.equals(".png") || ext.equals(".bmp"))
-			return true;
-
-		return false;
-	}
-
-	/*
 	 * Resize the Image to fit the button
 	 */
 	private ImageIcon resizeImg(String path, int width, int height) {
@@ -777,7 +729,9 @@ public class ConfigurationGUI extends JFrame {
 
 		DefaultListModel<String> listModel = new DefaultListModel<>();
 		for (int i = 0; i < finalNames.size(); i++) {
-			listModel.addElement(finalNames.get(i));
+			String str = finalNames.get(i);
+			listModel.addElement(str.substring(7, str.length()));
+//			listModel.addElement(finalNames.get(i));
 		}
 		listAudioList.setModel(listModel);
 		listAudioList.setSelectedIndex(-1);
@@ -1556,23 +1510,6 @@ public class ConfigurationGUI extends JFrame {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-	}
-
-	private void getAllSettings() {
-		for (String s : tbcFiles) {
-			try {
-				FileInputStream fileInputStream = new FileInputStream(new File(s));
-				ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-				talkbox = (TalkBox) objectInputStream.readObject();
-
-				tbList.add(talkbox);
-
-				objectInputStream.close();
-
-			} catch (IOException | ClassNotFoundException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 

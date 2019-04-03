@@ -36,6 +36,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import main.java.TalkBox.model.Check;
 import main.java.TalkBox.model.Sound;
 import main.java.TalkBox.model.TalkBox;
 
@@ -50,34 +51,26 @@ public class TalkBoxGui extends JFrame {
 	 * 
 	 */
 	private TalkBox talkbox;
+	private JComboBox<String> setSelector;
+	private JPanel contentPane, btnPanel, configExitPanel, mainPanel, loadPanel;
+	private JLabel lblTitle;
+	private JTextPane TextPane0, TextPane1, TextPane2, TextPane3, TextPane4, TextPane5;
+	private JTextPane[] currentText = new JTextPane[6];
+	private JButton Button0, Button1, Button2, Button3, Button4, Button5, btnPrevSet, btnStop, btnConfig, btnExit, btnLoad;
+	private JButton[] currentBtn = new JButton[6];
+	private String currentSettings = "default", path = "TalkBoxData/";
+	private String[] setNames;
 	private String[][] audioFileNames;
 	private Sound sound;
-	private int currentBtnSet = 0, audioSets, totAudioBtns;
-	private JPanel contentPane;
-	private JButton Button0, Button1, Button2, Button3, Button4, Button5;
-	private JTextPane TextPane0, TextPane1, TextPane2, TextPane3, TextPane4, TextPane5;
-	private JButton btnPrevSet;
-	private JButton btnStop;
-	private JButton btnConfig;
-	private JButton btnExit;
-	private ImageIcon[][] imageButtons;
-	private JButton[] currentBtn = new JButton[6];
-	private JTextPane[] currentText = new JTextPane[6];
-	private boolean[][] hasSound;
-	private JPanel btnPanel;
-	private JPanel configExitPanel;
-	private JPanel mainPanel;
-	private JPanel loadPanel;
-	private List<String> tbcFiles = new ArrayList<String>();
-	private String[] setNames;
-	private JLabel lblTitle;
-	private String currentSettings = "default", path = "TalkBoxData/";
+	private Check check = new Check();
 	private File[] sFile;
+	private ImageIcon[][] imageButtons;
+	private List<String> tbcFiles = new ArrayList<String>();
 	private List<File> allFiles;
 	private List<String> imgFiles = new ArrayList<>();
 	private List<TalkBox> tbList = new ArrayList<>();
-	private JComboBox<String> setSelector;
-	private JButton btnLoad;
+	private boolean[][] hasSound;
+	private int currentBtnSet = 0, audioSets, totAudioBtns;
 
 	/**
 	 * Launch the application.
@@ -165,43 +158,16 @@ public class TalkBoxGui extends JFrame {
 		}
 
 	}
-
-	/*
-	 * Get a list of all files and seperate them in sound, settings and image files
-	 */
-//	private int getAllFiles() {
-//		String path = "TalkBoxData/";
-//		allFiles = Arrays.asList(new File(path).listFiles());
-//		sFile = new File[allFiles.size() * 2];
-//
-//		int j = 0;
-//		for (int i = 0; i < allFiles.size(); i++) {
-//			String file = allFiles.get(i).toString();
-//			if (isWav(file)) {
-//				sFile[j] = allFiles.get(i);
-//				j++;
-//			}
-//			if (isTbc(file)) {
-//				tbcFiles.add(file);
-//			}
-//			if (isImg(file))
-//				imgFiles.add(file);
-//		}
-//
-//		// getAllSettings();
-//
-//		return j;
-//
-//	}
 	
 	private int getAllFiles() {
 		path = "TalkBoxData/Sounds/";
 		allFiles = Arrays.asList(new File(path).listFiles());
 		sFile = new File[allFiles.size() * 2];
+		String file;
 		int j = 0;
 		for (int i = 0; i < allFiles.size(); i++) {
-			String file = allFiles.get(i).toString();
-			if (isWav(file)) {
+			file = allFiles.get(i).toString();
+			if (check.isWav(file)) {
 				sFile[j] = allFiles.get(i);
 				j++;
 			}
@@ -210,16 +176,16 @@ public class TalkBoxGui extends JFrame {
 		path = "TalkBoxData/Images/";
 		allFiles = Arrays.asList(new File(path).listFiles());
 		for (int i = 0; i < allFiles.size(); i++) {
-			String file = allFiles.get(i).toString();
-			if (isImg(file))
+			file = allFiles.get(i).toString();
+			if (check.isImg(file))
 				imgFiles.add(file);
 		}
 		
 		path = "TalkBoxData/Settings/";
 		allFiles = Arrays.asList(new File(path).listFiles());
 		for (int i = 0; i < allFiles.size(); i++) {
-			String file = allFiles.get(i).toString();
-			if (isTbc(file))
+			file = allFiles.get(i).toString();
+			if (check.isTbc(file))
 				tbcFiles.add(file);
 		}
 		
@@ -421,42 +387,6 @@ public class TalkBoxGui extends JFrame {
 		String name = "";
 		name = string.substring(string.indexOf("\\") + 1, string.indexOf("."));
 		return name;
-	}
-
-	/*
-	 * Check if file is a .wav file
-	 */
-	private boolean isWav(String name) {
-		String ext = "";
-		ext = name.substring(name.indexOf("."), name.length());
-		if (ext.equals(".wav"))
-			return true;
-
-		return false;
-	}
-
-	/*
-	 * Check if the file is .tbc file
-	 */
-	private boolean isTbc(String name) {
-		String ext = "";
-		ext = name.substring(name.indexOf("."), name.length());
-		if (ext.equals(".tbc"))
-			return true;
-
-		return false;
-	}
-
-	/*
-	 * Check if the file is Image file
-	 */
-	private boolean isImg(String name) {
-		String ext = "";
-		ext = name.substring(name.indexOf("."), name.length());
-		if (ext.equals(".jpg") || ext.equals(".png") || ext.equals(".bmp"))
-			return true;
-
-		return false;
 	}
 
 	/*
@@ -804,15 +734,6 @@ public class TalkBoxGui extends JFrame {
 	 * Get .tbc settings and initiate sound, buttongroup, talkbox object
 	 */
 	private void getSetting(String name) {
-		/*
-		 * audioFileNames = tbList.get(index).getAudioFileNames(); totAudioBtns =
-		 * tbList.get(index).getNumberOfAudioButtons(); audioSets =
-		 * tbList.get(index).getNumberOfAudioSets(); hasSound =
-		 * tbList.get(index).getHasAudio(); setNames = tbList.get(index).getSetNames();
-		 * imageButtons = tbList.get(index).getImages();
-		 * 
-		 * currentBtnSet = 0; setSetList(); changeSet();
-		 */
 
 		try {
 			System.out.println(name);
@@ -832,10 +753,6 @@ public class TalkBoxGui extends JFrame {
 			currentBtnSet = 0;
 			setSetList();
 			changeSet();
-			// objectInputStream.close();
-			// fileInputStream.close();
-
-			// getAllFiles();
 
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
@@ -843,24 +760,6 @@ public class TalkBoxGui extends JFrame {
 			e.printStackTrace();
 		}
 
-	}
-
-	private void getAllSettings() {
-		for (String s : tbcFiles) {
-			try {
-				TalkBox tmp = new TalkBox();
-				FileInputStream fileInputStream = new FileInputStream(new File(s));
-				ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-				tmp = (TalkBox) objectInputStream.readObject();
-
-				tbList.add(tmp);
-
-				objectInputStream.close();
-
-			} catch (IOException | ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	@Override
