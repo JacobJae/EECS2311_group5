@@ -105,4 +105,29 @@ class TalkBoxTest {
 		TalkBox box = new TalkBox();
 		assertEquals(Paths.get(System.getProperty("user.dir")), box.getRelativePathToAudioFiles());
 	}
+	
+	@org.junit.jupiter.api.Test
+	void RemoveAudio_test() {
+		TalkBox box = new TalkBox();
+		String[][] names = { { "hello", "mark" }, { "micheal", "jones" } };
+		box.setAudioFileNames(names);
+		box.removeAudio(1,1);
+		String[][] names_2 = { { "hello", "mark" }, { "micheal",  } };
+		assertNotEquals(names_2, box.getAudioFileNames());
+		
+	}
+	@org.junit.jupiter.api.Test
+	void RemoveAudio_test2_All() {
+		TalkBox box = new TalkBox();
+		String[][] names = { { "hello", "mark" }, { "micheal", "jones" }, { "hello", "mark" }, { "micheal", "jones" } };
+		box.setAudioFileNames(names);
+		for (int i = 0; i < box.getNumberOfAudioSets(); i++) {
+			for (int j = 0; j < box.getNumberOfAudioButtons(); j++) {
+			box.removeAudio(i,j);
+		}
+		}
+		String[][] names_2 = {  };
+		assertNotEquals(names_2, box.getAudioFileNames());
+		
+	}
 }
