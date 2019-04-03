@@ -57,7 +57,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
 
-
 public class ConfigurationGUI extends JFrame {
 	/**
 	 * 
@@ -644,27 +643,27 @@ public class ConfigurationGUI extends JFrame {
 		j.showOpenDialog(null);
 
 		if (j.getSelectedFile() != null) {
-					
+
 			String selectedPath = j.getSelectedFile().getAbsolutePath();
 			File currentDirFile = new File(".");
 			String imagesDir = currentDirFile.getAbsolutePath();
 			imagesDir = imagesDir.substring(0, imagesDir.length() - 1);
 			imagesDir += "TalkBoxData\\Images\\";
-			String selectedDir = selectedPath.substring(0, selectedPath.length() - j.getSelectedFile().getName().length());
+			String selectedDir = selectedPath.substring(0,
+					selectedPath.length() - j.getSelectedFile().getName().length());
 
-			if ( !selectedDir.equals(imagesDir) ) {
+			if (!selectedDir.equals(imagesDir)) {
 				Path src = Paths.get(j.getSelectedFile().getAbsolutePath());
 				String name = j.getSelectedFile().getName();
-		        Path dest = Paths.get(imagesDir+name);
-		        try {
+				Path dest = Paths.get(imagesDir + name);
+				try {
 					Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-		       
+
 			}
-			 
-			
+
 			File file = j.getSelectedFile();
 			imageButtons[currentBtnSet][selectedBtnIndex] = new ImageIcon("TalkBoxData/Images/" + file.getName());
 			currentAudioBtns[selectedBtnIndex].setIcon(resizeImg("TalkBoxData/Images/" + file.getName(), 150, 120));
