@@ -311,7 +311,7 @@ public class RecordGUI extends JFrame {
 		nameText.setFont(new Font("Dialog", Font.BOLD, 18));
 		nameText.setColumns(10);
 
-		btnCancel = new JButton("Cancel");
+		btnCancel = new JButton("Return");
 		btnCancel.setFont(new Font("Dialog", Font.BOLD, 18));
 		GroupLayout gl_saveCancelPanel = new GroupLayout(saveCancelPanel);
 		gl_saveCancelPanel.setHorizontalGroup(gl_saveCancelPanel.createParallelGroup(Alignment.LEADING)
