@@ -83,7 +83,7 @@ public class ConfigurationGUI extends JFrame {
 	private JButton btn4I, btn4D, btn4S;
 	private JButton btn5I, btn5D, btn5S;
 	private JButton btn6I, btn6D, btn6S;
-	private JButton btnPreviousSet, btnNextSet, btnAddNewSet, btnDeleteSet, btnRecord_1, btnSave, btnSaveAs, btnExit;
+	private JButton btnPreviousSet, btnNextSet, btnAddNewSet, btnDeleteSet, btn_Record, btnSave, btnSaveAs, btnExit;
 	private JButton[] deleteBtns = new JButton[6], imageBtns = new JButton[6], swapBtns = new JButton[6];
 	private JList<String> listAudioList;
 	private JLabel disp;
@@ -451,7 +451,7 @@ public class ConfigurationGUI extends JFrame {
 			}
 		});
 
-		btnRecord_1.addActionListener(new ActionListener() {
+		btn_Record.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -780,6 +780,7 @@ public class ConfigurationGUI extends JFrame {
 	 * Open Record Dialogue
 	 */
 	protected void openRecord() {
+		sound.stopSound();
 		new RecordGUI(this).setVisible(true);
 		this.setEnabled(false);
 	}
@@ -1058,9 +1059,9 @@ public class ConfigurationGUI extends JFrame {
 						.addComponent(saveExitPanel, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE)
 						.addContainerGap()));
 
-		btnRecord_1 = new JButton("");
-		btnRecord_1.setFont(new Font("Dialog", Font.BOLD, 12));
-		btnRecord_1.setIcon(resizeImg(record_btn.toString(), 150, 150));
+		btn_Record = new JButton("");
+		btn_Record.setFont(new Font("Dialog", Font.BOLD, 12));
+		btn_Record.setIcon(resizeImg(record_btn.toString(), 150, 150));
 
 		JPanel loadPanel = new JPanel();
 		loadPanel.getLayout();
@@ -1075,12 +1076,12 @@ public class ConfigurationGUI extends JFrame {
 						.addGroup(gl_saveLoadPanel.createParallelGroup(Alignment.TRAILING)
 								.addComponent(loadPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 310,
 										Short.MAX_VALUE)
-								.addComponent(btnRecord_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 310,
+								.addComponent(btn_Record, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 310,
 										Short.MAX_VALUE))
 						.addContainerGap()));
 		gl_saveLoadPanel.setVerticalGroup(gl_saveLoadPanel.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_saveLoadPanel.createSequentialGroup().addContainerGap()
-						.addComponent(btnRecord_1, GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE).addGap(67)
+						.addComponent(btn_Record, GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE).addGap(67)
 						.addComponent(loadPanel, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
 						.addGap(4)));
 		saveLoadPanel.setLayout(gl_saveLoadPanel);
@@ -1111,7 +1112,7 @@ public class ConfigurationGUI extends JFrame {
 		btnAddNewSet = new JButton("Add New Audio Set");
 		btnAddNewSet.setFont(new Font("Dialog", Font.BOLD, 12));
 
-		btnDeleteSet = new JButton("Delete Current Audio Set");
+		btnDeleteSet = new JButton("Delete Last Audio Set");
 		btnDeleteSet.setFont(new Font("Dialog", Font.BOLD, 12));
 		GroupLayout gl_setCtrlPanel = new GroupLayout(setCtrlPanel);
 		gl_setCtrlPanel.setHorizontalGroup(gl_setCtrlPanel.createParallelGroup(Alignment.LEADING)
