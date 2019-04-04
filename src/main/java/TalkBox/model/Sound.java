@@ -39,6 +39,8 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import main.java.TalkBox.controller.Main;
+
 /**
  * The {@code Sound} class provide sound features.
  *
@@ -70,6 +72,7 @@ public class Sound {
 	 * @param audioFile relative path of audio file
 	 */
 	public void playSound(String audioFile) {
+		Main.LOG.info("Audio file " + audioFile + " is playing");
 		clip.stop();
 		clip.close();
 
