@@ -27,6 +27,7 @@ import javax.swing.Timer;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
+import main.java.TalkBox.controller.Main;
 import main.java.TalkBox.model.Sound;
 import javax.swing.JToggleButton;
 
@@ -65,6 +66,7 @@ public class RecordGUI extends JFrame {
 	 * Create the frame.
 	 */
 	public RecordGUI(ConfigurationGUI confGui) {
+		Main.LOG.info("RecordGUI App started");
 		setVisible(true);
 
 		this.confGui = confGui;
@@ -126,6 +128,7 @@ public class RecordGUI extends JFrame {
 				else {
 					if (recording) {
 						stopRecording();
+						Main.LOG.info("Recording has stopped!");
 						disp.setText("Recording has stopped!");
 						nameText.setText("");
 						t = new Timer(100, new ActionListener() {
@@ -144,6 +147,7 @@ public class RecordGUI extends JFrame {
 						t.start();
 						updateDisplay();
 					} else {
+						Main.LOG.info("Recording has started!");
 						disp.setText("Recording has started!");
 						disp.setText("");
 						disp.setText("");
@@ -190,6 +194,7 @@ public class RecordGUI extends JFrame {
 
 		File f = new File(path + fileName + ".wav");
 		f.delete();
+		Main.LOG.info("File: " + f + "+ has been deleted!");
 		t = new Timer(100, new ActionListener() {
 
 			@Override
@@ -291,7 +296,7 @@ public class RecordGUI extends JFrame {
 						.addPreferredGap(ComponentPlacement.UNRELATED)
 						.addComponent(controlPanel, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)));
 
-		lblFileName = new JLabel("Name");
+		lblFileName = new JLabel("");
 		lblFileName.setFont(new Font("Dialog", Font.BOLD, 18));
 		controlPanel.add(lblFileName);
 
@@ -311,7 +316,7 @@ public class RecordGUI extends JFrame {
 		nameText.setFont(new Font("Dialog", Font.BOLD, 18));
 		nameText.setColumns(10);
 
-		btnCancel = new JButton("Cancel");
+		btnCancel = new JButton("Exit");
 		btnCancel.setFont(new Font("Dialog", Font.BOLD, 18));
 		GroupLayout gl_saveCancelPanel = new GroupLayout(saveCancelPanel);
 		gl_saveCancelPanel.setHorizontalGroup(gl_saveCancelPanel.createParallelGroup(Alignment.LEADING)
