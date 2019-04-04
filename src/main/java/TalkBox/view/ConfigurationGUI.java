@@ -50,6 +50,7 @@ import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import main.java.TalkBox.controller.Main;
 import main.java.TalkBox.model.Check;
 import main.java.TalkBox.model.Sound;
 import main.java.TalkBox.model.TalkBox;
@@ -124,7 +125,7 @@ public class ConfigurationGUI extends JFrame {
 	 * Create the frame.
 	 */
 	public ConfigurationGUI(TalkBoxGui t, String currentSettings) {
-
+		Main.LOG.info("ConfigurationGUI App started");
 		setResizable(false);
 		talkboxgui = t;
 		talkboxgui.setVisible(false);

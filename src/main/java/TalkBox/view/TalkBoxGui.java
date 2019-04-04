@@ -36,6 +36,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import main.java.TalkBox.controller.Main;
 import main.java.TalkBox.model.Check;
 import main.java.TalkBox.model.Sound;
 import main.java.TalkBox.model.TalkBox;
@@ -81,6 +82,7 @@ public class TalkBoxGui extends JFrame {
 	 * Create default Simulator the frame.
 	 */
 	public TalkBoxGui() {
+		Main.LOG.info("TalkBoxGUI App started");
 		setVisible(true);
 		setSize(new Dimension(1030, 768));
 //		setAlwaysOnTop(true);
