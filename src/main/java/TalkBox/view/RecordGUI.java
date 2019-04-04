@@ -10,6 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.swing.GroupLayout;
@@ -22,25 +23,36 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
 import main.java.TalkBox.model.Sound;
+import javax.swing.JToggleButton;
 
 public class RecordGUI extends JFrame {
 
 	private JPanel contentPane;
 	private boolean recording = false;
-	private String path;
+	private String path = "TalkBoxData/Sounds/", fileName;
 	private Sound sound;
 	private JTextField nameText;
 	private JButton btnCancel;
 	private JLabel lblRecord;
 	private ConfigurationGUI confGui;
-	private ImageIcon recordBtn = new ImageIcon("TalkBoxData/Images/record_btn.png"),
-			playBtn = new ImageIcon("TalkBoxData/Images/play_btn.png"),
-			stop_btn = new ImageIcon("TalkBoxData/Images/stop_btn.png");
+	private ImageIcon recordBtn = new ImageIcon("TalkBoxData/SystemFiles/record_btn.png"),
+			playBtn = new ImageIcon("TalkBoxData/SystemFiles/play_btn.png"),
+			stop_btn = new ImageIcon("TalkBoxData/SystemFiles/stop_btn.png"),
+			preview_btn = new ImageIcon("TalkBoxData/SystemFiles/preview_btn.png"),
+			stop_preview_btn = new ImageIcon("TalkBoxData/SystemFiles/stop_preview_btn.png"),
+			delete_btn = new ImageIcon("TalkBoxData/SystemFiles/delete_btn.png");
 	private JLabel disp;
+	private Timer t;
+	private int counter = 0;
+	private JToggleButton btnPreview;
+	private JLabel lblFileName;
+	private JButton btnDelete;
+	private JPanel controlPanel;
 
 	/*
 	 * Launch the application. public static void main(String[] args) {
@@ -79,6 +91,10 @@ public class RecordGUI extends JFrame {
 
 		init();
 		lblRecord.setIcon(resizeImg(playBtn.toString(), 50, 50));
+		btnPreview.setEnabled(false);
+		btnDelete.setEnabled(false);
+		btnPreview.setIcon(resizeImg(preview_btn.toString(), 20, 20));
+		btnDelete.setIcon(resizeImg(delete_btn.toString(), 20, 20));
 		addAction();
 
 	}
@@ -90,32 +106,53 @@ public class RecordGUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				recording = false;
+				sound.stopSound();
 				sound.stopRecording();
 				confGui.setEnabled(true);
 				confGui.setVisible(true);
+				confGui.refresh();
 				dispose();
 			}
 		});
 
 		lblRecord.addMouseListener(new MouseAdapter() {
 
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent)
-			 */
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
-
+				fileName = nameText.getText();
 				if (nameText.getText().isEmpty())
 					disp.setText("Please enter a name first!");
 				else {
 					if (recording) {
 						stopRecording();
 						disp.setText("Recording has stopped!");
+						nameText.setText("");
+						t = new Timer(100, new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent e) {
+
+								disp.setText("Recording has been Saved!");
+								counter++;
+								if (counter >= 30) {
+									disp.setText("");
+									t.stop();
+								}
+							}
+						});
+						t.start();
+						updateDisplay();
 					} else {
 						disp.setText("Recording has started!");
+						disp.setText("");
+						disp.setText("");
+						lblFileName.setText("");
+						btnPreview.setIcon(resizeImg(preview_btn.toString(), 20, 20));
+						btnPreview.setSelected(false);
+						controlPanel.setEnabled(false);
+						btnPreview.setEnabled(false);
+						btnDelete.setEnabled(false);
 						startRecording();
 					}
 				}
@@ -123,6 +160,64 @@ public class RecordGUI extends JFrame {
 
 		});
 
+		btnPreview.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				if (!btnPreview.isSelected()) {
+					sound.stopSound();
+					btnPreview.setIcon(resizeImg(preview_btn.toString(), 20, 20));
+				} else {
+					sound.playSound(path + fileName + ".wav");
+					btnPreview.setIcon(resizeImg(stop_preview_btn.toString(), 20, 20));
+				}
+
+			}
+		});
+
+		btnDelete.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				deleteFile();
+			}
+		});
+
+	}
+
+	protected void deleteFile() {
+
+		File f = new File(path + fileName + ".wav");
+		f.delete();
+		t = new Timer(100, new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				disp.setText("Recording has been Deleted!");
+				counter++;
+				if (counter >= 30) {
+					disp.setText("");
+					lblFileName.setText("");
+					btnPreview.setIcon(resizeImg(preview_btn.toString(), 20, 20));
+					btnPreview.setSelected(false);
+					controlPanel.setEnabled(false);
+					btnPreview.setEnabled(false);
+					btnDelete.setEnabled(false);
+					t.stop();
+				}
+
+			}
+		});
+		t.start();
+	}
+
+	protected void updateDisplay() {
+		controlPanel.setEnabled(true);
+		btnPreview.setEnabled(true);
+		btnDelete.setEnabled(true);
+		lblFileName.setText(fileName);
 	}
 
 	protected void startRecording() {
@@ -157,7 +252,7 @@ public class RecordGUI extends JFrame {
 		setContentPane(contentPane);
 
 		JLabel lblRecordWindow = new JLabel("Record Window");
-		lblRecordWindow.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblRecordWindow.setFont(new Font("Dialog", Font.BOLD, 18));
 		lblRecordWindow.setHorizontalAlignment(SwingConstants.CENTER);
 
 		lblRecord = new JLabel("");
@@ -167,9 +262,13 @@ public class RecordGUI extends JFrame {
 		saveCancelPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 
 		disp = new JLabel("");
-		disp.setFont(new Font("Monospaced", Font.BOLD, 13));
+		disp.setFont(new Font("Dialog", Font.BOLD, 18));
 		disp.setHorizontalTextPosition(SwingConstants.CENTER);
 		disp.setHorizontalAlignment(SwingConstants.CENTER);
+
+		controlPanel = new JPanel();
+		controlPanel.setEnabled(false);
+		controlPanel.setBackground(Color.WHITE);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addComponent(lblRecordWindow, GroupLayout.DEFAULT_SIZE, 584, Short.MAX_VALUE)
@@ -179,6 +278,8 @@ public class RecordGUI extends JFrame {
 				.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
 						.addComponent(lblRecord, GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE).addContainerGap())
 				.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
+						.addComponent(controlPanel, GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE).addContainerGap())
+				.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
 						.addComponent(disp, GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE).addContainerGap()));
 		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup().addComponent(lblRecordWindow).addGap(18)
@@ -186,32 +287,44 @@ public class RecordGUI extends JFrame {
 								GroupLayout.PREFERRED_SIZE)
 						.addPreferredGap(ComponentPlacement.UNRELATED)
 						.addComponent(disp, GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE).addGap(18)
-						.addComponent(lblRecord, GroupLayout.PREFERRED_SIZE, 379, GroupLayout.PREFERRED_SIZE)
-						.addContainerGap()));
+						.addComponent(lblRecord, GroupLayout.PREFERRED_SIZE, 325, GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.UNRELATED)
+						.addComponent(controlPanel, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)));
+
+		lblFileName = new JLabel("Name");
+		lblFileName.setFont(new Font("Dialog", Font.BOLD, 18));
+		controlPanel.add(lblFileName);
+
+		btnPreview = new JToggleButton("");
+		btnPreview.setFont(new Font("Dialog", Font.BOLD, 18));
+		controlPanel.add(btnPreview);
+
+		btnDelete = new JButton("");
+		btnDelete.setFont(new Font("Dialog", Font.BOLD, 18));
+		controlPanel.add(btnDelete);
 
 		JLabel lblSave = new JLabel("Name:");
-		lblSave.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblSave.setFont(new Font("Dialog", Font.BOLD, 18));
 
 		nameText = new JTextField();
 		nameText.setToolTipText("Name the file");
-		nameText.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		nameText.setFont(new Font("Dialog", Font.BOLD, 18));
 		nameText.setColumns(10);
 
 		btnCancel = new JButton("Cancel");
-		btnCancel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnCancel.setFont(new Font("Dialog", Font.BOLD, 18));
 		GroupLayout gl_saveCancelPanel = new GroupLayout(saveCancelPanel);
 		gl_saveCancelPanel.setHorizontalGroup(gl_saveCancelPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_saveCancelPanel.createSequentialGroup().addContainerGap().addComponent(lblSave)
 						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(nameText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+						.addComponent(nameText, GroupLayout.PREFERRED_SIZE, 238, GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.RELATED, 91, Short.MAX_VALUE)
 						.addComponent(btnCancel, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
 						.addContainerGap()));
 		gl_saveCancelPanel.setVerticalGroup(gl_saveCancelPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_saveCancelPanel.createSequentialGroup().addContainerGap()
 						.addGroup(gl_saveCancelPanel.createParallelGroup(Alignment.LEADING)
-								.addComponent(btnCancel, GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+								.addComponent(btnCancel, GroupLayout.PREFERRED_SIZE, 32, Short.MAX_VALUE)
 								.addGroup(gl_saveCancelPanel.createParallelGroup(Alignment.BASELINE)
 										.addComponent(lblSave, GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
 										.addComponent(nameText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,

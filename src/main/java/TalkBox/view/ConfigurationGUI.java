@@ -41,6 +41,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
@@ -56,6 +57,7 @@ import main.java.TalkBox.model.TalkBox;
 import java.awt.Component;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
+import javax.swing.ListSelectionModel;
 
 public class ConfigurationGUI extends JFrame {
 	/**
@@ -97,10 +99,10 @@ public class ConfigurationGUI extends JFrame {
 	private ImageIcon[][] imageButtons;
 	private ImageIcon defaultImg = new ImageIcon("TalkBoxData/Images/smiley_face.jpg"),
 			emptyImg = new ImageIcon("TalkBoxData/Images/Empty_Btn.png"),
-			swap_btn = new ImageIcon("TalkBoxData/Images/swap_btn_1.png"),
-			delete_btn = new ImageIcon("TalkBoxData/Images/delete_btn.png"),
-			image_btn = new ImageIcon("TalkBoxData/Images/image_btn.png"),
-			record_btn = new ImageIcon("TalkBoxData/Images/record_btn.png");
+			swap_btn = new ImageIcon("TalkBoxData/SystemFiles/swap_btn_1.png"),
+			delete_btn = new ImageIcon("TalkBoxData/SystemFiles/delete_btn.png"),
+			image_btn = new ImageIcon("TalkBoxData/SystemFiles/image_btn.png"),
+			record_btn = new ImageIcon("TalkBoxData/SystemFiles/record_btn.png");
 	private final ButtonGroup currentBtnGrp = new ButtonGroup();
 	private List<File> allFiles;
 	private List<String> tbcFiles = new ArrayList<String>();
@@ -312,7 +314,7 @@ public class ConfigurationGUI extends JFrame {
 		for (int i = 0; i < 6; i++) {
 			currentAudioBtns[i].setIcon(resizeImg(imageButtons[currentBtnSet][i].toString(), 150, 120));
 			currentAudioText[i].setText(toDisplayCase((findName(getName(audioFileNames[currentBtnSet][i])))));
-			currentAudioBtns[i].setToolTipText(findName(getName(audioFileNames[currentBtnSet][i])));
+			currentAudioBtns[i].setToolTipText(getName(audioFileNames[currentBtnSet][i]));
 		}
 
 		List<String> finalNames = new ArrayList<String>();
@@ -490,9 +492,7 @@ public class ConfigurationGUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
 				decreaseButtonSet();
-
 			}
 		});
 
@@ -558,6 +558,19 @@ public class ConfigurationGUI extends JFrame {
 		hasSound = tempA;
 		setNames = tempS;
 
+		t = new Timer(100, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				disp.setText("New Button Set has been added!");
+				counter++;
+				if (counter >= 30) {
+					disp.setText(defaultText);
+					t.stop();
+				}
+			}
+		});
+		t.start();
+
 		currentBtnSet = 0;
 		resetSetList();
 		changeSet();
@@ -592,6 +605,19 @@ public class ConfigurationGUI extends JFrame {
 			hasSound = tempA;
 			setNames = tempS;
 
+			t = new Timer(100, new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					disp.setText("Last Button set has been removed!");
+					counter++;
+					if (counter >= 30) {
+						disp.setText(defaultText);
+						t.stop();
+					}
+				}
+			});
+			t.start();
+			
 			currentBtnSet = 0;
 			resetSetList();
 			changeSet();
@@ -931,6 +957,16 @@ public class ConfigurationGUI extends JFrame {
 		}
 		return sb.toString();
 	}
+	
+	/*
+	 * Refreshes the files and images
+	 */
+	public void refresh()
+	{
+		getAllFiles();
+		changeSet();
+	}
+	
 
 	/*
 	 * Initialize the Display
@@ -1123,26 +1159,35 @@ public class ConfigurationGUI extends JFrame {
 		lblAudioSelector.setFont(new Font("Dialog", Font.BOLD, 12));
 
 		listAudioList = new JList<String>();
+		listAudioList.setVisibleRowCount(10);
+		listAudioList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listAudioList.setFont(new Font("Dialog", Font.BOLD, 12));
+		JScrollPane js = new JScrollPane(listAudioList);
 
 		btnSave = new JButton("Save");
 		btnSave.setFont(new Font("Dialog", Font.BOLD, 14));
 		GroupLayout gl_audioSelPanel = new GroupLayout(audioSelPanel);
-		gl_audioSelPanel.setHorizontalGroup(gl_audioSelPanel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_audioSelPanel.createSequentialGroup().addContainerGap().addGroup(gl_audioSelPanel
-						.createParallelGroup(Alignment.TRAILING)
-						.addComponent(listAudioList, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
-						.addComponent(lblAudioSelector, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 269,
-								Short.MAX_VALUE)
-						.addComponent(btnSave, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 271,
-								GroupLayout.PREFERRED_SIZE))
-						.addContainerGap()));
-		gl_audioSelPanel.setVerticalGroup(gl_audioSelPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_audioSelPanel.createSequentialGroup().addContainerGap().addComponent(lblAudioSelector)
-						.addGap(12).addComponent(listAudioList, GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(btnSave, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
-						.addContainerGap()));
+		gl_audioSelPanel.setHorizontalGroup(
+			gl_audioSelPanel.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_audioSelPanel.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_audioSelPanel.createParallelGroup(Alignment.TRAILING)
+						.addComponent(js, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+						.addComponent(lblAudioSelector, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+						.addComponent(btnSave, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 271, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap())
+		);
+		gl_audioSelPanel.setVerticalGroup(
+			gl_audioSelPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_audioSelPanel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblAudioSelector)
+					.addGap(12)
+					.addComponent(js, GroupLayout.PREFERRED_SIZE, 260, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(btnSave, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap())
+		);
 		audioSelPanel.setLayout(gl_audioSelPanel);
 
 		btn1Panel = new JPanel();

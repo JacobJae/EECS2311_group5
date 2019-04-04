@@ -743,7 +743,6 @@ public class TalkBoxGui extends JFrame {
 	private void getSetting(String name) {
 
 		try {
-			System.out.println(name);
 			String path = "TalkBoxData/Settings/" + name;
 			FileInputStream fileInputStream = new FileInputStream(new File(path));
 			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
