@@ -432,7 +432,7 @@ public class ConfigurationGUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				setSetting();
-				Main.LOG.info(currentSettings +".tbc configuration has been saved!");
+				Main.LOG.info(currentSettings + ".tbc configuration has been saved!");
 
 				t = new Timer(1000, new ActionListener() {
 
@@ -715,7 +715,7 @@ public class ConfigurationGUI extends JFrame {
 		File file = j.getSelectedFile();
 		if (file != null) {
 			String name = file.getName();
-			Main.LOG.info(name+" configuration has been loaded!");
+			Main.LOG.info(name + " configuration has been loaded!");
 			currentSettings = getName(name);
 			if (!name.equals("default.tbc"))
 				btnSave.setEnabled(true);
@@ -741,7 +741,7 @@ public class ConfigurationGUI extends JFrame {
 		File file = j.getSelectedFile();
 		if (file != null) {
 			String name = file.getName();
-			Main.LOG.info(name+" configuration has been saved!");
+			Main.LOG.info(name + " configuration has been saved!");
 			setSetting(name);
 		}
 	}
@@ -941,8 +941,12 @@ public class ConfigurationGUI extends JFrame {
 	private String findName(String name) {
 		if (name.equals(defaultText))
 			return name;
-
-		String[] words = name.split("_");
+		String deli;
+		if (name.contains("-"))
+			deli = "-";
+		else
+			deli = "_";
+		String[] words = name.split(deli);
 		String str = "";
 		for (String w : words)
 			str += toDisplayCase(w) + " ";

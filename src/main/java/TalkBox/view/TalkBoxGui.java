@@ -406,7 +406,12 @@ public class TalkBoxGui extends JFrame {
 		if (name.equals(defaultText))
 			return name;
 
-		String[] words = name.split("_");
+		String deli;
+		if (name.contains("-"))
+			deli = "-";
+		else
+			deli = "_";
+		String[] words = name.split(deli);
 		String str = "";
 		for (String w : words)
 			str += toDisplayCase(w) + " ";
