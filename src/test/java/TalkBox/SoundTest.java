@@ -10,10 +10,6 @@ import main.java.TalkBox.model.Sound;
 
 class SoundTest {
 
-	@org.junit.jupiter.api.Test
-	void test() {
-//		fail("Not yet implemented");
-	}
 
 	private Sound sound;
 
