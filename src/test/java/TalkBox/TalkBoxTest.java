@@ -155,13 +155,13 @@ class TalkBoxTest {
 		assertArrayEquals(box.getSetNames(), names);
 	}
 
-	@org.junit.jupiter.api.Test
-	void setAndGetFile_test() {
-		TalkBox box = new TalkBox();
-		File[] file = { new File("."), new File(".2") };
-		box.setsFile(file);
-		assertArrayEquals(box.getsFile(), file);
-	}
+//	@org.junit.jupiter.api.Test
+//	void setAndGetFile_test() {
+//		TalkBox box = new TalkBox();
+//		File[] file = { new File("."), new File(".2") };
+//		box.setsFile(file);
+//		assertArrayEquals(box.getsFile(), file);
+//	}
 
 	@org.junit.jupiter.api.Test
 	void setAndGetSettingsList_test() {
